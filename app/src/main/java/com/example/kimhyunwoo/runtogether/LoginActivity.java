@@ -27,13 +27,13 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        TextView registerButton = (TextView) findViewById(R.id.registerButton);
+        TextView registerButton = (TextView) findViewById(R.id.registerButton);                     // 회원가입 버튼
         registerButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
             public void onClick(View view)
             {
-                Intent registerIntent = new Intent(LoginActivity.this,RegisterActivity.class);
+                Intent registerIntent = new Intent(LoginActivity.this,RegisterActivity.class);      // 회원가입 버튼 눌렀을시 회원가입액티비티로 넘어감
                 LoginActivity.this.startActivity(registerIntent);
             }
         });
@@ -42,7 +42,7 @@ public class LoginActivity extends AppCompatActivity {
         passwordText= (EditText)findViewById(R.id.passwordText);
         loginButton= (Button) findViewById(R.id.loginButton);
 
-        loginButton.setOnClickListener(new View.OnClickListener()
+        loginButton.setOnClickListener(new View.OnClickListener()                                   // 로그인 버튼
         {
             @Override
             public void onClick(View view)
@@ -50,23 +50,27 @@ public class LoginActivity extends AppCompatActivity {
                 String userEmail = emailText.getText().toString();
                 String userPassword = passwordText.getText().toString();
 
+                // Volley 사용하기 위한 리스너 정의.
                 Response.Listener<String> reponseListener = new Response.Listener<String>() {
+
+                    // Volley 를 통해서 정상적으로 웹서버와 통신이 되면 실행되는 함수
                     @Override
                     public void onResponse(String response)
                     {
                         try
                         {
+                            // JSON 형식으로 값을 response 에 받아서 넘어온다.
                             JSONObject jsonResponse = new JSONObject(response);
-                            boolean success = jsonResponse.getBoolean("success");
+                            boolean success = jsonResponse.getBoolean("success");               // success 이름으로 boolean 타입의 값이 넘어온다
                             if(success)
                             {
                                 Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(LoginActivity.this,MainActivity.class);
+                                Intent intent = new Intent(LoginActivity.this,MainActivity.class);      // 로그인 성공으로 메인화면으로 넘어감.
                                 LoginActivity.this.startActivity(intent);
                             }
                             else
                             {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);      // 로그인 실패로 알림을 띄움
                                 dialog = builder.setMessage("Please, Check Acount")
                                         .setNegativeButton("Try Again",null)
                                         .create();
@@ -79,9 +83,9 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 };
-                LoginRequest loginRequest = new LoginRequest(userEmail,userPassword,reponseListener);
-                RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
-                queue.add(loginRequest);
+                LoginRequest loginRequest = new LoginRequest(userEmail,userPassword,reponseListener);           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
+                RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);            // Volley의 사용법으로 request queue로 queue를 하나 선언하고
+                queue.add(loginRequest);                                                            // queue에 로그인 리퀘스트를 넣으면 loginrequest가 실행됨.
             }
         });
     }
