@@ -27,6 +27,10 @@ public class MainActivity extends AppCompatActivity {
 
     android.support.v4.app.Fragment historys, main, friends;
 
+    public LocationManager getLocationManager() {
+        return manager;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
