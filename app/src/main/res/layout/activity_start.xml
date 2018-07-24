@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".StartActivity">
+    tools:context=".usermanagement.StartActivity"
+    >
     <LinearLayout
         android:id="@+id/Layouts"
         android:layout_width="match_parent"
@@ -13,14 +14,18 @@
         android:onClick="on"
         android:gravity="center"
         android:orientation="vertical"
+        android:layout_weight="2"
         >
 
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="230dp"
             android:layout_gravity="center"
+            android:layout_marginTop="50dp"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/runtogetherui"/>
+            android:src="@drawable/exampleruntoui"
+            android:layout_weight="1"
+            />
 
         <TextView
             android:id="@+id/mytext"
@@ -29,6 +34,8 @@
             android:layout_gravity="center"
             android:text="Touch to screen"
             android:textColor="#7a7a7a"
+            android:textSize="20dp"
+            android:layout_weight="1"
             />
 
     </LinearLayout>
