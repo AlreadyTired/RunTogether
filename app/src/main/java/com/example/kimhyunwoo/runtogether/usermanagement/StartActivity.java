@@ -1,4 +1,4 @@
-package com.example.kimhyunwoo.runtogether;
+package com.example.kimhyunwoo.runtogether.usermanagement;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.TextView;
+
+import com.example.kimhyunwoo.runtogether.R;
 
 public class StartActivity extends AppCompatActivity {
 

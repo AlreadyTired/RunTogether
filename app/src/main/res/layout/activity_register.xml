@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RegisterActivity">
+    tools:context=".usermanagement.RegisterActivity">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -60,25 +60,12 @@
                     android:layout_height="40dp"
                     android:textSize="15dp"
                     android:textStyle="bold"
-                    android:background="@color/colorWarning"
+                    android:background="@color/colorPrimaryDark"
                     android:text="DuplicateCheck"
                     android:layout_gravity="center"
                     android:id="@+id/validateButton"
                     android:textColor="#ffffff"/>
             </LinearLayout>
-
-            <EditText
-                android:id="@+id/AutenticationCode"
-                android:layout_width="280dp"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="10dp"
-                android:drawableLeft="@drawable/ic_vpn_key_black_24dp"
-                android:drawableStart="@drawable/ic_vpn_key_black_24dp"
-                android:hint="Authentication Code"
-                android:padding="10dp"
-                android:textColor="#ffffff"
-                android:textColorHint="#ffffff"/>
 
             <EditText
             android:id="@+id/passwordText"
@@ -102,7 +89,7 @@
                 android:layout_marginTop="10dp"
                 android:drawableLeft="@drawable/ic_https_black_24dp"
                 android:drawableStart="@drawable/ic_https_black_24dp"
-                android:hint="Re Enter Password"
+                android:hint="Confirm Password"
                 android:inputType="textPassword"
                 android:padding="10dp"
                 android:textColor="#ffffff"

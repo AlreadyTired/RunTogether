@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".usermanagement.LoginActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -35,7 +35,7 @@
             android:layout_marginTop="50dp"
             android:drawableLeft="@drawable/ic_person_black_24dp"
             android:drawableStart="@drawable/ic_person_black_24dp"
-            android:hint="Email"
+            android:hint=" Email"
             android:padding="10dp"
             android:textColor="#ffffff"
             android:textColorHint="#ffffff" />
@@ -86,7 +86,7 @@
                 android:layout_marginHorizontal="20dp"
                 android:text=" / "/>
             <TextView
-                android:id="@+id/findPasswordButton"
+                android:id="@+id/forgetPasswordButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
