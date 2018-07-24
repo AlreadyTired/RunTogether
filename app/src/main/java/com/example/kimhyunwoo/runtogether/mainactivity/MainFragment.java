@@ -1,8 +1,10 @@
-package com.example.kimhyunwoo.runtogether;
+package com.example.kimhyunwoo.runtogether.mainactivity;
 
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -17,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.kimhyunwoo.runtogether.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -24,7 +27,6 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.SphericalUtil;
 
 
@@ -47,6 +49,10 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     Button buttonStart;
     Button buttonEnd;
     Button buttonCalc;
+
+
+    //  전역변수용 클레스 생기면 옮기자
+    int markerRequstCode = 1234;
 
     public MainFragment() {
         // Required empty public constructor
@@ -113,7 +119,31 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        return false;
+        //dialog fragment class 생성
+        MarkerClickFragment newFragment = new MarkerClickFragment();
+        // onActivityResult에서 1234 라는 요청 코드를 받아서 처리할 수 있도록 설정
+        newFragment.setTargetFragment(this, markerRequstCode );
+        //"dialog"라는 태그를 갖는 프래그먼트 생성
+        newFragment.show(getFragmentManager(), "dialog");
+
+        return true;
+    }
+
+    // 다이얼이 끝나고 여기로 결과가 전송됨
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // 1234라는 요청 코드가 오면 받음
+        if (requestCode == markerRequstCode) {
+
+            // ok를 눌렀을 경우
+            if (resultCode == Activity.RESULT_OK) {
+                // intent 에서 id 키를 받아서 여기로 가져옴
+                String id = data.getExtras().getString("id");
+                Toast.makeText(getActivity(), "Sending Friend request!\n to "+id ,Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     @Override

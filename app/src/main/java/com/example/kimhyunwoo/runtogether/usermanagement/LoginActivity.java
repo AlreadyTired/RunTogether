@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.example.kimhyunwoo.runtogether.MainActivity;
+import com.example.kimhyunwoo.runtogether.mainactivity.MainActivity;
 import com.example.kimhyunwoo.runtogether.R;
 
 import org.json.JSONObject;

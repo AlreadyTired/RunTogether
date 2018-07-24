@@ -1,8 +1,7 @@
-package com.example.kimhyunwoo.runtogether;
+package com.example.kimhyunwoo.runtogether.mainactivity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
-import android.app.Fragment;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
@@ -15,6 +14,8 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
+
+import com.example.kimhyunwoo.runtogether.R;
 
 import java.util.ArrayList;
 import java.util.List;
