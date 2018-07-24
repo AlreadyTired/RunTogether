@@ -25,6 +25,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.SphericalUtil;
 
 
 /**
@@ -40,6 +41,12 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     MarkerOptions markerOptions = new MarkerOptions();
 
     LatLng savedCoordinate = new LatLng(32.881033, -117.235601);
+    LatLng startLat = new LatLng(32.881033, -117.235601);
+    LatLng endLat = new LatLng(32.881033, -117.235601);
+
+    Button buttonStart;
+    Button buttonEnd;
+    Button buttonCalc;
 
     public MainFragment() {
         // Required empty public constructor
@@ -55,7 +62,17 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                 .findFragmentById(R.id.map_google);
         // 맵이 사용할 준비가 되면 onMapReady 함수를 자동으로 호출
 
-        //  구글맵 쓰레드 시작
+        // 버튼을 만들기 위해서 생성
+        buttonStart = (Button)view.findViewById(R.id.btn_start);
+        buttonEnd = (Button)view.findViewById(R.id.btn_end);
+        buttonCalc = (Button)view.findViewById(R.id.btn_calc);
+
+        // 리스너에 버튼을 등록함
+        buttonStart.setOnClickListener(this);
+        buttonEnd.setOnClickListener(this);
+        buttonCalc.setOnClickListener(this);
+
+        //  구글맵 쓰레드 시작ㅈ
         mapFragment.getMapAsync(this);
 
         //  프래그먼트가 호출된 상위 액티비티를 가져올수있음
@@ -69,7 +86,29 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onClick(View v) {
+        if (v == buttonStart) {
+            startLat = savedCoordinate;
 
+            Context context = getActivity().getApplicationContext();
+            Toast toast = Toast.makeText(context,"startLat : "+startLat.latitude + "\nstartLng : " + startLat.longitude, Toast.LENGTH_SHORT);
+            toast.show();
+        } else if (v == buttonEnd) {
+            endLat = savedCoordinate;
+
+            Context context = getActivity().getApplicationContext();
+            Toast toast = Toast.makeText(context,"endLat : "+ endLat.latitude+ "\nendLng : " + endLat.longitude, Toast.LENGTH_SHORT);
+            toast.show();
+
+        } else if (v == buttonCalc) {
+            //Calculating the distance in meters
+            Double distance = SphericalUtil.computeDistanceBetween(startLat, endLat);
+
+            Context context = getActivity().getApplicationContext();
+            //Displaying the distance
+            int duration = Toast.LENGTH_SHORT;
+            Toast toast = Toast.makeText(context,"distance " + distance, duration);
+            toast.show();
+        }
     }
 
     @Override

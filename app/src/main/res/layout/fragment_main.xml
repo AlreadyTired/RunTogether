@@ -16,5 +16,33 @@
         android:layout_height="400dp"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        android:weightSum="3"
+        >
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="start"
+        android:id="@+id/btn_start"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="end"
+        android:id="@+id/btn_end"
+        />
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:text="calc"
+        android:id="@+id/btn_calc"
+        />
+    </LinearLayout>
 
 </LinearLayout>

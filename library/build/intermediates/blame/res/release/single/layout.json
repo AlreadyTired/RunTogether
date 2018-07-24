@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "C:\\android-maps-utils\\library\\build\\intermediates\\res\\merged\\release\\layout\\amu_webview.xml",
+        "source": "C:\\android-maps-utils\\library\\res\\layout\\amu_webview.xml"
+    },
+    {
+        "merged": "C:\\android-maps-utils\\library\\build\\intermediates\\res\\merged\\release\\layout\\amu_info_window.xml",
+        "source": "C:\\android-maps-utils\\library\\res\\layout\\amu_info_window.xml"
+    },
+    {
+        "merged": "C:\\android-maps-utils\\library\\build\\intermediates\\res\\merged\\release\\layout\\amu_text_bubble.xml",
+        "source": "C:\\android-maps-utils\\library\\res\\layout\\amu_text_bubble.xml"
+    }
+]
