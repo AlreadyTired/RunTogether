@@ -1,4 +1,4 @@
-package com.example.kimhyunwoo.runtogether;
+package com.example.kimhyunwoo.runtogether.usermanagement;
 
 import android.util.Log;
 

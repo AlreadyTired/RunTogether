@@ -1,4 +1,4 @@
-package com.example.kimhyunwoo.runtogether;
+package com.example.kimhyunwoo.runtogether.usermanagement;
 
 import android.content.Intent;
 import android.support.v7.app.AlertDialog;
@@ -13,6 +13,8 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.example.kimhyunwoo.runtogether.MainActivity;
+import com.example.kimhyunwoo.runtogether.R;
 
 import org.json.JSONObject;
 
@@ -23,11 +25,18 @@ public class LoginActivity extends AppCompatActivity {
     EditText emailText;
     EditText passwordText;
     Button loginButton;
+    TextView ForgetButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        TextView registerButton = (TextView) findViewById(R.id.registerButton);                     // 회원가입 버튼
+        TextView registerButton = (TextView) findViewById(R.id.registerButton);         // 회원가입 버튼
+
+        emailText = (EditText)findViewById(R.id.EmailText);
+        passwordText= (EditText)findViewById(R.id.passwordText);
+        loginButton= (Button) findViewById(R.id.loginButton);
+        ForgetButton = (TextView) findViewById(R.id.forgetPasswordButton);
+
         registerButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
@@ -38,9 +47,14 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
-        emailText = (EditText)findViewById(R.id.EmailText);
-        passwordText= (EditText)findViewById(R.id.passwordText);
-        loginButton= (Button) findViewById(R.id.loginButton);
+
+        ForgetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent FindPasswordIntent = new Intent(LoginActivity.this,FindUserInfoActivity.class);      // ForgetPassword 버튼 눌렀을시 회원비밀번호찾기 액티비티로 넘어감
+                LoginActivity.this.startActivity(FindPasswordIntent);
+            }
+        });
 
         loginButton.setOnClickListener(new View.OnClickListener()                                   // 로그인 버튼
         {
