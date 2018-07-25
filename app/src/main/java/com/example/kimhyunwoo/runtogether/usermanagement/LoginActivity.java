@@ -13,7 +13,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.example.kimhyunwoo.runtogether.MainActivity;
+import com.example.kimhyunwoo.runtogether.mainactivity.MainActivity;
 import com.example.kimhyunwoo.runtogether.R;
 
 import org.json.JSONObject;
@@ -26,16 +26,16 @@ public class LoginActivity extends AppCompatActivity {
     EditText passwordText;
     Button loginButton;
     TextView ForgetButton;
+    TextView registerButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        TextView registerButton = (TextView) findViewById(R.id.registerButton);         // 회원가입 버튼
-
+        registerButton = (TextView) findViewById(R.id.registerButton);         // 회원가입 버튼
+        ForgetButton = (TextView) findViewById(R.id.forgetPasswordButton);
         emailText = (EditText)findViewById(R.id.EmailText);
         passwordText= (EditText)findViewById(R.id.passwordText);
         loginButton= (Button) findViewById(R.id.loginButton);
-        ForgetButton = (TextView) findViewById(R.id.forgetPasswordButton);
 
         registerButton.setOnClickListener(new View.OnClickListener()
         {
@@ -63,6 +63,14 @@ public class LoginActivity extends AppCompatActivity {
             {
                 String userEmail = emailText.getText().toString();
                 String userPassword = passwordText.getText().toString();
+
+
+
+                // @#$#@#$#@#$#@#$#@#$#@#$#@$#@#$#@#$#@#$#@#$#@#$#@#@#$@#$로그인 없이 돌아가는가 확인하기위해 넣어놨음 지워야함@#$#@$#@#$#@#$#@#$#@#$#@#$#@#$#@#$#@#$#@#$
+                Intent intent = new Intent(LoginActivity.this,MainActivity.class);      // 로그인 성공으로 메인화면으로 넘어감.
+                LoginActivity.this.startActivity(intent);
+
+
 
                 // Volley 사용하기 위한 리스너 정의.
                 Response.Listener<String> reponseListener = new Response.Listener<String>() {
