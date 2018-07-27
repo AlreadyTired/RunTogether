@@ -25,17 +25,17 @@
     <LinearLayout
         android:layout_width="280dp"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:layout_weight="1.4"
         android:gravity="top|center"
-        android:layout_weight="1.4">
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"
+            android:layout_marginTop="15dp"
             android:text="If input your Email and touch the button, we will send a authentication code and link. then you should go to the link and input authentication code please."
-            android:textColor="@color/colorGray"/>
+            android:textColor="@color/colorGray" />
     </LinearLayout>
     <LinearLayout
         android:layout_width="280dp"

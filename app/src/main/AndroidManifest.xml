@@ -16,13 +16,10 @@
         android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".mainactivity.MainActivity"
-            android:theme="@style/AppTheme.NoActionBar">
-
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".usermanagement.LoginActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".usermanagement.StartActivity"
             android:theme="@style/AppTheme.NoActionBar">
@@ -47,9 +44,11 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/title_activity_maps"></activity>
-        <activity android:name=".usermanagement.FindUserInfoActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+            android:label="@string/title_activity_maps" />
+        <activity
+            android:name=".usermanagement.FindUserInfoActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity android:name=".usermanagement.PasswordChangeActivity"></activity>
     </application>
 
 </manifest>
