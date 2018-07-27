@@ -10,8 +10,10 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.example.kimhyunwoo.runtogether.ServerInfo.*;
+
 public class RegisterRequest extends StringRequest{
-    final static private String URL = "http://100.64.12.80/UserRegister.php";
+    final static private String URL = serverURL+registerURL;
     private Map<String,String> parameters;
 
     public RegisterRequest(String userEmail,String userPassword, String userGender, String userNickname,String userAge,Response.Listener<String> listener){
