@@ -4,14 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".usermanagement.RegisterActivity">
+    tools:context=".usermanagement.RegisterActivity"
+    android:background="@drawable/gradient_background">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:background="@drawable/gradient_background"
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="0dp"
+        android:layout_marginTop="20dp"
         tools:ignore="MissingConstraints">
 
         <LinearLayout
@@ -49,12 +51,13 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginRight="10dp"
-                    android:drawableLeft="@drawable/ic_person_black_24dp"
-                    android:drawableStart="@drawable/ic_person_black_24dp"
+                    android:drawableLeft="@drawable/ic_local_post_office_black_24dp"
+                    android:drawableStart="@drawable/ic_local_post_office_black_24dp"
                     android:hint="Email"
                     android:padding="10dp"
                     android:textColor="#ffffff"
-                    android:textColorHint="#ffffff" />
+                    android:textColorHint="#ffffff"
+                    android:inputType="textEmailAddress"/>
                 <Button
                     android:layout_width="80dp"
                     android:layout_height="40dp"
@@ -82,7 +85,7 @@
             android:textColorHint="#ffffff" />
 
             <EditText
-                android:id="@+id/passwordCheckText"
+                android:id="@+id/confirmpassword"
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -101,18 +104,45 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="10dp"
-                android:drawableLeft="@drawable/ic_local_post_office_black_24dp"
-                android:drawableStart="@drawable/ic_local_post_office_black_24dp"
+                android:drawableLeft="@drawable/ic_person_black_24dp"
+                android:drawableStart="@drawable/ic_person_black_24dp"
                 android:hint="Nickname"
                 android:padding="10dp"
                 android:textColor="#ffffff"
                 android:textColorHint="#ffffff" />
 
+            <LinearLayout
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:text="Age : "
+                    android:textSize="25dp"
+                    android:textColor="#ffffff"
+                    android:drawableStart="@drawable/ic_insert_invitation_black_24dp"
+                    android:drawableLeft="@drawable/ic_insert_invitation_black_24dp"
+                    />
+                <Spinner
+                    android:id="@+id/agespinner"
+                    android:layout_width="180dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_gravity="right"
+                    android:overlapAnchor="false"
+                    android:dropDownWidth="100dp"
+                    android:gravity="center"></Spinner>
+            </LinearLayout>
+
             <RadioGroup
                 android:id="@+id/genderGroup"
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="center"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
