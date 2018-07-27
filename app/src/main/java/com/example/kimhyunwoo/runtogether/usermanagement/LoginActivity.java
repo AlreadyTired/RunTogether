@@ -65,12 +65,12 @@ public class LoginActivity extends AppCompatActivity {
                 String userPassword = passwordText.getText().toString();
 
 
-
+                /*
                 // @#$#@#$#@#$#@#$#@#$#@#$#@$#@#$#@#$#@#$#@#$#@#$#@#@#$@#$로그인 없이 돌아가는가 확인하기위해 넣어놨음 지워야함@#$#@$#@#$#@#$#@#$#@#$#@#$#@#$#@#$#@#$#@#$
                 Intent intent = new Intent(LoginActivity.this,MainActivity.class);      // 로그인 성공으로 메인화면으로 넘어감.
                 LoginActivity.this.startActivity(intent);
 
-
+                */
 
                 // Volley 사용하기 위한 리스너 정의.
                 Response.Listener<String> reponseListener = new Response.Listener<String>() {
