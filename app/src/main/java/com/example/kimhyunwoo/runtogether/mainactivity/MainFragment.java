@@ -33,6 +33,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kimhyunwoo.runtogether.MapUtil;
 import com.example.kimhyunwoo.runtogether.R;
 import com.example.kimhyunwoo.runtogether.bluetoothmanagement.BluetoothChatService;
 import com.example.kimhyunwoo.runtogether.bluetoothmanagement.Constants;
@@ -44,6 +45,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.SphericalUtil;
 
 
@@ -56,22 +58,30 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
     //===================================================================
     //  구글 맵 변수
+
+    MapUtil util = null;
+
     LocationManager manager;
 
     GoogleMap map = null;
     MarkerOptions markerOptions = new MarkerOptions();
 
+    //  TODO(db 연동 시에 db에서 마지막 위치를 받아 오도록 하자)
+    //  현재는 db에 연동이 안되어 임의로 설정함
     LatLng savedCoordinate = new LatLng(32.881033, -117.235601);
-    LatLng startLat = new LatLng(32.881033, -117.235601);
-    LatLng endLat = new LatLng(32.881033, -117.235601);
+    LatLng startLat = null;
+    LatLng endLat = null;
+
+    boolean sendResult = false;
+    boolean exercisingFlag = false;
 
     Button buttonStart;
     Button buttonEnd;
+    Button buttonReset;
     Button buttonCalc;
 
-    //  전역변수용 클레스 생기면 옮기자
+    //  TODO(그루트와 코드 번호를 정의 해보자)
     private static final int markerRequstCode = 1234;
-
     //  구글 맵 변수 끝
     //===================================================================
 
@@ -135,11 +145,13 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         // 버튼을 만들기 위해서 생성
         buttonStart = (Button)view.findViewById(R.id.btn_start);
         buttonEnd = (Button)view.findViewById(R.id.btn_end);
+        buttonReset = (Button)view.findViewById(R.id.btn_reset);
         buttonCalc = (Button)view.findViewById(R.id.btn_calc);
 
         // 리스너에 버튼을 등록함
         buttonStart.setOnClickListener(this);
         buttonEnd.setOnClickListener(this);
+        buttonReset.setOnClickListener(this);
         buttonCalc.setOnClickListener(this);
 
         //  구글맵 쓰레드 시작ㅈ
@@ -168,21 +180,64 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onClick(View v) {
         if (v == buttonStart) {
-            startLat = savedCoordinate;
+            String toastText = "";
+
+            //  sendResult가 true면 서버로 보낼 운동 데이터가 남은 상태로 간주
+            if(sendResult != false){
+                toastText = "press reset button!";
+            }else if(exercisingFlag != true) {
+                exercisingFlag = true;
+                startLat = savedCoordinate;
+                toastText = "exercise start!!";
+            }else{
+                toastText = "already start!!";
+            }
 
             Context context = getActivity().getApplicationContext();
-            Toast toast = Toast.makeText(context,"startLat : "+startLat.latitude + "\nstartLng : " + startLat.longitude, Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(context,toastText, Toast.LENGTH_SHORT);
             toast.show();
-        } else if (v == buttonEnd) {
-            endLat = savedCoordinate;
+
+        }else if (v == buttonEnd){
+            String toastText = "";
+
+            if(exercisingFlag != false) {
+                exercisingFlag = false;
+                sendResult = true;
+                endLat = savedCoordinate;
+                toastText = "exercise end!!";
+            }else{
+                toastText = "press start button!!";
+            }
 
             Context context = getActivity().getApplicationContext();
-            Toast toast = Toast.makeText(context,"endLat : "+ endLat.latitude+ "\nendLng : " + endLat.longitude, Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(context,toastText, Toast.LENGTH_SHORT);
+            toast.show();
+
+        }else if (v == buttonReset) {
+            Context context = getActivity().getApplicationContext();
+            String toastText = "";
+
+            //  TODO(서버로 전송 기능 구현)
+            if (sendResult) {
+                sendResult = false;
+                map.clear();
+
+                toastText = "Reset Google Map";
+            }else{
+                toastText = "No record...";
+            }
+
+            Toast toast = Toast.makeText(context,toastText, Toast.LENGTH_SHORT);
             toast.show();
 
         } else if (v == buttonCalc) {
             //Calculating the distance in meters
-            Double distance = SphericalUtil.computeDistanceBetween(startLat, endLat);
+            Double distance = 0d;
+
+            //  startLat, endLat이 null일 때 앱 튕김 방지
+            if(startLat != null && endLat != null) {
+                distance = SphericalUtil.computeDistanceBetween(startLat, endLat);
+            }
 
             Context context = getActivity().getApplicationContext();
             //Displaying the distance
@@ -240,7 +295,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                     Log.d(TAG, "BT not enabled");
                     Toast.makeText(getActivity(), R.string.bt_not_enabled_leaving,
                             Toast.LENGTH_SHORT).show();
-                    getActivity().finish();
                 }
         }
     }
@@ -249,18 +303,20 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
-        //  좌표 적용
-        //  마커생성
-        markerOptions.position(savedCoordinate); //좌표
-        markerOptions.title("임시 마커");
-        //  마커를 화면에 그림
-        map.addMarker(markerOptions);
-        //  맵의 중심을 해당 좌표로 이동
-        //  savedCoordinate : 좌표
-        //  v: 줌레벨
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(savedCoordinate,16));
-
-        map.setOnMarkerClickListener(this);
+        //  현재는 사용 안함.
+        //  사용하면 다시 활성화 하자.
+//        //  좌표 적용
+//        //  마커생성
+//        markerOptions.position(savedCoordinate); //좌표
+//        markerOptions.title("임시 마커");
+//        //  마커를 화면에 그림
+//        map.addMarker(markerOptions);
+//        //  맵의 중심을 해당 좌표로 이동
+//        //  savedCoordinate : 좌표
+//        //  v: 줌레벨
+//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(savedCoordinate,util.zoomLevel));
+//
+//        map.setOnMarkerClickListener(this);
     }
 
     // 현재 프래그먼트가 러닝직전
@@ -319,20 +375,21 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             //  현재 좌표에 마커를 찍기 위해서 옵션에 저장
             markerOptions.position(currentCoordinate);
 
-            //  맵의 중심을 해당 좌표로 이동
-            //  savedCoordinate : 좌표
-            //  v: 줌레벨
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentCoordinate,16));
+            if(exercisingFlag == true) {
+                // 라인 그리기
+                util.polylineOnMap(map, savedCoordinate, currentCoordinate);
+                savedCoordinate = currentCoordinate;
+            }
 
-            //  계산을 위해서 저장
-            savedCoordinate = currentCoordinate;
+            //  마커 삭제
+            util.deleteMarker(map, markerOptions);
 
-            //  현재 좌표에 마커 찍음
-            map.addMarker(markerOptions);
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentCoordinate,util.zoomLevel));
+
+            //  디버깅 용
             Context context = getActivity().getApplicationContext();
-            int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(context,"lat : "+currentLat + "\nlng : "
-                    + currentLng, duration);
+                    + currentLng, Toast.LENGTH_SHORT);
             toast.show();
         }
 
@@ -358,6 +415,9 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        //  Set google map util
+        util = new MapUtil();
+
         // Get local Bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
