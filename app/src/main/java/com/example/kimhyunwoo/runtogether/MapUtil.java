@@ -12,7 +12,7 @@ import com.google.android.gms.maps.model.PolylineOptions;
 public class MapUtil {
     private String TAG = "MapUtil TAG : ";
 
-    public  int zoomLevel = 16;
+    public  int zoomLevel = 18;
 
     Marker delete = null;
 

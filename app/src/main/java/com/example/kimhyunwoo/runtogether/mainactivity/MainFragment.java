@@ -72,14 +72,11 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     LatLng startLat = null;
     LatLng endLat = null;
 
-
-    private final int RECORD_START = 1;
-    private final int RECORD_END = -1;
-
-    int recordFlag = RECORD_END;
+    boolean sendResult = false;
     boolean exercisingFlag = false;
 
     Button buttonStart;
+    Button buttonEnd;
     Button buttonReset;
     Button buttonCalc;
 
@@ -147,11 +144,13 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
         // 버튼을 만들기 위해서 생성
         buttonStart = (Button)view.findViewById(R.id.btn_start);
+        buttonEnd = (Button)view.findViewById(R.id.btn_end);
         buttonReset = (Button)view.findViewById(R.id.btn_reset);
         buttonCalc = (Button)view.findViewById(R.id.btn_calc);
 
         // 리스너에 버튼을 등록함
         buttonStart.setOnClickListener(this);
+        buttonEnd.setOnClickListener(this);
         buttonReset.setOnClickListener(this);
         buttonCalc.setOnClickListener(this);
 
@@ -181,36 +180,51 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     @Override
     public void onClick(View v) {
         if (v == buttonStart) {
-            startLat = savedCoordinate;
-            //  기록 플래그 스위칭
-            recordFlag *= RECORD_END;
-
-            Context context = getActivity().getApplicationContext();
             String toastText = "";
 
-            if(recordFlag == RECORD_START) {
+            //  sendResult가 true면 서버로 보낼 운동 데이터가 남은 상태로 간주
+            if(sendResult != false){
+                toastText = "press reset button!";
+            }else if(exercisingFlag != true) {
                 exercisingFlag = true;
-                toastText = "End exercise";
-                buttonStart.setText("Start");
+                startLat = savedCoordinate;
+                toastText = "exercise start!!";
             }else{
-                exercisingFlag = false;
-                toastText = "Start exercise";
-                buttonStart.setText("END");
+                toastText = "already start!!";
             }
 
-            Toast toast = Toast.makeText(context,toastText + "\n"+startLat.latitude +
-                    "\n" + startLat.longitude, Toast.LENGTH_SHORT);
+            Context context = getActivity().getApplicationContext();
+            Toast toast = Toast.makeText(context,toastText, Toast.LENGTH_SHORT);
             toast.show();
 
-        } else if (v == buttonReset) {
+        }else if (v == buttonEnd){
+            String toastText = "";
+
+            if(exercisingFlag != false) {
+                exercisingFlag = false;
+                sendResult = true;
+                endLat = savedCoordinate;
+                toastText = "exercise end!!";
+            }else{
+                toastText = "press start button!!";
+            }
+
+            Context context = getActivity().getApplicationContext();
+            Toast toast = Toast.makeText(context,toastText, Toast.LENGTH_SHORT);
+            toast.show();
+
+        }else if (v == buttonReset) {
             Context context = getActivity().getApplicationContext();
             String toastText = "";
 
-            if (exercisingFlag) {
+            //  TODO(서버로 전송 기능 구현)
+            if (sendResult) {
+                sendResult = false;
                 map.clear();
+
                 toastText = "Reset Google Map";
             }else{
-                toastText = "Press Stop button";
+                toastText = "No record...";
             }
 
             Toast toast = Toast.makeText(context,toastText, Toast.LENGTH_SHORT);
@@ -361,7 +375,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             //  현재 좌표에 마커를 찍기 위해서 옵션에 저장
             markerOptions.position(currentCoordinate);
 
-            if(recordFlag != RECORD_START) {
+            if(exercisingFlag == true) {
                 // 라인 그리기
                 util.polylineOnMap(map, savedCoordinate, currentCoordinate);
                 savedCoordinate = currentCoordinate;
