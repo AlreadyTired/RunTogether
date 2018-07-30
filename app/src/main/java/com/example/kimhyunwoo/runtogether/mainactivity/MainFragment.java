@@ -44,6 +44,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.SphericalUtil;
 
 
@@ -60,6 +61,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
     GoogleMap map = null;
     MarkerOptions markerOptions = new MarkerOptions();
+    Marker delete_marker = null;
 
     LatLng savedCoordinate = new LatLng(32.881033, -117.235601);
     LatLng startLat = new LatLng(32.881033, -117.235601);
@@ -69,6 +71,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     Button buttonEnd;
     Button buttonCalc;
 
+    int zoomLevel = 16;
     //  전역변수용 클레스 생기면 옮기자
     private static final int markerRequstCode = 1234;
 
@@ -258,7 +261,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         //  맵의 중심을 해당 좌표로 이동
         //  savedCoordinate : 좌표
         //  v: 줌레벨
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(savedCoordinate,16));
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(savedCoordinate,zoomLevel));
 
         map.setOnMarkerClickListener(this);
     }
@@ -319,13 +322,22 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             //  현재 좌표에 마커를 찍기 위해서 옵션에 저장
             markerOptions.position(currentCoordinate);
 
+            // 사용자가 운동한 경로를 선으로 연결함
+            map.addPolyline(new PolylineOptions().color(0xffff0000).width(30.0f).
+                    geodesic(true).add(savedCoordinate).add(currentCoordinate));
+
+
+            savedCoordinate = currentCoordinate;
+            if(delete_marker != null)
+            {
+                delete_marker.remove();
+            }
+            delete_marker = map.addMarker(markerOptions);
+
             //  맵의 중심을 해당 좌표로 이동
             //  savedCoordinate : 좌표
             //  v: 줌레벨
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentCoordinate,16));
-
-            //  계산을 위해서 저장
-            savedCoordinate = currentCoordinate;
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentCoordinate,zoomLevel));
 
             //  현재 좌표에 마커 찍음
             map.addMarker(markerOptions);
