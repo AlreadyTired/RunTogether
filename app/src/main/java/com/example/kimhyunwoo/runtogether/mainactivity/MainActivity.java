@@ -37,6 +37,10 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        //  블루투스 연결해야함
+
+        //
+
         //  Context에 있는 location 상수 알려주기
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 
