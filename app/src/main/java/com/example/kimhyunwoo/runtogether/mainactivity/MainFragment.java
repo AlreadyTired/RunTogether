@@ -33,6 +33,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kimhyunwoo.runtogether.MapUtil;
 import com.example.kimhyunwoo.runtogether.R;
 import com.example.kimhyunwoo.runtogether.bluetoothmanagement.BluetoothChatService;
 import com.example.kimhyunwoo.runtogether.bluetoothmanagement.Constants;
@@ -57,24 +58,33 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
     //===================================================================
     //  구글 맵 변수
+
+    MapUtil util = null;
+
     LocationManager manager;
 
     GoogleMap map = null;
     MarkerOptions markerOptions = new MarkerOptions();
-    Marker delete_marker = null;
 
+    //  TODO(db 연동 시에 db에서 마지막 위치를 받아 오도록 하자)
+    //  현재는 db에 연동이 안되어 임의로 설정함
     LatLng savedCoordinate = new LatLng(32.881033, -117.235601);
     LatLng startLat = null;
     LatLng endLat = null;
 
+
+    private final int RECORD_START = 1;
+    private final int RECORD_END = -1;
+
+    int recordFlag = RECORD_END;
+    boolean exercisingFlag = false;
+
     Button buttonStart;
-    Button buttonEnd;
+    Button buttonReset;
     Button buttonCalc;
 
-    int zoomLevel = 16;
-    //  전역변수용 클레스 생기면 옮기자
+    //  TODO(그루트와 코드 번호를 정의 해보자)
     private static final int markerRequstCode = 1234;
-
     //  구글 맵 변수 끝
     //===================================================================
 
@@ -137,12 +147,12 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
         // 버튼을 만들기 위해서 생성
         buttonStart = (Button)view.findViewById(R.id.btn_start);
-        buttonEnd = (Button)view.findViewById(R.id.btn_end);
+        buttonReset = (Button)view.findViewById(R.id.btn_reset);
         buttonCalc = (Button)view.findViewById(R.id.btn_calc);
 
         // 리스너에 버튼을 등록함
         buttonStart.setOnClickListener(this);
-        buttonEnd.setOnClickListener(this);
+        buttonReset.setOnClickListener(this);
         buttonCalc.setOnClickListener(this);
 
         //  구글맵 쓰레드 시작ㅈ
@@ -172,15 +182,38 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     public void onClick(View v) {
         if (v == buttonStart) {
             startLat = savedCoordinate;
+            //  기록 플래그 스위칭
+            recordFlag *= RECORD_END;
 
             Context context = getActivity().getApplicationContext();
-            Toast toast = Toast.makeText(context,"startLat : "+startLat.latitude + "\nstartLng : " + startLat.longitude, Toast.LENGTH_SHORT);
+            String toastText = "";
+
+            if(recordFlag == RECORD_START) {
+                exercisingFlag = true;
+                toastText = "End exercise";
+                buttonStart.setText("Start");
+            }else{
+                exercisingFlag = false;
+                toastText = "Start exercise";
+                buttonStart.setText("END");
+            }
+
+            Toast toast = Toast.makeText(context,toastText + "\n"+startLat.latitude +
+                    "\n" + startLat.longitude, Toast.LENGTH_SHORT);
             toast.show();
-        } else if (v == buttonEnd) {
-            endLat = savedCoordinate;
 
+        } else if (v == buttonReset) {
             Context context = getActivity().getApplicationContext();
-            Toast toast = Toast.makeText(context,"endLat : "+ endLat.latitude+ "\nendLng : " + endLat.longitude, Toast.LENGTH_SHORT);
+            String toastText = "";
+
+            if (exercisingFlag) {
+                map.clear();
+                toastText = "Reset Google Map";
+            }else{
+                toastText = "Press Stop button";
+            }
+
+            Toast toast = Toast.makeText(context,toastText, Toast.LENGTH_SHORT);
             toast.show();
 
         } else if (v == buttonCalc) {
@@ -257,18 +290,20 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     public void onMapReady(GoogleMap googleMap) {
         map = googleMap;
 
-        //  좌표 적용
-        //  마커생성
-        markerOptions.position(savedCoordinate); //좌표
-        markerOptions.title("임시 마커");
-        //  마커를 화면에 그림
-        map.addMarker(markerOptions);
-        //  맵의 중심을 해당 좌표로 이동
-        //  savedCoordinate : 좌표
-        //  v: 줌레벨
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(savedCoordinate,zoomLevel));
-
-        map.setOnMarkerClickListener(this);
+        //  현재는 사용 안함.
+        //  사용하면 다시 활성화 하자.
+//        //  좌표 적용
+//        //  마커생성
+//        markerOptions.position(savedCoordinate); //좌표
+//        markerOptions.title("임시 마커");
+//        //  마커를 화면에 그림
+//        map.addMarker(markerOptions);
+//        //  맵의 중심을 해당 좌표로 이동
+//        //  savedCoordinate : 좌표
+//        //  v: 줌레벨
+//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(savedCoordinate,util.zoomLevel));
+//
+//        map.setOnMarkerClickListener(this);
     }
 
     // 현재 프래그먼트가 러닝직전
@@ -327,26 +362,21 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             //  현재 좌표에 마커를 찍기 위해서 옵션에 저장
             markerOptions.position(currentCoordinate);
 
-            // 사용자가 운동한 경로를 선으로 연결함
-            map.addPolyline(new PolylineOptions().color(0xffff0000).width(30.0f).
-                    geodesic(true).add(savedCoordinate).add(currentCoordinate));
-            
-            savedCoordinate = currentCoordinate;
-            if(delete_marker != null)
-            {
-                delete_marker.remove();
+            if(recordFlag != RECORD_START) {
+                // 라인 그리기
+                util.polylineOnMap(map, savedCoordinate, currentCoordinate);
+                savedCoordinate = currentCoordinate;
             }
-            delete_marker = map.addMarker(markerOptions);
 
-            //  맵의 중심을 해당 좌표로 이동
-            //  savedCoordinate : 좌표
-            //  v: 줌레벨
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentCoordinate,zoomLevel));
+            //  마커 삭제
+            util.deleteMarker(map, markerOptions);
 
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentCoordinate,util.zoomLevel));
+
+            //  디버깅 용
             Context context = getActivity().getApplicationContext();
-            int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(context,"lat : "+currentLat + "\nlng : "
-                    + currentLng, duration);
+                    + currentLng, Toast.LENGTH_SHORT);
             toast.show();
         }
 
@@ -372,6 +402,9 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        //  Set google map util
+        util = new MapUtil();
+
         // Get local Bluetooth adapter
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 

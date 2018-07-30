@@ -39,8 +39,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:text="end"
-            android:id="@+id/btn_end"
+            android:text="reset"
+            android:id="@+id/btn_reset"
             />
         <Button
             android:layout_width="match_parent"
