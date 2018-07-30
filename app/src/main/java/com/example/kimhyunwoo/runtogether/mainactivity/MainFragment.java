@@ -64,8 +64,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     Marker delete_marker = null;
 
     LatLng savedCoordinate = new LatLng(32.881033, -117.235601);
-    LatLng startLat = new LatLng(32.881033, -117.235601);
-    LatLng endLat = new LatLng(32.881033, -117.235601);
+    LatLng startLat = null;
+    LatLng endLat = null;
 
     Button buttonStart;
     Button buttonEnd;
@@ -185,7 +185,12 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
         } else if (v == buttonCalc) {
             //Calculating the distance in meters
-            Double distance = SphericalUtil.computeDistanceBetween(startLat, endLat);
+            Double distance = 0d;
+
+            //  startLat, endLat이 null일 때 앱 튕김 방지
+            if(startLat != null && endLat != null) {
+                distance = SphericalUtil.computeDistanceBetween(startLat, endLat);
+            }
 
             Context context = getActivity().getApplicationContext();
             //Displaying the distance
@@ -325,8 +330,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             // 사용자가 운동한 경로를 선으로 연결함
             map.addPolyline(new PolylineOptions().color(0xffff0000).width(30.0f).
                     geodesic(true).add(savedCoordinate).add(currentCoordinate));
-
-
+            
             savedCoordinate = currentCoordinate;
             if(delete_marker != null)
             {
@@ -339,8 +343,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             //  v: 줌레벨
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentCoordinate,zoomLevel));
 
-            //  현재 좌표에 마커 찍음
-            map.addMarker(markerOptions);
             Context context = getActivity().getApplicationContext();
             int duration = Toast.LENGTH_SHORT;
             Toast toast = Toast.makeText(context,"lat : "+currentLat + "\nlng : "
