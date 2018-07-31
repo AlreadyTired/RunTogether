@@ -22,6 +22,7 @@
         android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".mainactivity.MainActivity"
+            android:configChanges="orientation|keyboardHidden"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
         <activity
@@ -57,7 +58,12 @@
             android:name=".usermanagement.FindUserInfoActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".usermanagement.PasswordChangeActivity" />
-        <activity android:name=".upperactivity.MyAccountActivity"></activity>
+        <activity
+            android:name=".upperactivity.MyAccountActivity"
+            android:configChanges="orientation|keyboardHidden"
+            >
+
+        </activity>
     </application>
 
 </manifest>
