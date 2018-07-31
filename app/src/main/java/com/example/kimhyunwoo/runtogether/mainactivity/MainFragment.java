@@ -86,6 +86,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     //===================================================================
 
     //===================================================================
+    TextView textSO2;
+
     //  블루투스 변수
     Button bt_list;
 
@@ -97,7 +99,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     private static final int REQUEST_ENABLE_BT = 3;
 
     // Layout Views
-    private ListView mConversationView;
     private EditText mOutEditText;
     private Button mSendButton;
 
@@ -163,6 +164,9 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         //  상위 액티비티의 자원을 사용하기 위해서 Activity를 가져옴
         MainActivity activity = (MainActivity) getActivity();
         manager = activity.getLocationManager();
+
+
+        textSO2 = view.findViewById(R.id.txt_so2);
 
         //===========================================================
         bt_list = (Button)view.findViewById(R.id.btn_list);
@@ -450,15 +454,12 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        mConversationView = (ListView) view.findViewById(R.id.in);
         mOutEditText = (EditText) view.findViewById(R.id.edit_text_out);
         mSendButton = (Button) view.findViewById(R.id.button_send);
 
     }
-
 
     /**
      * Set up the UI and background operations for chat.
@@ -468,8 +469,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
         // Initialize the array adapter for the conversation thread
         mConversationArrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.message);
-
-        mConversationView.setAdapter(mConversationArrayAdapter);
 
         // Initialize the compose field with a listener for the return key
         mOutEditText.setOnEditorActionListener(mWriteListener);
@@ -492,18 +491,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
         // Initialize the buffer for outgoing messages
         mOutStringBuffer = new StringBuffer("");
-    }
-
-    /**
-     * Makes this device discoverable for 300 seconds (5 minutes).
-     */
-    private void ensureDiscoverable() {
-        if (mBluetoothAdapter.getScanMode() !=
-                BluetoothAdapter.SCAN_MODE_CONNECTABLE_DISCOVERABLE) {
-            Intent discoverableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE);
-            discoverableIntent.putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, 300);
-            startActivity(discoverableIntent);
-        }
     }
 
     /**
@@ -608,10 +595,15 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                     String writeMessage = new String(writeBuf);
                     mConversationArrayAdapter.add("Me:  " + writeMessage);
                     break;
-                case Constants.MESSAGE_READ:
+                case Constants.MESSAGE_READ: //메세지 여기로 받음
                     byte[] readBuf = (byte[]) msg.obj;
                     // construct a string from the valid bytes in the buffer
                     String readMessage = new String(readBuf, 0, msg.arg1);
+                    if(readMessage != null)
+                    {
+                        //  이런식으로 받으면 될 듯하다.
+                        textSO2.setText(readMessage);
+                    }
                     mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
                     break;
                 case Constants.MESSAGE_DEVICE_NAME:
