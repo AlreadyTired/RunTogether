@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.location.LocationManager;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -16,6 +17,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.kimhyunwoo.runtogether.MapUtil;
 import com.example.kimhyunwoo.runtogether.R;
 import com.example.kimhyunwoo.runtogether.upperactivity.UpperFragment;
 
@@ -30,6 +32,8 @@ public class MainActivity extends AppCompatActivity {
 
     android.support.v4.app.Fragment historys, main, friends;
 
+    MapUtil mapUtil;
+
     public LocationManager getLocationManager() {
         return manager;
     }
@@ -37,6 +41,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mapUtil = new MapUtil();
+
+        Configuration config = new Configuration();
+        config = mapUtil.setLocaleResources();
+        getBaseContext().getResources().updateConfiguration(
+                config,getBaseContext().getResources().getDisplayMetrics());
+
         setContentView(R.layout.activity_main);
 
 
