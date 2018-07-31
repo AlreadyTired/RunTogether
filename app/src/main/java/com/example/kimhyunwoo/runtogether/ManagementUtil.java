@@ -14,4 +14,8 @@ public class ManagementUtil {
     {
         editText.setHintTextColor(Color.parseColor(color));
     }
+    public boolean isEmailValid(CharSequence email)
+    {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
 }

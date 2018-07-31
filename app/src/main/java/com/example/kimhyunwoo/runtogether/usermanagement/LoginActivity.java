@@ -33,8 +33,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         registerButton = (TextView) findViewById(R.id.registerButton);         // 회원가입 버튼
         ForgetButton = (TextView) findViewById(R.id.forgetPasswordButton);
-        emailText = (EditText)findViewById(R.id.EmailText);
-        passwordText= (EditText)findViewById(R.id.passwordText);
+        emailText = (EditText)findViewById(R.id.LoginEmailText);
+        passwordText= (EditText)findViewById(R.id.LoginPasswordText);
         loginButton= (Button) findViewById(R.id.loginButton);
 
         registerButton.setOnClickListener(new View.OnClickListener()
@@ -51,7 +51,7 @@ public class LoginActivity extends AppCompatActivity {
         ForgetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent FindPasswordIntent = new Intent(LoginActivity.this,FindUserInfoActivity.class);      // ForgetPassword 버튼 눌렀을시 회원비밀번호찾기 액티비티로 넘어감
+                Intent FindPasswordIntent = new Intent(LoginActivity.this,FindPasswordActivity.class);      // ForgetPassword 버튼 눌렀을시 회원비밀번호찾기 액티비티로 넘어감
                 LoginActivity.this.startActivity(FindPasswordIntent);
             }
         });

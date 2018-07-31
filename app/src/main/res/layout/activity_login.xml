@@ -28,7 +28,7 @@
         </LinearLayout>
 
         <EditText
-            android:id="@+id/EmailText"
+            android:id="@+id/LoginEmailText"
             android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -41,7 +41,7 @@
             android:textColorHint="#ffffff" />
 
         <EditText
-            android:id="@+id/passwordText"
+            android:id="@+id/LoginPasswordText"
             android:layout_width="280dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
