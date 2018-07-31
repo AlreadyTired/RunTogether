@@ -60,7 +60,7 @@ public class FindPasswordActivity extends AppCompatActivity {
                     {
                         EmailFlag = false;
                     }
-                    if(Util.isEmailValid(temporarystring))
+                    if(isEmailValid(temporarystring))
                     {
                         EmailTextLayout.setErrorEnabled(true);
                         EmailTextLayout.setError("Email is not valid");
@@ -154,5 +154,10 @@ public class FindPasswordActivity extends AppCompatActivity {
         FindPasswordRequest FindPasswordRequest = new FindPasswordRequest(userEmail,reponseListener);           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
         RequestQueue queue = Volley.newRequestQueue(FindPasswordActivity.this);            // Volley의 사용법으로 request queue로 queue를 하나 선언하고
         queue.add(FindPasswordRequest);
+    }
+
+    boolean isEmailValid(CharSequence email)
+    {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
     }
 }

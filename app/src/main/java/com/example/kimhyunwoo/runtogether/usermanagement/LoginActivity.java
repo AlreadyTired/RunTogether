@@ -1,9 +1,13 @@
 package com.example.kimhyunwoo.runtogether.usermanagement;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,29 +17,163 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.example.kimhyunwoo.runtogether.ManagementUtil;
 import com.example.kimhyunwoo.runtogether.mainactivity.MainActivity;
 import com.example.kimhyunwoo.runtogether.R;
 
 import org.json.JSONObject;
+import org.w3c.dom.Text;
+
+import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity {
 
     // 다이얼로그는 비밀번호 틀렸을때 추가 메세지 띄우기 위함.
     private AlertDialog dialog;
+    private ManagementUtil Util;
+    private boolean EmailFlag,PasswordFlag;
     EditText emailText;
     EditText passwordText;
     Button loginButton;
     TextView ForgetButton;
     TextView registerButton;
+    TextInputLayout EmailTextLayout,PasswordTextLayout;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        EmailFlag = PasswordFlag = true;
         registerButton = (TextView) findViewById(R.id.registerButton);         // 회원가입 버튼
         ForgetButton = (TextView) findViewById(R.id.forgetPasswordButton);
-        emailText = (EditText)findViewById(R.id.LoginEmailText);
-        passwordText= (EditText)findViewById(R.id.LoginPasswordText);
+        emailText = (EditText)findViewById(R.id.LoginEmailText);emailText.setHint(" Email");
+        EmailTextLayout = (TextInputLayout)findViewById(R.id.LoginEmailTextLayout);
+        passwordText= (EditText)findViewById(R.id.LoginPasswordText);passwordText.setHint(" Password");
+        PasswordTextLayout = (TextInputLayout)findViewById(R.id.LoginpasswordTextLayout);
         loginButton= (Button) findViewById(R.id.loginButton);
+
+        emailText.addTextChangedListener(new TextWatcher() {
+            String temporarystring;
+            String ErrorMessage="";
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                temporarystring = emailText.getText().toString();
+                do {
+                    if(temporarystring.equals(""))
+                    {
+                        emailText.setHint(" Email");
+                        ErrorMessage = "Email is not Empty";
+                        EmailFlag = true;
+                        break;
+                    }
+                    else
+                    {
+                        EmailFlag = false;
+                    }
+                    if(isEmailValid(temporarystring)==false)
+                    {
+                        ErrorMessage = "Email is not valid";
+                        EmailFlag = true;
+                        break;
+                    }
+                    else
+                    {
+                        EmailFlag = false;
+                    }
+                    if(temporarystring.length()>50)
+                    {
+                        ErrorMessage = "Email is less than 50 letters";
+                        EmailFlag = true;
+                        break;
+                    }
+                    else
+                    {
+                        EmailFlag = false;
+                    }
+
+                }while(false);
+                if(EmailFlag)
+                {
+                    EmailTextLayout.setErrorEnabled(true);
+                    EmailTextLayout.setError(ErrorMessage);
+                }
+                else
+                {
+                    EmailTextLayout.setErrorEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
+        passwordText.addTextChangedListener(new TextWatcher() {
+            private String temporarystring;
+            private String ErrorMessage = "";
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                temporarystring = passwordText.getText().toString();
+                do {
+                    if(temporarystring.equals(""))
+                    {
+                        passwordText.setHint(" Password");
+                        ErrorMessage = "Please enter the Password";
+                        PasswordFlag = true;
+                        break;
+                    }
+                    else
+                    {
+                        PasswordFlag = false;
+                    }
+
+                    if(temporarystring.length() < 8 || temporarystring.length() > 50)
+                    {
+                        ErrorMessage = "Password is more than 8 letters and less than 50 letters";
+                        PasswordFlag = true;
+                        break;
+                    }
+                    else
+                    {
+                        PasswordFlag = false;
+                    }
+
+                    if(!Pattern.matches("(?=.*[a-z])(?=.*[0-9])[a-z0-9]{8,50}", temporarystring)) {
+                        ErrorMessage = "password should be mixing with small English letter and number";
+                        PasswordFlag = true;
+                        break;
+                    }
+                    else
+                    {
+                        PasswordFlag = false;
+                    }
+                }while(false);
+                if(PasswordFlag)
+                {
+                    PasswordTextLayout.setErrorEnabled(true);
+                    PasswordTextLayout.setError(ErrorMessage);
+                }
+                else
+                {
+                    PasswordTextLayout.setErrorEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
 
         registerButton.setOnClickListener(new View.OnClickListener()
         {
@@ -64,13 +202,31 @@ public class LoginActivity extends AppCompatActivity {
                 String userEmail = emailText.getText().toString();
                 String userPassword = passwordText.getText().toString();
 
-
                 /*
                 // @#$#@#$#@#$#@#$#@#$#@#$#@$#@#$#@#$#@#$#@#$#@#$#@#@#$@#$로그인 없이 돌아가는가 확인하기위해 넣어놨음 지워야함@#$#@$#@#$#@#$#@#$#@#$#@#$#@#$#@#$#@#$#@#$
                 Intent intent = new Intent(LoginActivity.this,MainActivity.class);      // 로그인 성공으로 메인화면으로 넘어감.
                 LoginActivity.this.startActivity(intent);
 
                 */
+                if(EmailFlag)
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);      // 로그인 실패로 알림을 띄움
+                    dialog = builder.setMessage("Please, Chech again Email address")
+                            .setNegativeButton("Try Again",null)
+                            .create();
+                    dialog.show();
+                    return;
+                }
+
+                if(PasswordFlag)
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);      // 로그인 실패로 알림을 띄움
+                    dialog = builder.setMessage("Please, Chech again Password")
+                            .setNegativeButton("Try Again",null)
+                            .create();
+                    dialog.show();
+                    return;
+                }
 
                 // Volley 사용하기 위한 리스너 정의.
                 Response.Listener<String> reponseListener = new Response.Listener<String>() {
@@ -120,5 +276,12 @@ public class LoginActivity extends AppCompatActivity {
             dialog.dismiss();
             dialog=null;
         }
+        Util = null;
     }
+
+    boolean isEmailValid(CharSequence email)
+    {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
+
 }

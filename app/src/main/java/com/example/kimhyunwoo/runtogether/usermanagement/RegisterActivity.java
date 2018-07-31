@@ -145,7 +145,7 @@ public class RegisterActivity extends AppCompatActivity {
                         EmailFlag = false;
                     }
 
-                    if(Util.isEmailValid(temporarystring)==false)
+                    if(isEmailValid(temporarystring)==false)
                     {
                         emailTextLayout.setErrorEnabled(true);
                         emailTextLayout.setError("Email is not valid");
@@ -489,5 +489,8 @@ public class RegisterActivity extends AppCompatActivity {
         Util = null;
     }
 
-
+    boolean isEmailValid(CharSequence email)
+    {
+        return android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+    }
 }
