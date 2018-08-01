@@ -1,5 +1,7 @@
 package com.example.kimhyunwoo.runtogether.usermanagement;
 
+import android.content.Context;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -19,11 +21,18 @@ public class RegisterRequest extends StringRequest{
     final static private String URL = serverURL+registerURL;
     private Map<String,String> parameters;
 
-    public RegisterRequest(String userEmail,String userPassword, String userGender, String userNickname,String userAge,Response.Listener<String> listener){
+    public RegisterRequest(String userEmail, String userPassword, String userGender, String userNickname, String userAge, Response.Listener<String> listener, final Context context){
         super(Request.Method.POST,URL,listener,new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.v("volley Error",error.getMessage().toString());
+                AlertDialog dialog;
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                dialog = builder.setMessage("Connect Error, Please Try again later")
+                        .setNegativeButton("OK", null)
+                        .create();
+                dialog.show();
+                return;
+
             }
         });
         parameters = new HashMap<>();

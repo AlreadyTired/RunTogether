@@ -294,8 +294,8 @@ public class PasswordChangeActivity extends AppCompatActivity {
                         {
                             // JSON 형식으로 값을 response 에 받아서 넘어온다.
                             JSONObject jsonResponse = new JSONObject(response);
-                            boolean success = jsonResponse.getBoolean("success");               // success 이름으로 boolean 타입의 값이 넘어온다
-                            if(success)
+                            String message = jsonResponse.getString("message");               // success 이름으로 boolean 타입의 값이 넘어온다
+                            if(message.equals("ok"))
                             {
                                 Toast.makeText(PasswordChangeActivity.this, "Password Change Success", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(PasswordChangeActivity.this,MainActivity.class);      // 로그인 성공으로 메인화면으로 넘어감.
@@ -304,7 +304,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
                             else
                             {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(PasswordChangeActivity.this);      // 로그인 실패로 알림을 띄움
-                                dialog = builder.setMessage("Please, Check Again Password")
+                                dialog = builder.setMessage(message)
                                         .setNegativeButton("Try Again",null)
                                         .create();
                                 dialog.show();
@@ -316,7 +316,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
                         }
                     }
                 };
-                PasswordChangeRequest PasswordChangeRequest = new PasswordChangeRequest(userPresentPassword,userNewPassword,reponseListener);           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
+                PasswordChangeRequest PasswordChangeRequest = new PasswordChangeRequest(userPresentPassword,userNewPassword,reponseListener,PasswordChangeActivity.this);           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
                 RequestQueue queue = Volley.newRequestQueue(PasswordChangeActivity.this);            // Volley의 사용법으로 request queue로 queue를 하나 선언하고
                 queue.add(PasswordChangeRequest);
             }
