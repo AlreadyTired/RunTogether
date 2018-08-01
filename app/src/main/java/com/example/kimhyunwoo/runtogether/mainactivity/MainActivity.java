@@ -15,10 +15,12 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.kimhyunwoo.runtogether.MapUtil;
 import com.example.kimhyunwoo.runtogether.R;
+import com.example.kimhyunwoo.runtogether.UserInfo;
 import com.example.kimhyunwoo.runtogether.upperactivity.UpperFragment;
 
 import java.util.ArrayList;
@@ -50,6 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
+        Log.v("UserEmail", UserInfo.getUserEmail());
 
         //  상단바 연결
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -86,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
 
         //  어뎁터를 페이저 위젯 연결
         pager.setAdapter(adapter);
+        pager.setCurrentItem(adapter.getCount()-2);
         //  페이저 변경 됬을 때 변경해주는 리스너
         pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tab));
 

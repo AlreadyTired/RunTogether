@@ -17,12 +17,11 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.kimhyunwoo.runtogether.ManagementUtil;
 import com.example.kimhyunwoo.runtogether.R;
-import com.example.kimhyunwoo.runtogether.mainactivity.MainActivity;
 
 import org.json.JSONObject;
 
 public class FindPasswordActivity extends AppCompatActivity {
-    private EditText EmailText;
+    EditText EmailText;
     private String userEmail;
     private TextInputLayout EmailTextLayout;
     private Button FindPasswordButton;
@@ -35,8 +34,9 @@ public class FindPasswordActivity extends AppCompatActivity {
         setContentView(R.layout.activity_find_user_info);
         EmailText = (EditText)findViewById(R.id.FindPasswordEmailText);EmailText.setHint(" Email");
         EmailTextLayout = (TextInputLayout)findViewById(R.id.FindPasswordEmailTextLayout);
-        FindPasswordButton = (Button)findViewById(R.id.FindPasswordButton);
+        FindPasswordButton = (Button)findViewById(R.id.PasswordChangeButton);
         EmailFlag = true;
+        Util = new ManagementUtil();
         EmailText.addTextChangedListener(new TextWatcher() {
             private String temporarystring;
             @Override
@@ -60,7 +60,7 @@ public class FindPasswordActivity extends AppCompatActivity {
                     {
                         EmailFlag = false;
                     }
-                    if(isEmailValid(temporarystring))
+                    if(isEmailValid(temporarystring)==false)
                     {
                         EmailTextLayout.setErrorEnabled(true);
                         EmailTextLayout.setError("Email is not valid");
@@ -115,45 +115,43 @@ public class FindPasswordActivity extends AppCompatActivity {
                     return;
                 }
 
+                Response.Listener<String> reponseListener = new Response.Listener<String>() {
 
+                    // Volley 를 통해서 정상적으로 웹서버와 통신이 되면 실행되는 함수
+                    @Override
+                    public void onResponse(String response)
+                    {
+                        try
+                        {
+                            // JSON 형식으로 값을 response 에 받아서 넘어온다.
+                            JSONObject jsonResponse = new JSONObject(response);
+                            String message = jsonResponse.getString("message");               // success 이름으로 boolean 타입의 값이 넘어온다
+                            if(message.equals("ok"))
+                            {
+                                Toast.makeText(FindPasswordActivity.this, "Success!", Toast.LENGTH_SHORT).show();
+                                Intent intent = new Intent(FindPasswordActivity.this,LoginActivity.class);      // 성공으로 화면으로 넘어감.
+                                FindPasswordActivity.this.startActivity(intent);
+                            }
+                            else
+                            {
+                                AlertDialog.Builder builder = new AlertDialog.Builder(FindPasswordActivity.this);      // 로그인 실패로 알림을 띄움
+                                dialog = builder.setMessage(message)
+                                        .setNegativeButton("Try Again",null)
+                                        .create();
+                                dialog.show();
+                            }
+                        }
+                        catch(Exception e)
+                        {
+                            e.printStackTrace();
+                        }
+                    }
+                };
+                FindPasswordRequest FindPasswordRequest = new FindPasswordRequest(userEmail,reponseListener,FindPasswordActivity.this);           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
+                RequestQueue queue = Volley.newRequestQueue(FindPasswordActivity.this);            // Volley의 사용법으로 request queue로 queue를 하나 선언하고
+                queue.add(FindPasswordRequest);
             }
         });
-
-        Response.Listener<String> reponseListener = new Response.Listener<String>() {
-
-            // Volley 를 통해서 정상적으로 웹서버와 통신이 되면 실행되는 함수
-            @Override
-            public void onResponse(String response)
-            {
-                try
-                {
-                    // JSON 형식으로 값을 response 에 받아서 넘어온다.
-                    JSONObject jsonResponse = new JSONObject(response);
-                    boolean success = jsonResponse.getBoolean("success");               // success 이름으로 boolean 타입의 값이 넘어온다
-                    if(success)
-                    {
-                        Toast.makeText(FindPasswordActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(FindPasswordActivity.this,LoginActivity.class);      // 로그인 성공으로 메인화면으로 넘어감.
-                        FindPasswordActivity.this.startActivity(intent);
-                    }
-                    else
-                    {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(FindPasswordActivity.this);      // 로그인 실패로 알림을 띄움
-                        dialog = builder.setMessage("Please, Check Acount")
-                                .setNegativeButton("Try Again",null)
-                                .create();
-                        dialog.show();
-                    }
-                }
-                catch(Exception e)
-                {
-                    e.printStackTrace();
-                }
-            }
-        };
-        FindPasswordRequest FindPasswordRequest = new FindPasswordRequest(userEmail,reponseListener);           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
-        RequestQueue queue = Volley.newRequestQueue(FindPasswordActivity.this);            // Volley의 사용법으로 request queue로 queue를 하나 선언하고
-        queue.add(FindPasswordRequest);
     }
 
     boolean isEmailValid(CharSequence email)

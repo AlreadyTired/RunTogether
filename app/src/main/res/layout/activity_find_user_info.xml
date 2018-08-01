@@ -51,7 +51,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:layout_marginBottom="15dp"
                 android:drawableLeft="@drawable/ic_local_post_office_black_24dp"
                 android:drawableStart="@drawable/ic_local_post_office_black_24dp"
                 android:padding="10dp"
@@ -63,11 +62,12 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:textSize="15dp"
+            android:layout_marginTop="10dp"
             android:textStyle="bold"
             android:background="@color/colorPrimaryDark"
-            android:text="Duplicate Check &amp; Send Mail"
+            android:text="RESET PASSWORD &amp; SEND MAIL"
             android:layout_gravity="center"
-            android:id="@+id/FindPasswordButton"
+            android:id="@+id/PasswordChangeButton"
             android:textColor="#ffffff"/>
     </LinearLayout>
 

@@ -223,7 +223,7 @@ public class IDcancellationActivity extends AppCompatActivity {
                         }
                     }
                 };
-                IDCancellateRequest cancellateRequest = new IDCancellateRequest(userPassword,reponseListener);           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
+                IDCancellateRequest cancellateRequest = new IDCancellateRequest(userPassword,reponseListener,IDcancellationActivity.this);           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
                 RequestQueue queue = Volley.newRequestQueue(IDcancellationActivity.this);            // Volley의 사용법으로 request queue로 queue를 하나 선언하고
                 queue.add(cancellateRequest);
             }

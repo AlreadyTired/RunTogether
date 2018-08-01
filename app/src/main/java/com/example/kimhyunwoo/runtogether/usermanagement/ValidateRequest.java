@@ -1,5 +1,7 @@
 package com.example.kimhyunwoo.runtogether.usermanagement;
 
+import android.content.Context;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -20,13 +22,19 @@ public class ValidateRequest extends StringRequest{
     final static private String URL = serverURL + validateURL;
     private Map<String,String> parameters;
 
-    public ValidateRequest(String userEmail,Response.Listener<String> listener){
+    public ValidateRequest(String userEmail, Response.Listener<String> listener, final Context context){
         super(Request.Method.POST, URL, listener,
                 new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-
-                        Log.v("volley Error",error.getMessage().toString());
+                        Log.v("VolleyError",error.getMessage().toString());
+                        AlertDialog dialog;
+                        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                        dialog = builder.setMessage("Connect Error, Please Try again later")
+                                .setNegativeButton("OK", null)
+                                .create();
+                        dialog.show();
+                        return;
                     }
                 });
         parameters = new HashMap<>();
