@@ -10,12 +10,14 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.widget.Toast;
 
 import com.example.kimhyunwoo.runtogether.R;
+import com.example.kimhyunwoo.runtogether.upperactivity.UpperFragment;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +38,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+
+        //  상단바 연결
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.add(R.id.frag_upper, new UpperFragment());
+        fragmentTransaction.commit();
 
         //  Context에 있는 location 상수 알려주기
         manager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);

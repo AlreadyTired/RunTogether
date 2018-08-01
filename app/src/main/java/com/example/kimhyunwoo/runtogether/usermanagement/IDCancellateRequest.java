@@ -4,6 +4,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +22,14 @@ public class IDCancellateRequest extends StringRequest
     {
         super(Request.Method.POST,URL,listener,null);
         parameters = new HashMap<>();
-        parameters.put("userPassword",userPassword);
+        JSONObject informationObject = new JSONObject();
+        try{
+            informationObject.put("userPassword",userPassword);
+        }catch(JSONException e)
+        {
+            e.printStackTrace();
+        }
+        parameters.put("json",informationObject.toString());
     }
 
     public Map<String,String>getParams()

@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -431,10 +432,11 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
-                            boolean success = jsonResponse.getBoolean("success");
+                            String success = jsonResponse.getString("message");
 
-                            if (success)
+                            if (success=="ok")
                             {
+                                Log.v("Enter!","success");
                                 Response.Listener<String> RegisterresponseListener = new Response.Listener<String>() {
                                     @Override
                                     public void onResponse(String response) {
@@ -462,7 +464,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Registerqueue.add(registerRequest);
                             } else {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
-                                dialog = builder.setMessage("You can not use this Email")
+                                dialog = builder.setMessage(success)
                                         .setNegativeButton("OK", null)
                                         .create();
                                 dialog.show();
