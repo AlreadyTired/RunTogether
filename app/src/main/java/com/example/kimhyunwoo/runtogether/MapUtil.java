@@ -1,7 +1,15 @@
 package com.example.kimhyunwoo.runtogether;
 
+import android.content.Context;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.os.Build;
+import android.preference.PreferenceManager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 
+import com.example.kimhyunwoo.runtogether.mainactivity.MainActivity;
+import com.example.kimhyunwoo.runtogether.mainactivity.MainFragment;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMapOptions;
 import com.google.android.gms.maps.model.LatLng;
@@ -9,8 +17,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 
+import java.util.Locale;
+
 public class MapUtil {
-    private String TAG = "MapUtil TAG : ";
+    private final String TAG = "MapUtil TAG : ";
+    private final String DEFAULT_LOCALE_STRING = "en_US";
 
     public  int zoomLevel = 18;
 
@@ -41,4 +52,15 @@ public class MapUtil {
         }
         delete = map.addMarker(markerOptions);
     }
+
+    public Configuration setLocaleResources() {
+        String languageToLoad = DEFAULT_LOCALE_STRING;
+        Locale locale = new Locale(languageToLoad);
+        Locale.setDefault(locale);
+        Configuration config = new Configuration();
+        config.locale = locale;
+
+        return config;
+    }
+
 }
