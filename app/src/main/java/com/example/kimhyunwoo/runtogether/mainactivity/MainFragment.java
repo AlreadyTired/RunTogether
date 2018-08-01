@@ -6,8 +6,12 @@ import android.app.ActionBar;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.companion.AssociationRequest;
+import android.companion.BluetoothDeviceFilter;
+import android.companion.CompanionDeviceManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
@@ -16,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.ParcelUuid;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -34,6 +39,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.kimhyunwoo.runtogether.BluetoothSingleton;
+import com.example.kimhyunwoo.runtogether.BluetoothUtil;
 import com.example.kimhyunwoo.runtogether.MapUtil;
 import com.example.kimhyunwoo.runtogether.R;
 import com.example.kimhyunwoo.runtogether.bluetoothmanagement.BluetoothChatService;
@@ -49,6 +55,12 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.SphericalUtil;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.UUID;
+import java.util.regex.Pattern;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,7 +72,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     //===================================================================
     //  구글 맵 변수
 
-    MapUtil util = null;
+    MapUtil mapUtil = null;
 
     LocationManager manager;
 
@@ -88,10 +100,18 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
     //===================================================================
     TextView textSO2;
+    TextView textPM25;
+
+    private CompanionDeviceManager mDeviceManager;
+    private AssociationRequest mPairingRequest;
+    private BluetoothDeviceFilter mDeviceFilter;
+
+    private static final int SELECT_DEVICE_REQUEST_CODE = 42;
+
 
     //  블루투스 변수
     Button bt_list;
-
+    BluetoothUtil btUtil;
     private static final String TAG = "BluetoothChatFragment";
 
     // Intent request codes
@@ -99,7 +119,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     private static final int REQUEST_CONNECT_DEVICE_INSECURE = 2;
     private static final int REQUEST_ENABLE_BT = 3;
 
-    // Layout Views
+    // Layout View
     private EditText mOutEditText;
     private Button mSendButton;
 
@@ -160,6 +180,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
 
         textSO2 = view.findViewById(R.id.txt_so2);
+        textPM25 = view.findViewById(R.id.txt_pm25);
 
         //===========================================================
         bt_list = (Button)view.findViewById(R.id.btn_list);
@@ -270,6 +291,17 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                     Toast.makeText(getActivity(), "Sending Friend request!\n to "+id ,Toast.LENGTH_LONG).show();
                 }
         }
+
+        if (requestCode == SELECT_DEVICE_REQUEST_CODE &&
+                resultCode == Activity.RESULT_OK) {
+            // User has chosen to pair with the Bluetooth device.
+            BluetoothDevice deviceToPair =
+                    data.getParcelableExtra(CompanionDeviceManager.EXTRA_DEVICE);
+            deviceToPair.createBond();
+
+            // ... Continue interacting with the paired device.
+        }
+
     }
 
     @Override
@@ -350,14 +382,14 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
             if(exercisingFlag == true) {
                 // 라인 그리기
-                util.polylineOnMap(map, savedCoordinate, currentCoordinate);
+                mapUtil.polylineOnMap(map, savedCoordinate, currentCoordinate);
                 savedCoordinate = currentCoordinate;
             }
 
             //  마커 삭제
-            util.deleteMarker(map, markerOptions);
+            mapUtil.deleteMarker(map, markerOptions);
 
-            map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentCoordinate,util.zoomLevel));
+            map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentCoordinate,mapUtil.zoomLevel));
 
             //  디버깅 용
             Context context = getActivity().getApplicationContext();
@@ -389,8 +421,10 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         //  Set google map util
-        util = new MapUtil();
+        mapUtil = new MapUtil();
         btSingletion = BluetoothSingleton.getInstance();
+        btUtil = new BluetoothUtil();
+
 
         // Get local Bluetooth adapter
         btSingletion.mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -400,6 +434,37 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             FragmentActivity activity = getActivity();
             Toast.makeText(activity, "Bluetooth is not available", Toast.LENGTH_LONG).show();
             activity.finish();
+
+            //  ====================
+//        mDeviceManager = getActivity().getSystemService(CompanionDeviceManager.class);
+//
+//        // To skip filtering based on name and supported feature flags (UUIDs),
+//        // don't include calls to setNamePattern() and addServiceUuid(),
+//        // respectively. This example uses Bluetooth.
+//        mDeviceFilter = new BluetoothDeviceFilter.Builder()
+//                .setNamePattern(Pattern.compile("My device"))
+//                .addServiceUuid(new ParcelUuid(new UUID(0x123abcL, -1L)))
+//                .build();
+//
+//        // The argument provided in setSingleDevice() determines whether a single
+//        // device name or a list of device names is presented to the user as
+//        // pairing options.
+//        mPairingRequest = new AssociationRequest.Builder()
+//                .addDeviceFilter(mDeviceFilter)
+//                .setSingleDevice(true)
+//                .build();
+//
+//        // When the app tries to pair with the Bluetooth device, show the
+//        // appropriate pairing request dialog to the user.
+//        mDeviceManager.associate(mPairingRequest,
+//                new CompanionDeviceManager.Callback() {
+//                    @Override
+//                    public void onDeviceFound(IntentSender chooserLauncher) {
+//                        startIntentSenderForResult(chooserLauncher,
+//                                SELECT_DEVICE_REQUEST_CODE, null, 0, 0, 0);
+//                    }
+//                },
+//                null);
         }
     }
 
@@ -571,8 +636,18 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                     String readMessage = new String(readBuf, 0, msg.arg1);
                     if(readMessage != null)
                     {
-                        //  이런식으로 받으면 될 듯하다.
-                        textSO2.setText(readMessage);
+                        String parsingResult = null;
+                        try {
+                            parsingResult = btUtil.airDataJsonParsing(readMessage);
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                        if(parsingResult != null) {
+                            String[] parsing = parsingResult.split(",");
+                            //  이런식으로 받으면 될 듯하다.
+                            textSO2.setText(parsing[0]);
+                            textPM25.setText(parsing[1]);
+                        }
                     }
                     mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
                     break;

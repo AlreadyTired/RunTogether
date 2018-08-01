@@ -63,7 +63,7 @@ public class UpperFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 Intent serverIntent = new Intent(getActivity(), DeviceListActivity.class);
-                startActivityForResult(serverIntent, 2);
+                startActivityForResult(serverIntent, REQUEST_CONNECT_DEVICE_INSECURE);
             }
         });
 
