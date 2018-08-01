@@ -54,6 +54,8 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.maps.android.SphericalUtil;
+import com.hsalf.smilerating.BaseRating;
+import com.hsalf.smilerating.SmileRating;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -146,6 +148,11 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     public MainFragment() {
         // Required empty public constructor
     }
+    private SmileRating srCO;
+    private SmileRating srSO2;
+    private SmileRating srNO2;
+    private SmileRating srO3;
+    private SmileRating srPM25;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -192,8 +199,16 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             }
         });
 
+        //===========================================================
+        MainAllDataChart(view);
+
         return view;
     }
+
+    public void onRatingSelected(int level, boolean reselected) {
+        Log.i(TAG, "Rated as: " + level + " - " + reselected);
+    }
+
 
     @Override
     public void onClick(View v) {
@@ -424,6 +439,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         mapUtil = new MapUtil();
         btSingletion = BluetoothSingleton.getInstance();
         btUtil = new BluetoothUtil();
+
 
 
         // Get local Bluetooth adapter
@@ -668,4 +684,149 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             }
         }
     };
+
+    public void MainAllDataChart(View v){
+        //smile
+        srCO = v.findViewById(R.id.rv_co);
+        srCO.setSelectedSmile(srCO.BAD);
+        srCO.setOnSmileySelectionListener(new SmileRating.OnSmileySelectionListener() {
+            @Override
+            public void onSmileySelected(@BaseRating.Smiley int smiley, boolean reselected) {
+                // reselected is false when user selects different smiley that previously selected one
+                // true when the same smiley is selected.
+                // Except if it first time, then the value will be false.
+                switch (smiley) {
+                    case SmileRating.BAD:
+                        Log.i(TAG, "Bad");
+                        break;
+                    case SmileRating.GOOD:
+                        Log.i(TAG, "Good");
+                        break;
+                    case SmileRating.GREAT:
+                        Log.i(TAG, "Great");
+                        break;
+                    case SmileRating.OKAY:
+                        Log.i(TAG, "Okay");
+                        break;
+                    case SmileRating.TERRIBLE:
+                        Log.i(TAG, "Terrible");
+                        break;
+                }
+            }
+        });
+
+        srSO2 = v.findViewById(R.id.rv_so2);
+        srSO2.setSelectedSmile(srSO2.BAD);
+        srSO2.setOnSmileySelectionListener(new SmileRating.OnSmileySelectionListener() {
+            @Override
+            public void onSmileySelected(@BaseRating.Smiley int smiley, boolean reselected) {
+                // reselected is false when user selects different smiley that previously selected one
+                // true when the same smiley is selected.
+                // Except if it first time, then the value will be false.
+                switch (smiley) {
+                    case SmileRating.BAD:
+                        Log.i(TAG, "Bad");
+                        break;
+                    case SmileRating.GOOD:
+                        Log.i(TAG, "Good");
+                        break;
+                    case SmileRating.GREAT:
+                        Log.i(TAG, "Great");
+                        break;
+                    case SmileRating.OKAY:
+                        Log.i(TAG, "Okay");
+                        break;
+                    case SmileRating.TERRIBLE:
+                        Log.i(TAG, "Terrible");
+                        break;
+                }
+            }
+        });
+
+        srNO2 = v.findViewById(R.id.rv_no2);
+        srNO2.setSelectedSmile(srNO2.BAD);
+        srNO2.setOnSmileySelectionListener(new SmileRating.OnSmileySelectionListener() {
+            @Override
+            public void onSmileySelected(@BaseRating.Smiley int smiley, boolean reselected) {
+                // reselected is false when user selects different smiley that previously selected one
+                // true when the same smiley is selected.
+                // Except if it first time, then the value will be false.
+                switch (smiley) {
+                    case SmileRating.BAD:
+                        Log.i(TAG, "Bad");
+                        break;
+                    case SmileRating.GOOD:
+                        Log.i(TAG, "Good");
+                        break;
+                    case SmileRating.GREAT:
+                        Log.i(TAG, "Great");
+                        break;
+                    case SmileRating.OKAY:
+                        Log.i(TAG, "Okay");
+                        break;
+                    case SmileRating.TERRIBLE:
+                        Log.i(TAG, "Terrible");
+                        break;
+                }
+            }
+        });
+
+        srO3 = v.findViewById(R.id.rv_o3);
+        srO3.setSelectedSmile(srO3.BAD);
+        srO3.setOnSmileySelectionListener(new SmileRating.OnSmileySelectionListener() {
+            @Override
+            public void onSmileySelected(@BaseRating.Smiley int smiley, boolean reselected) {
+                // reselected is false when user selects different smiley that previously selected one
+                // true when the same smiley is selected.
+                // Except if it first time, then the value will be false.
+                switch (smiley) {
+                    case SmileRating.BAD:
+                        Log.i(TAG, "Bad");
+                        break;
+                    case SmileRating.GOOD:
+                        Log.i(TAG, "Good");
+                        break;
+                    case SmileRating.GREAT:
+                        Log.i(TAG, "Great");
+                        break;
+                    case SmileRating.OKAY:
+                        Log.i(TAG, "Okay");
+                        break;
+                    case SmileRating.TERRIBLE:
+                        Log.i(TAG, "Terrible");
+                        break;
+                }
+            }
+        });
+
+        srPM25 = v.findViewById(R.id.rv_pm25);
+        srPM25.setSelectedSmile(srPM25.BAD);
+        srPM25.setOnSmileySelectionListener(new SmileRating.OnSmileySelectionListener() {
+            @Override
+            public void onSmileySelected(@BaseRating.Smiley int smiley, boolean reselected) {
+                // reselected is false when user selects different smiley that previously selected one
+                // true when the same smiley is selected.
+                // Except if it first time, then the value will be false.
+                switch (smiley) {
+                    case SmileRating.BAD:
+                        Log.i(TAG, "Bad");
+                        break;
+                    case SmileRating.GOOD:
+                        Log.i(TAG, "Good");
+                        break;
+                    case SmileRating.GREAT:
+                        Log.i(TAG, "Great");
+                        break;
+                    case SmileRating.OKAY:
+                        Log.i(TAG, "Okay");
+                        break;
+                    case SmileRating.TERRIBLE:
+                        Log.i(TAG, "Terrible");
+                        break;
+                }
+            }
+        });
+
+        //smile end
+    }
 }
