@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".usermanagement.FindUserInfoActivity"
+    tools:context=".usermanagement.FindPasswordActivity"
     android:orientation="vertical"
     android:background="@drawable/gradient_background"
     android:theme="@style/AppTheme.NoActionBar"
@@ -42,17 +42,22 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_weight="1">
-        <EditText
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/FindPasswordEmailTextLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="15dp"
-            android:drawableLeft="@drawable/ic_local_post_office_black_24dp"
-            android:drawableStart="@drawable/ic_local_post_office_black_24dp"
-            android:hint="Email"
-            android:padding="10dp"
-            android:textColor="#ffffff"
-            android:textColorHint="#ffffff"/>
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/FindPasswordEmailText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="15dp"
+                android:drawableLeft="@drawable/ic_local_post_office_black_24dp"
+                android:drawableStart="@drawable/ic_local_post_office_black_24dp"
+                android:padding="10dp"
+                android:textColor="#ffffff"
+                android:textColorHint="#ffffff"/>
+        </android.support.design.widget.TextInputLayout>
 
         <Button
             android:layout_width="match_parent"
@@ -62,7 +67,7 @@
             android:background="@color/colorPrimaryDark"
             android:text="Duplicate Check &amp; Send Mail"
             android:layout_gravity="center"
-            android:id="@+id/validateButton"
+            android:id="@+id/FindPasswordButton"
             android:textColor="#ffffff"/>
     </LinearLayout>
 

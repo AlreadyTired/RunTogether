@@ -7,6 +7,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,11 +27,20 @@ public class RegisterRequest extends StringRequest{
             }
         });
         parameters = new HashMap<>();
-        parameters.put("userEmail",userEmail);
-        parameters.put("userPassword",userPassword);
-        parameters.put("userGender",userGender);
-        parameters.put("userNickname",userNickname);
-        parameters.put("userAge",userAge);
+        JSONObject informationObject = new JSONObject();
+        try{
+            informationObject.put("userEmail",userEmail);
+            informationObject.put("userPassword",userPassword);
+            informationObject.put("userGender",userGender);
+            informationObject.put("userNickname",userNickname);
+            informationObject.put("userAge",userAge);
+        }catch(JSONException e)
+        {
+            e.printStackTrace();
+        }
+
+        parameters.put("json",informationObject.toString());
+        Log.v("parameters",parameters.toString());
     }
 
     @Override

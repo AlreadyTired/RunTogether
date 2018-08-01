@@ -22,8 +22,9 @@
         android:theme="@style/AppTheme.NoActionBar">
         <activity
             android:name=".mainactivity.MainActivity"
+            android:theme="@style/AppTheme.NoActionBar"
             android:configChanges="orientation|keyboardHidden"
-            android:theme="@style/AppTheme.NoActionBar">
+            >
         </activity>
         <activity
             android:name=".usermanagement.LoginActivity"
@@ -55,9 +56,10 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".usermanagement.FindUserInfoActivity"
+            android:name=".usermanagement.FindPasswordActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".usermanagement.PasswordChangeActivity" />
+        <activity android:name=".usermanagement.IDcancellationActivity"/>
         <activity
             android:name=".upperactivity.MyAccountActivity"
             android:configChanges="orientation|keyboardHidden"

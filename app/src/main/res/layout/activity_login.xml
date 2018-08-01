@@ -27,32 +27,40 @@
                 android:src="@drawable/rui" />
         </LinearLayout>
 
-        <EditText
-            android:id="@+id/EmailText"
-            android:layout_width="280dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="50dp"
-            android:drawableLeft="@drawable/ic_person_black_24dp"
-            android:drawableStart="@drawable/ic_person_black_24dp"
-            android:hint=" Email"
-            android:padding="10dp"
-            android:textColor="#ffffff"
-            android:textColorHint="#ffffff" />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/LoginEmailTextLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/LoginEmailText"
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="50dp"
+                android:drawableLeft="@drawable/ic_person_black_24dp"
+                android:drawableStart="@drawable/ic_person_black_24dp"
+                android:padding="10dp"
+                android:textColor="#ffffff"
+                android:textColorHint="#ffffff" />
+        </android.support.design.widget.TextInputLayout>
 
-        <EditText
-            android:id="@+id/passwordText"
-            android:layout_width="280dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="10dp"
-            android:drawableLeft="@drawable/ic_https_black_24dp"
-            android:drawableStart="@drawable/ic_https_black_24dp"
-            android:hint="Password"
-            android:inputType="textPassword"
-            android:padding="10dp"
-            android:textColor="#ffffff"
-            android:textColorHint="#ffffff" />
+        <android.support.design.widget.TextInputLayout
+            android:id="@+id/LoginpasswordTextLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/LoginPasswordText"
+                android:layout_width="280dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:drawableLeft="@drawable/ic_https_black_24dp"
+                android:drawableStart="@drawable/ic_https_black_24dp"
+                android:inputType="textPassword"
+                android:padding="10dp"
+                android:textColor="#ffffff"
+                android:textColorHint="#ffffff" />
+        </android.support.design.widget.TextInputLayout>
 
         <Button
             android:id="@+id/loginButton"
