@@ -1,14 +1,13 @@
 package com.example.kimhyunwoo.runtogether.usermanagement;
 
-import android.graphics.Color;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,13 +24,10 @@ import com.example.kimhyunwoo.runtogether.ManagementUtil;
 import com.example.kimhyunwoo.runtogether.R;
 
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
-
-import static com.example.kimhyunwoo.runtogether.ServerInfo.serverURL;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -92,8 +88,8 @@ public class RegisterActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        emailText = (EditText) findViewById(R.id.EmailText);emailText.setHint("Email");
-        passwordText = (EditText) findViewById(R.id.passwordText);passwordText.setHint("Password");
+        emailText = (EditText) findViewById(R.id.LoginEmailText);emailText.setHint("Email");
+        passwordText = (EditText) findViewById(R.id.LoginPasswordText);passwordText.setHint("Password");
         NicknameText = (EditText) findViewById(R.id.NicknameText);NicknameText.setHint("Nickname");
         confirmpasswordText = (EditText) findViewById(R.id.confirmpassword);confirmpasswordText.setHint("Confirm Password");
         emailTextLayout = (TextInputLayout)findViewById(R.id.emailTextInputLayout);
@@ -138,7 +134,7 @@ public class RegisterActivity extends AppCompatActivity {
                         EmailFlag = false;
                     }
 
-                    if(temporarystring.length()>49)
+                    if(temporarystring.length()>50)
                     {
                         emailTextLayout.setErrorEnabled(true);
                         emailTextLayout.setError("Email can't exceed 50 letters");
@@ -226,7 +222,7 @@ public class RegisterActivity extends AppCompatActivity {
                         ConfirmPasswordFlag = false;
                     }
 
-                    if(!Pattern.matches("(?=.*[a-z])(?=.*[0-9])[a-z0-9]{8,20}", temporarystring)) {
+                    if(!Pattern.matches("(?=.*[a-z])(?=.*[0-9])[a-z0-9]{8,50}", temporarystring)) {
                         passwordTextLayout.setErrorEnabled(true);
                         passwordTextLayout.setError("password should be mixing with small English letter and number");
                         PasswordFlag = true;
@@ -281,6 +277,10 @@ public class RegisterActivity extends AppCompatActivity {
                         confirmPasswordTextLayout.setError("Please enter the Confirm Password");
                         ConfirmPasswordFlag = true;
                         break;
+                    }
+                    else
+                    {
+                        ConfirmPasswordFlag = false;
                     }
                     if(!passwordText.getText().toString().equals(temporarystring))
                     {
@@ -384,7 +384,6 @@ public class RegisterActivity extends AppCompatActivity {
                 userEmail = emailText.getText().toString();
                 userPassword = passwordText.getText().toString();
                 userNickname = NicknameText.getText().toString();
-                userGender = userEmail = emailText.getText().toString();
                 userAge = AgeSpinner.getSelectedItem().toString();
 
                 if(EmailFlag)
@@ -427,17 +426,17 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
 
-                boolean tempFlag = false;
                 RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
-                            boolean success = jsonResponse.getBoolean("success");
+                            String success = jsonResponse.getString("message");
 
-                            if (success)
+                            if (success=="ok")
                             {
+                                Log.v("Enter!","success");
                                 Response.Listener<String> RegisterresponseListener = new Response.Listener<String>() {
                                     @Override
                                     public void onResponse(String response) {
@@ -465,7 +464,7 @@ public class RegisterActivity extends AppCompatActivity {
                                 Registerqueue.add(registerRequest);
                             } else {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
-                                dialog = builder.setMessage("You can not use this Email")
+                                dialog = builder.setMessage(success)
                                         .setNegativeButton("OK", null)
                                         .create();
                                 dialog.show();

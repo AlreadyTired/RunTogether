@@ -51,13 +51,14 @@
                 android:layout_gravity="center">
 
                 <EditText
-                    android:id="@+id/EmailText"
-                    android:layout_width="match_parent"
+                    android:id="@+id/LoginEmailText"
+                    android:layout_width="280dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:drawableLeft="@drawable/ic_local_post_office_black_24dp"
                     android:drawableStart="@drawable/ic_local_post_office_black_24dp"
                     android:inputType="textEmailAddress"
+                    android:padding="10dp"
                     android:textColor="#ffffff"
                     android:textColorHint="#ffffff" />
             </android.support.design.widget.TextInputLayout>
@@ -68,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center">
                 <EditText
-                    android:id="@+id/passwordText"
+                    android:id="@+id/LoginPasswordText"
                     android:layout_width="280dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -122,15 +123,15 @@
             <LinearLayout
                 android:layout_width="280dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center_horizontal"
+                android:layout_gravity="center"
+                android:orientation="horizontal"
+                android:gravity="center"
                 >
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
                     android:text="Age : "
-                    android:textSize="25dp"
+                    android:textSize="20dp"
                     android:textColor="#ffffff"
                     android:drawableStart="@drawable/ic_insert_invitation_black_24dp"
                     android:drawableLeft="@drawable/ic_insert_invitation_black_24dp"
@@ -139,8 +140,7 @@
                     android:id="@+id/agespinner"
                     android:layout_width="180dp"
                     android:layout_height="40dp"
-                    android:layout_marginTop="5dp"
-                    android:layout_gravity="right"
+                    android:layout_gravity="center"
                     android:overlapAnchor="false"
                     android:dropDownWidth="100dp"
                     android:gravity="center"></Spinner>
