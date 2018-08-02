@@ -232,8 +232,8 @@ public class LoginActivity extends AppCompatActivity {
                         {
                             // JSON 형식으로 값을 response 에 받아서 넘어온다.
                             JSONObject jsonResponse = new JSONObject(response);
-                            String success = jsonResponse.getString("message");               // success 이름으로 boolean 타입의 값이 넘어온다
-                            if(success.equals("ok"))
+                            String message = jsonResponse.getString("message");               // success 이름으로 boolean 타입의 값이 넘어온다
+                            if(message.equals("ok"))
                             {
                                 Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
                                 UserInfo.setUserEmail(userEmail);
@@ -243,7 +243,7 @@ public class LoginActivity extends AppCompatActivity {
                             else
                             {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);      // 로그인 실패로 알림을 띄움
-                                dialog = builder.setMessage(success)
+                                dialog = builder.setMessage(message)
                                         .setNegativeButton("Try Again",null)
                                         .create();
                                 dialog.show();
