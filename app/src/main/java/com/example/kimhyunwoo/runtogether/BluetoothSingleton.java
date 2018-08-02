@@ -3,9 +3,12 @@ package com.example.kimhyunwoo.runtogether;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.util.Log;
 
 import com.example.kimhyunwoo.runtogether.bluetoothmanagement.BluetoothChatService;
 import com.example.kimhyunwoo.runtogether.bluetoothmanagement.DeviceListActivity;
+
+import java.io.IOException;
 
 public class BluetoothSingleton {
     /**
@@ -36,11 +39,22 @@ public class BluetoothSingleton {
      */
     public void connectDevice(Intent data) {
         // Get the device MAC address
-        String address = data.getExtras()
-                .getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+        String address = "";
+        BluetoothDevice device = null;
+        try {
+            address = data.getExtras()
+                    .getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
+            device = mBluetoothAdapter.getRemoteDevice(address);
+        }catch (IllegalArgumentException e){
+            Log.e("[ERR]getExtras ",e.getMessage().toString());
+        }
         // Get the BluetoothDevice object
-        BluetoothDevice device = mBluetoothAdapter.getRemoteDevice(address);
+
         // Attempt to connect to the device
-        mChatService.connect(device);
+        try{
+            mChatService.connect(device);
+        }catch (Exception e){
+            Log.e("[ERR]connectDevice", e.getMessage().toString());
+        }
     }
 }
