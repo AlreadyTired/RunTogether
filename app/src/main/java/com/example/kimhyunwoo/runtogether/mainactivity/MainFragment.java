@@ -101,7 +101,10 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     //===================================================================
 
     //===================================================================
+    TextView textCO;
     TextView textSO2;
+    TextView textNO2;
+    TextView textO3;
     TextView textPM25;
 
     private CompanionDeviceManager mDeviceManager;
@@ -185,21 +188,12 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         MainActivity activity = (MainActivity) getActivity();
         manager = activity.getLocationManager();
 
-
+        textCO = view.findViewById(R.id.txt_co);
         textSO2 = view.findViewById(R.id.txt_so2);
+        textNO2 = view.findViewById(R.id.txt_no2);
+        textO3 = view.findViewById(R.id.txt_o3);
         textPM25 = view.findViewById(R.id.txt_pm25);
 
-        //===========================================================
-        bt_list = (Button)view.findViewById(R.id.btn_list);
-        bt_list.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent serverIntent = new Intent(getActivity(), DeviceListActivity.class);
-                startActivityForResult(serverIntent, 2);
-            }
-        });
-
-        //===========================================================
         MainAllDataChart(view);
 
         return view;
@@ -451,36 +445,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             Toast.makeText(activity, "Bluetooth is not available", Toast.LENGTH_LONG).show();
             activity.finish();
 
-            //  ====================
-//        mDeviceManager = getActivity().getSystemService(CompanionDeviceManager.class);
-//
-//        // To skip filtering based on name and supported feature flags (UUIDs),
-//        // don't include calls to setNamePattern() and addServiceUuid(),
-//        // respectively. This example uses Bluetooth.
-//        mDeviceFilter = new BluetoothDeviceFilter.Builder()
-//                .setNamePattern(Pattern.compile("My device"))
-//                .addServiceUuid(new ParcelUuid(new UUID(0x123abcL, -1L)))
-//                .build();
-//
-//        // The argument provided in setSingleDevice() determines whether a single
-//        // device name or a list of device names is presented to the user as
-//        // pairing options.
-//        mPairingRequest = new AssociationRequest.Builder()
-//                .addDeviceFilter(mDeviceFilter)
-//                .setSingleDevice(true)
-//                .build();
-//
-//        // When the app tries to pair with the Bluetooth device, show the
-//        // appropriate pairing request dialog to the user.
-//        mDeviceManager.associate(mPairingRequest,
-//                new CompanionDeviceManager.Callback() {
-//                    @Override
-//                    public void onDeviceFound(IntentSender chooserLauncher) {
-//                        startIntentSenderForResult(chooserLauncher,
-//                                SELECT_DEVICE_REQUEST_CODE, null, 0, 0, 0);
-//                    }
-//                },
-//                null);
         }
     }
 
@@ -661,8 +625,16 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                         if(parsingResult != null) {
                             String[] parsing = parsingResult.split(",");
                             //  이런식으로 받으면 될 듯하다.
-                            textSO2.setText(parsing[0]);
-                            textPM25.setText(parsing[1]);
+                            textCO.setText(parsing[0]);
+                            setSmileChart(srCO, Integer.parseInt(parsing[0]));
+                            textSO2.setText(parsing[1]);
+                            setSmileChart(srSO2, Integer.parseInt(parsing[1]));
+                            textNO2.setText(parsing[2]);
+                            setSmileChart(srNO2, Integer.parseInt(parsing[2]));
+                            textO3.setText(parsing[3]);
+                            setSmileChart(srO3, Integer.parseInt(parsing[3]));
+                            textPM25.setText(parsing[4]);
+                            setSmileChart(srPM25, Integer.parseInt(parsing[4]));
                         }
                     }
                     mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
@@ -684,6 +656,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             }
         }
     };
+
+
 
     public void MainAllDataChart(View v){
         //smile
@@ -826,7 +800,20 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                 }
             }
         });
-
         //smile end
+    }
+
+    public void setSmileChart(SmileRating srData, int airData){
+        if(airData > 80){
+            srData.setSelectedSmile(srData.TERRIBLE, true);
+        }else if(airData > 60){
+            srData.setSelectedSmile(srData.BAD, true);
+        }else if(airData > 40){
+            srData.setSelectedSmile(srData.OKAY, true);
+        }else if(airData > 20){
+            srData.setSelectedSmile(srData.GOOD, true);
+        }else{
+            srData.setSelectedSmile(srData.GREAT, true);
+        }
     }
 }

@@ -1,7 +1,6 @@
 package com.example.kimhyunwoo.runtogether.usermanagement;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,11 +17,11 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.kimhyunwoo.runtogether.ManagementUtil;
+import com.example.kimhyunwoo.runtogether.UserInfo;
 import com.example.kimhyunwoo.runtogether.mainactivity.MainActivity;
 import com.example.kimhyunwoo.runtogether.R;
 
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.regex.Pattern;
 
@@ -44,7 +43,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         EmailFlag = PasswordFlag = true;
         registerButton = (TextView) findViewById(R.id.registerButton);         // 회원가입 버튼
-        ForgetButton = (TextView) findViewById(R.id.forgetPasswordButton);
+        ForgetButton = (TextView) findViewById(R.id.PasswordChangeButton);
         emailText = (EditText)findViewById(R.id.LoginEmailText);emailText.setHint(" Email");
         EmailTextLayout = (TextInputLayout)findViewById(R.id.LoginEmailTextLayout);
         passwordText= (EditText)findViewById(R.id.LoginPasswordText);passwordText.setHint(" Password");
@@ -199,15 +198,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View view)
             {
-                String userEmail = emailText.getText().toString();
+                final String userEmail = emailText.getText().toString();
                 String userPassword = passwordText.getText().toString();
 
-                /*
-                // @#$#@#$#@#$#@#$#@#$#@#$#@$#@#$#@#$#@#$#@#$#@#$#@#@#$@#$로그인 없이 돌아가는가 확인하기위해 넣어놨음 지워야함@#$#@$#@#$#@#$#@#$#@#$#@#$#@#$#@#$#@#$#@#$
-                Intent intent = new Intent(LoginActivity.this,MainActivity.class);      // 로그인 성공으로 메인화면으로 넘어감.
-                LoginActivity.this.startActivity(intent);
-
-                */
                 if(EmailFlag)
                 {
                     AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);      // 로그인 실패로 알림을 띄움
@@ -239,17 +232,18 @@ public class LoginActivity extends AppCompatActivity {
                         {
                             // JSON 형식으로 값을 response 에 받아서 넘어온다.
                             JSONObject jsonResponse = new JSONObject(response);
-                            boolean success = jsonResponse.getBoolean("success");               // success 이름으로 boolean 타입의 값이 넘어온다
-                            if(success)
+                            String success = jsonResponse.getString("message");               // success 이름으로 boolean 타입의 값이 넘어온다
+                            if(success.equals("ok"))
                             {
                                 Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
+                                UserInfo.setUserEmail(userEmail);
                                 Intent intent = new Intent(LoginActivity.this,MainActivity.class);      // 로그인 성공으로 메인화면으로 넘어감.
                                 LoginActivity.this.startActivity(intent);
                             }
                             else
                             {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);      // 로그인 실패로 알림을 띄움
-                                dialog = builder.setMessage("Please, Check Acount")
+                                dialog = builder.setMessage(success)
                                         .setNegativeButton("Try Again",null)
                                         .create();
                                 dialog.show();
@@ -261,7 +255,7 @@ public class LoginActivity extends AppCompatActivity {
                         }
                     }
                 };
-                LoginRequest loginRequest = new LoginRequest(userEmail,userPassword,reponseListener);           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
+                LoginRequest loginRequest = new LoginRequest(userEmail,userPassword,reponseListener,LoginActivity.this);           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
                 RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);            // Volley의 사용법으로 request queue로 queue를 하나 선언하고
                 queue.add(loginRequest);                                                            // queue에 로그인 리퀘스트를 넣으면 loginrequest가 실행됨.
             }

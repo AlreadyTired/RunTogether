@@ -33,10 +33,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private AlertDialog dialog;
 
-    private Spinner AgeSpinner;
-    private ArrayAdapter<String> AgeArray;
-    private ArrayList<String> AgeList;
-
     private boolean validate = false;
 
     private ManagementUtil Util;
@@ -52,50 +48,30 @@ public class RegisterActivity extends AppCompatActivity {
     EditText passwordText;
     EditText confirmpasswordText;
     EditText NicknameText;
+    EditText AgeText;
 
-    TextInputLayout emailTextLayout,passwordTextLayout,confirmPasswordTextLayout,nicknameTextLayout;
+    TextInputLayout emailTextLayout,passwordTextLayout,confirmPasswordTextLayout,nicknameTextLayout,AgeTextLayout;
 
-    private boolean EmailFlag , PasswordFlag ,ConfirmPasswordFlag,NicknameFlag;
+    private boolean EmailFlag , PasswordFlag ,ConfirmPasswordFlag,NicknameFlag,AgeFlag;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-        EmailFlag = PasswordFlag = ConfirmPasswordFlag = NicknameFlag = true;
+        EmailFlag = PasswordFlag = ConfirmPasswordFlag = NicknameFlag = AgeFlag = true;
 
         Util = new ManagementUtil();
-
-        // 나이 스피너를 위한 부분
-        AgeList = new ArrayList<String>();
-        for(int i=1;i<101;i++)
-        {
-            String A = Integer.toString(i);
-            AgeList.add(A);
-        }
-        AgeArray = new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,AgeList);
-        AgeSpinner = (Spinner)findViewById(R.id.agespinner);
-        AgeSpinner.setAdapter(AgeArray);
-        try
-        {
-            Field popup = Spinner.class.getDeclaredField("mPopup");
-            popup.setAccessible(true);
-
-            ListPopupWindow window = (ListPopupWindow)popup.get(AgeSpinner);
-            window.setHeight(400);
-        }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
 
         emailText = (EditText) findViewById(R.id.LoginEmailText);emailText.setHint("Email");
         passwordText = (EditText) findViewById(R.id.LoginPasswordText);passwordText.setHint("Password");
         NicknameText = (EditText) findViewById(R.id.NicknameText);NicknameText.setHint("Nickname");
         confirmpasswordText = (EditText) findViewById(R.id.confirmpassword);confirmpasswordText.setHint("Confirm Password");
+        AgeText = (EditText)findViewById(R.id.AgeText);AgeText.setHint(" Age");
         emailTextLayout = (TextInputLayout)findViewById(R.id.emailTextInputLayout);
         passwordTextLayout = (TextInputLayout)findViewById(R.id.passwordTextInputLayout);
         confirmPasswordTextLayout = (TextInputLayout)findViewById(R.id.confirmpasswordTextInputLayout);
         nicknameTextLayout = (TextInputLayout)findViewById(R.id.nicknameTextInputLayout);
+        AgeTextLayout = (TextInputLayout)findViewById(R.id.AgeTextLayout);
 
         // 성별을 위한 부분
         final RadioGroup genderGroup = (RadioGroup) findViewById(R.id.genderGroup);
@@ -107,6 +83,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onCheckedChanged(RadioGroup radioGroup, int i) {
                 RadioButton genderButton = (RadioButton) findViewById(i);
                 userGender = genderButton.getText().toString();
+                Log.v("Gender",userGender);
             }
         });
 
@@ -376,6 +353,59 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
+        //Age 입력부분 오류체크
+        AgeText.addTextChangedListener(new TextWatcher() {
+            String temporarystring;
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                temporarystring = AgeText.getText().toString();
+                do {
+                    if(temporarystring.equals(""))
+                    {
+                        AgeText.setHint(" Age");
+                        AgeTextLayout.setErrorEnabled(true);
+                        AgeTextLayout.setError("Please enter the Age");
+                        AgeFlag = true;
+                        break;
+                    }
+                    else
+                    {
+                        AgeFlag = false;
+                    }
+                    if(Integer.parseInt(temporarystring)>150)
+                    {
+                        AgeTextLayout.setErrorEnabled(true);
+                        AgeTextLayout.setError("Age must less than 150 years old");
+                        AgeFlag = true;
+                        break;
+                    }
+                    else
+                    {
+                        AgeFlag = false;
+                    }
+                }while(false);
+                if(!AgeFlag)
+                {
+                    AgeTextLayout.setErrorEnabled(false);
+                    Util.setEditColor(AgeText,"#00ff00");
+                }
+                else
+                {
+                    Util.setEditColor(AgeText,"#ff0000");
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         // 회원가입 버튼
         Button registerButton = (Button) findViewById(R.id.registerButton);
         registerButton.setOnClickListener(new View.OnClickListener() {
@@ -384,7 +414,7 @@ public class RegisterActivity extends AppCompatActivity {
                 userEmail = emailText.getText().toString();
                 userPassword = passwordText.getText().toString();
                 userNickname = NicknameText.getText().toString();
-                userAge = AgeSpinner.getSelectedItem().toString();
+                userAge = AgeText.getText().toString();
 
                 if(EmailFlag)
                 {
@@ -426,29 +456,39 @@ public class RegisterActivity extends AppCompatActivity {
                     return;
                 }
 
+                if(AgeFlag)
+                {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
+                    dialog = builder.setMessage("Please Check again Age")
+                            .setNegativeButton("OK", null)
+                            .create();
+                    dialog.show();
+                    return;
+                }
+
                 RequestQueue queue = Volley.newRequestQueue(RegisterActivity.this);
                 Response.Listener<String> responseListener = new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         try {
-                            JSONObject jsonResponse = new JSONObject(response);
-                            String success = jsonResponse.getString("message");
+                            JSONObject jsonvalidateResponse = new JSONObject(response);
+                            String validatemessage = jsonvalidateResponse.getString("message");
 
-                            if (success=="ok")
+                            if (validatemessage.equals("ok"))
                             {
-                                Log.v("Enter!","success");
                                 Response.Listener<String> RegisterresponseListener = new Response.Listener<String>() {
                                     @Override
                                     public void onResponse(String response) {
                                         try {
-                                            JSONObject jsonResponse = new JSONObject(response);
-                                            boolean success = jsonResponse.getBoolean("success");
-                                            if (success) {
+                                            JSONObject jsonregisterResponse = new JSONObject(response);
+                                            String registmessage = jsonregisterResponse.getString("message");
+                                            if (registmessage.equals("ok")) {
                                                 Toast.makeText(RegisterActivity.this, "Registration Completed", Toast.LENGTH_SHORT).show();
                                                 finish();
-                                            } else {
+                                            }
+                                            else {
                                                 AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
-                                                dialog = builder.setMessage("Registration Failed")
+                                                dialog = builder.setMessage(registmessage)
                                                         .setNegativeButton("OK", null)
                                                         .create();
                                                 dialog.show();
@@ -459,12 +499,13 @@ public class RegisterActivity extends AppCompatActivity {
                                         }
                                     }
                                 };
-                                RegisterRequest registerRequest = new RegisterRequest(userEmail, userPassword, userGender, userNickname, userAge, RegisterresponseListener);
+                                RegisterRequest registerRequest = new RegisterRequest(userEmail, userPassword, userGender, userNickname, userAge, RegisterresponseListener,RegisterActivity.this);
                                 RequestQueue Registerqueue = Volley.newRequestQueue(RegisterActivity.this);
                                 Registerqueue.add(registerRequest);
-                            } else {
+                            }
+                            else {
                                 AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
-                                dialog = builder.setMessage(success)
+                                dialog = builder.setMessage(validatemessage)
                                         .setNegativeButton("OK", null)
                                         .create();
                                 dialog.show();
@@ -474,7 +515,7 @@ public class RegisterActivity extends AppCompatActivity {
                         }
                     }
                 };
-                ValidateRequest validateRequest = new ValidateRequest(userEmail, responseListener);
+                ValidateRequest validateRequest = new ValidateRequest(userEmail, responseListener,RegisterActivity.this);
                 queue.add(validateRequest);
                 queue.start();
             }

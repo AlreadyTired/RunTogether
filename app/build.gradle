@@ -18,11 +18,17 @@ android {
     }
 }
 
+repositories{
+    maven { url 'http://repo1.maven.org/maven2'}
+    maven { url 'http://jitpack.io'}
+}
+
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     implementation 'com.android.support:appcompat-v7:26.0.0'
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
     implementation 'com.android.support:design:26.1.0'
+    implementation 'com.github.PhilJay:MpAndroidChart:v3.0.3'
     //TabLayout 사용
     implementation 'com.android.support:support-v4:26.1.0'
     implementation 'com.google.android.gms:play-services-maps:15.0.1'
