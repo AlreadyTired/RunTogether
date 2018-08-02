@@ -5,6 +5,16 @@ import android.app.Application;
 public class UserInfo extends Application{
     private static String UserEmail;
     private static String UserToken;
+    private static String UserNickname;
+
+    public static void setUserNickname(String email)
+    {
+        UserNickname = email;
+    }
+    public static String getUserNickname()
+    {
+        return UserNickname;
+    }
 
     public static void setUserEmail(String email)
     {
@@ -22,5 +32,11 @@ public class UserInfo extends Application{
     public static String getUserToken()
     {
         return UserToken;
+    }
+
+    public static void UserDataReset()
+    {
+        UserToken=null;
+        UserEmail=null;
     }
 }

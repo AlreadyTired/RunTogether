@@ -8,12 +8,54 @@
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:text="~"/>
+            <TextView
+                android:id="@+id/HistoryDataDateViewText"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="10dp"
+                android:gravity="center"
+                android:layout_marginRight="10dp"
+                android:text="2018-08-04"/>
+            <Spinner
+                android:id="@+id/HistoryDataPeriodSelectSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="10dp">
+
+            </Spinner>
+            <Spinner
+                android:id="@+id/HistoryDataSelectSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="10dp">
+
+            </Spinner>
+            <Button
+                android:id="@+id/HistoryDataRequestButton"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:text="OK"
+                android:padding="10dp"
+                android:textColor="#ffffff"
+                android:background="@color/colorPrimaryDark"/>
+        </LinearLayout>
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/myLineChart"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
         </com.github.mikephil.charting.charts.LineChart>
     </LinearLayout>
 

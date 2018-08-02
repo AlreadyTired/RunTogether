@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background"
     android:gravity="center"
-    tools:context=".usermanagement.IDcancellationActivity"
+    tools:context=".usermanagement.IDCancellationActivity"
     android:layout_gravity="center"
     android:orientation="vertical">
     <LinearLayout
