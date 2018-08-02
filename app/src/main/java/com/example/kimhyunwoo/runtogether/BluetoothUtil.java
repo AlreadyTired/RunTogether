@@ -18,10 +18,17 @@ public class BluetoothUtil {
         }
 
         //  현재는 임시 데이터로 정의 됨
-        String pm25 = airData.getString("PM25");
-        String so2 = airData.getString("SO2");
-        String jsonString = pm25 + "," + so2;
+        String type = airData.getString("type");
+        String co = airData.getString("co");
+        String so2 = airData.getString("so2");
+        String no2 = airData.getString("no2");
+        String o3 = airData.getString("o3");
+        String pm25 = airData.getString("pm25");
+
+        String jsonString = co + "," +  so2 + "," + no2 + "," + o3 +"," + pm25;
 
         return jsonString;
     }
+
+
 }

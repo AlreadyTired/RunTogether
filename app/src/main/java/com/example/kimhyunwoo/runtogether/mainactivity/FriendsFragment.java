@@ -34,7 +34,6 @@ public class FriendsFragment extends Fragment {
 
     public FriendsFragment() {
         // Required empty public constructor
-        Log.v("EmailFragment", UserInfo.getUserEmail());
     }
 
 

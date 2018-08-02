@@ -52,7 +52,6 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        Log.v("UserEmail", UserInfo.getUserEmail());
 
         //  상단바 연결
         FragmentManager fragmentManager = getSupportFragmentManager();

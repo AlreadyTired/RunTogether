@@ -14,7 +14,6 @@
         android:orientation="vertical"
         >
 
-
         <fragment
             android:id="@+id/map_google"
             android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -57,113 +56,146 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            <Button
-                android:id="@+id/btn_list"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="list" />
-        </LinearLayout>
-
-
-        <!--<ListView-->
-            <!--android:id="@+id/lv_received_data"-->
-            <!--android:layout_width="match_parent"-->
-            <!--android:layout_height="500dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:stackFromBottom="true"-->
-            <!--android:transcriptMode="alwaysScroll" />-->
-
-        <LinearLayout
-            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             >
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:textSize="20pt"
-                    android:text="co : "
-                    />
-                <TextView
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <com.hsalf.smilerating.SmileRating
+                    android:id="@+id/rv_co"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20pt"
-                    android:id="@+id/txt_co"
                     />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="co : "
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txt_co"
+                        />
+
+                </LinearLayout>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:textSize="20pt"
-                    android:text="so2 : "
-                    />
-                <TextView
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <com.hsalf.smilerating.SmileRating
+                    android:id="@+id/rv_so2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20pt"
-                    android:id="@+id/txt_so2"
+                    android:layout_centerVertical="true"
                     />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="so2 : "
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txt_so2"
+                        />
+                </LinearLayout>
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:textSize="20pt"
-                    android:text="no2 : "
-                    />
-                <TextView
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <com.hsalf.smilerating.SmileRating
+                    android:id="@+id/rv_no2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20pt"
-                    android:id="@+id/txt_no2"
+                    android:layout_centerVertical="true"
                     />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="no2 : "
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txt_no2"
+                        />
+                </LinearLayout>
+
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:textSize="20pt"
-                    android:text="o3 : "
-                    />
-                <TextView
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <com.hsalf.smilerating.SmileRating
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20pt"
-                    android:id="@+id/txt_o3"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/rv_o3"
                     />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="o3 : "
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txt_o3"
+                        />
+                </LinearLayout>
+
             </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:orientation="horizontal">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:textSize="20pt"
-                    android:text="pm2.5 : "
-                    />
-                <TextView
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <com.hsalf.smilerating.SmileRating
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textSize="20pt"
-                    android:id="@+id/txt_pm25"
+                    android:layout_centerVertical="true"
+                    android:id="@+id/rv_pm25"
                     />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="pm2.5 : "
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/txt_pm25"
+                        />
+                </LinearLayout>
+
             </LinearLayout>
         </LinearLayout>
 
