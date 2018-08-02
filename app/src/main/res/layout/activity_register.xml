@@ -120,6 +120,7 @@
                     android:drawableStart="@drawable/ic_person_black_24dp"
                     android:padding="10dp"
                     android:maxLength="150"
+                    android:inputType="textEmailAddress"
                     android:textColor="#ffffff"
                     android:textColorHint="#ffffff" />
             </android.support.design.widget.TextInputLayout>

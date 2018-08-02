@@ -1,6 +1,5 @@
 package com.example.kimhyunwoo.runtogether.usermanagement;
 
-import android.app.Dialog;
 import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
@@ -9,7 +8,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -19,11 +17,11 @@ import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
 import com.example.kimhyunwoo.runtogether.ManagementUtil;
 import com.example.kimhyunwoo.runtogether.R;
-import com.example.kimhyunwoo.runtogether.mainactivity.MainActivity;
+import com.example.kimhyunwoo.runtogether.UserInfo;
 
 import org.json.JSONObject;
 
-public class IDcancellationActivity extends AppCompatActivity {
+public class IDCancellationActivity extends AppCompatActivity {
 
     private String userPassword;
     private EditText PasswordText,ConfirmPasswordText;
@@ -174,7 +172,7 @@ public class IDcancellationActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if(PasswordFlag)
                 {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(IDcancellationActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(IDCancellationActivity.this);
                     dialog = builder.setMessage("Please Check again Password")
                             .setNegativeButton("OK", null)
                             .create();
@@ -184,7 +182,7 @@ public class IDcancellationActivity extends AppCompatActivity {
 
                 if(ConfirmPasswordFlag)
                 {
-                    AlertDialog.Builder builder = new AlertDialog.Builder(IDcancellationActivity.this);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(IDCancellationActivity.this);
                     dialog = builder.setMessage("Please Check again Confirm Password")
                             .setNegativeButton("OK", null)
                             .create();
@@ -201,17 +199,18 @@ public class IDcancellationActivity extends AppCompatActivity {
                         {
                             // JSON 형식으로 값을 response 에 받아서 넘어온다.
                             JSONObject jsonResponse = new JSONObject(response);
-                            boolean success = jsonResponse.getBoolean("success");               // success 이름으로 boolean 타입의 값이 넘어온다
-                            if(success)
+                            String message = jsonResponse.getString("message");               // success 이름으로 boolean 타입의 값이 넘어온다
+                            if(message.equals("ok"))
                             {
-                                Toast.makeText(IDcancellationActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(IDcancellationActivity.this,LoginActivity.class);      // 로그인 성공으로 메인화면으로 넘어감.
-                                IDcancellationActivity.this.startActivity(intent);
+                                Toast.makeText(IDCancellationActivity.this, "ID Cancellation Success", Toast.LENGTH_SHORT).show();
+                                UserInfo.UserDataReset();
+                                Intent intent = new Intent(IDCancellationActivity.this,LoginActivity.class);      // 로그인 성공으로 메인화면으로 넘어감.
+                                IDCancellationActivity.this.startActivity(intent);
                             }
                             else
                             {
-                                AlertDialog.Builder builder = new AlertDialog.Builder(IDcancellationActivity.this);      // 로그인 실패로 알림을 띄움
-                                dialog = builder.setMessage("Please, Check Acount")
+                                AlertDialog.Builder builder = new AlertDialog.Builder(IDCancellationActivity.this);      // 로그인 실패로 알림을 띄움
+                                dialog = builder.setMessage(message)
                                         .setNegativeButton("Try Again",null)
                                         .create();
                                 dialog.show();
@@ -223,8 +222,8 @@ public class IDcancellationActivity extends AppCompatActivity {
                         }
                     }
                 };
-                IDCancellateRequest cancellateRequest = new IDCancellateRequest(userPassword,reponseListener,IDcancellationActivity.this);           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
-                RequestQueue queue = Volley.newRequestQueue(IDcancellationActivity.this);            // Volley의 사용법으로 request queue로 queue를 하나 선언하고
+                IDCancellateRequest cancellateRequest = new IDCancellateRequest(userPassword,reponseListener,IDCancellationActivity.this);           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
+                RequestQueue queue = Volley.newRequestQueue(IDCancellationActivity.this);            // Volley의 사용법으로 request queue로 queue를 하나 선언하고
                 queue.add(cancellateRequest);
             }
 
