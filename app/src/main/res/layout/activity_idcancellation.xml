@@ -37,9 +37,11 @@
                 android:id="@+id/IDCancelPasswordText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:inputType="textPassword"
+                android:textColorHint="#ffffff"
                 android:drawableStart="@drawable/ic_https_black_24dp"
-                android:drawableLeft="@drawable/ic_https_black_24dp"
-                android:hint="Password"/>
+                android:drawableLeft="@drawable/ic_https_black_24dp"/>
         </android.support.design.widget.TextInputLayout>
         <android.support.design.widget.TextInputLayout
             android:id="@+id/IDCancelConfirmPasswrodTextLayout"
@@ -49,9 +51,11 @@
                 android:id="@+id/IDCancelConfirmPasswordText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="#ffffff"
+                android:inputType="textPassword"
+                android:textColorHint="#ffffff"
                 android:drawableLeft="@drawable/ic_https_black_24dp"
-                android:drawableStart="@drawable/ic_https_black_24dp"
-                android:hint="ConfirmPassword"/>
+                android:drawableStart="@drawable/ic_https_black_24dp"/>
         </android.support.design.widget.TextInputLayout>
         <Button
             android:id="@+id/IDcancellationButton"

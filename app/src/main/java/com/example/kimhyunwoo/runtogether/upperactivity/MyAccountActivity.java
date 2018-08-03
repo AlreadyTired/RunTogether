@@ -15,6 +15,7 @@ import com.example.kimhyunwoo.runtogether.R;
 import com.example.kimhyunwoo.runtogether.UserInfo;
 import com.example.kimhyunwoo.runtogether.mainactivity.MainActivity;
 import com.example.kimhyunwoo.runtogether.usermanagement.FindPasswordActivity;
+import com.example.kimhyunwoo.runtogether.usermanagement.IDCancellationActivity;
 import com.example.kimhyunwoo.runtogether.usermanagement.LoginActivity;
 import com.example.kimhyunwoo.runtogether.usermanagement.LoginRequest;
 import com.example.kimhyunwoo.runtogether.usermanagement.PasswordChangeActivity;
@@ -22,18 +23,26 @@ import com.example.kimhyunwoo.runtogether.usermanagement.PasswordChangeActivity;
 import org.json.JSONObject;
 
 public class MyAccountActivity extends AppCompatActivity {
-    Button ChangePasswordButton;
+    Button ChangePasswordButton,IDCancellationInputButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_my_account);
         ChangePasswordButton = (Button)findViewById(R.id.PasswordChangeButton);
+        IDCancellationInputButton = (Button)findViewById(R.id.IDCancellationInputButton);
         ChangePasswordButton.setOnClickListener(new View.OnClickListener()                                   // 로그인 버튼
         {
             @Override
             public void onClick(View view)
             {
                 Intent intent = new Intent(MyAccountActivity.this,PasswordChangeActivity.class);      // 로그인 성공으로 메인화면으로 넘어감.
+                MyAccountActivity.this.startActivity(intent);
+            }
+        });
+        IDCancellationInputButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MyAccountActivity.this,IDCancellationActivity.class);      // 로그인 성공으로 메인화면으로 넘어감.
                 MyAccountActivity.this.startActivity(intent);
             }
         });
