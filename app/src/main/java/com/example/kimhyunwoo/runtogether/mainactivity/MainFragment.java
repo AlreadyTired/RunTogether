@@ -579,7 +579,11 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                 case Constants.MESSAGE_STATE_CHANGE:
                     switch (msg.arg1) {
                         case BluetoothChatService.STATE_CONNECTED:
-                            setStatus(getString(R.string.title_connecting) + mConnectedDeviceName);
+                            try {
+                                setStatus(getString(R.string.title_connecting) + mConnectedDeviceName);
+                            }catch (IllegalStateException e){
+                                Log.e("[ERR]Handler", e.getMessage().toString());
+                            }
                             mConversationArrayAdapter.clear();
                             break;
                         case BluetoothChatService.STATE_CONNECTING:
