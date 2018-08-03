@@ -95,20 +95,23 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     Button buttonReset;
     Button buttonCalc;
 
-    //  TODO(그루트와 코드 번호를 정의 해보자)
     private static final int markerRequstCode = 1234;
-    //  구글 맵 변수 끝
-    //===================================================================
 
     //===================================================================
+    //  메인 차트
     TextView textCO;
     TextView textSO2;
     TextView textNO2;
     TextView textO3;
     TextView textPM25;
 
-    private static final int SELECT_DEVICE_REQUEST_CODE = 42;
+    private SmileRating srCO;
+    private SmileRating srSO2;
+    private SmileRating srNO2;
+    private SmileRating srO3;
+    private SmileRating srPM25;
 
+    //===================================================================
     //  블루투스 변수
     BluetoothUtil btUtil;
     private static final String TAG = "BluetoothChatFragment";
@@ -137,17 +140,30 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
     BluetoothSingleton btSingletion;
 
-    //  불루투스 변수 끝
-    //===================================================================
-
     public MainFragment() {
         // Required empty public constructor
     }
-    private SmileRating srCO;
-    private SmileRating srSO2;
-    private SmileRating srNO2;
-    private SmileRating srO3;
-    private SmileRating srPM25;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        //  Set google map util
+        mapUtil = new MapUtil();
+        btSingletion = BluetoothSingleton.getInstance();
+        btUtil = new BluetoothUtil();
+
+        // Get local Bluetooth adapter
+        btSingletion.mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        // If the adapter is null, then Bluetooth is not supported
+        if (btSingletion.mBluetoothAdapter == null) {
+            FragmentActivity activity = getActivity();
+            Toast.makeText(activity, "Bluetooth is not available", Toast.LENGTH_LONG).show();
+            activity.finish();
+
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -189,6 +205,63 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         MainAllDataChart(view);
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // If BT is not on, request that it be enabled.
+        // setupChat() will then be called during onActivityResult
+        if (!btSingletion.mBluetoothAdapter.isEnabled()) {
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+            // Otherwise, setup the chat session
+        } else if (btSingletion.mChatService == null) {
+            setupChat();
+        }
+    }
+
+
+    // 현재 프래그먼트가 러닝직전
+    // 생명주기를 생각하면 onResume
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        //마시멜로 이상버전에서는 런타임 권한 체크여부를 확인
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // GPS 사용을 위한 권한 휙득이 되어 있지 않으면 리스너 해제
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+        }
+        // GPS 리스너 등록
+        manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, //위치제공자
+                3000, //변경사항 체크 주기 millisecond 단위임
+                1, //변경사항 체크 거리 meter단위
+                locationListener //locationListener 함수를 호출 함
+        );
+
+        //==========================================================================
+        // Performing this check in onResume() covers the case in which BT was
+        // not enabled during onStart(), so we were paused to enable it...
+        // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
+        if (btSingletion.mChatService != null) {
+            // Only if the state is STATE_NONE, do we know that we haven't started already
+            if (btSingletion.mChatService.getState() == BluetoothChatService.STATE_NONE) {
+                // Start the Bluetooth chat services
+                btSingletion.mChatService.start();
+            }
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (btSingletion.mChatService != null) {
+            btSingletion.mChatService.stop();
+        }
     }
 
     @Override
@@ -261,18 +334,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         }
     }
 
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        //dialog fragment class 생성
-        MarkerClickFragment newFragment = new MarkerClickFragment();
-        // onActivityResult에서 1234 라는 요청 코드를 받아서 처리할 수 있도록 설정
-        newFragment.setTargetFragment(this, markerRequstCode );
-        //"dialog"라는 태그를 갖는 프래그먼트 생성
-        newFragment.show(getFragmentManager(), "dialog");
-
-        return true;
-    }
-
     // 다이얼이 끝나고 여기로 결과가 전송됨
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -287,17 +348,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                     Toast.makeText(getActivity(), "Sending Friend request!\n to "+id ,Toast.LENGTH_LONG).show();
                 }
         }
-
-        if (requestCode == SELECT_DEVICE_REQUEST_CODE &&
-                resultCode == Activity.RESULT_OK) {
-            // User has chosen to pair with the Bluetooth device.
-            BluetoothDevice deviceToPair =
-                    data.getParcelableExtra(CompanionDeviceManager.EXTRA_DEVICE);
-            deviceToPair.createBond();
-
-            // ... Continue interacting with the paired device.
-        }
-
     }
 
     @Override
@@ -320,40 +370,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 //        map.setOnMarkerClickListener(this);
     }
 
-    // 현재 프래그먼트가 러닝직전
-    // 생명주기를 생각하면 onResume
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        //마시멜로 이상버전에서는 런타임 권한 체크여부를 확인
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // GPS 사용을 위한 권한 휙득이 되어 있지 않으면 리스너 해제
-            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-        }
-        // GPS 리스너 등록
-        manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, //위치제공자
-                3000, //변경사항 체크 주기 millisecond 단위임
-                1, //변경사항 체크 거리 meter단위
-                locationListener //locationListener 함수를 호출 함
-        );
-
-        //==========================================================================
-        // Performing this check in onResume() covers the case in which BT was
-        // not enabled during onStart(), so we were paused to enable it...
-        // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
-        if (btSingletion.mChatService != null) {
-            // Only if the state is STATE_NONE, do we know that we haven't started already
-            if (btSingletion.mChatService.getState() == BluetoothChatService.STATE_NONE) {
-                // Start the Bluetooth chat services
-                btSingletion.mChatService.start();
-            }
-        }
-    }
-
     //GPS 사용을 위해서 좌표 리스너를 생성
     LocationListener locationListener = new LocationListener() {
         @Override
@@ -362,13 +378,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             double currentLng = location.getLongitude();
             //위도
             double currentLat = location.getLatitude();
-            // 현재는 사용하지 않음 아마도 사용 안할듯?
-//            //고도
-//            double alt = location.getAltitude();
-//            //정확도
-//            float acc = location.getAccuracy();
-//            //위치제공자(ISP)
-//            String provider = location.getProvider();
 
             //  바뀐 현재 좌표
             LatLng currentCoordinate = new LatLng(currentLat ,currentLng);
@@ -410,50 +419,16 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         }
     };
 
-    //=========================================================================
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        //  Set google map util
-        mapUtil = new MapUtil();
-        btSingletion = BluetoothSingleton.getInstance();
-        btUtil = new BluetoothUtil();
+    public boolean onMarkerClick(Marker marker) {
+        //dialog fragment class 생성
+        MarkerClickFragment newFragment = new MarkerClickFragment();
+        // onActivityResult에서 1234 라는 요청 코드를 받아서 처리할 수 있도록 설정
+        newFragment.setTargetFragment(this, markerRequstCode );
+        //"dialog"라는 태그를 갖는 프래그먼트 생성
+        newFragment.show(getFragmentManager(), "dialog");
 
-
-
-        // Get local Bluetooth adapter
-        btSingletion.mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-        // If the adapter is null, then Bluetooth is not supported
-        if (btSingletion.mBluetoothAdapter == null) {
-            FragmentActivity activity = getActivity();
-            Toast.makeText(activity, "Bluetooth is not available", Toast.LENGTH_LONG).show();
-            activity.finish();
-
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // If BT is not on, request that it be enabled.
-        // setupChat() will then be called during onActivityResult
-        if (!btSingletion.mBluetoothAdapter.isEnabled()) {
-            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-            // Otherwise, setup the chat session
-        } else if (btSingletion.mChatService == null) {
-            setupChat();
-        }
-    }
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (btSingletion.mChatService != null) {
-            btSingletion.mChatService.stop();
-        }
+        return true;
     }
 
     @Override
