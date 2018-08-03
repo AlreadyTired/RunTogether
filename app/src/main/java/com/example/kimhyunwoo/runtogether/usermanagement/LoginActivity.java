@@ -17,6 +17,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.example.kimhyunwoo.runtogether.BackPressCloseHandler;
 import com.example.kimhyunwoo.runtogether.ManagementUtil;
 import com.example.kimhyunwoo.runtogether.UserInfo;
 import com.example.kimhyunwoo.runtogether.mainactivity.MainActivity;
@@ -28,6 +29,9 @@ import java.util.regex.Pattern;
 
 public class LoginActivity extends AppCompatActivity {
 
+    //  뒤로가기 버튼을 2번 누르면 종료시키는 클레스
+    private BackPressCloseHandler backPressCloseHandler;
+
     // 다이얼로그는 비밀번호 틀렸을때 추가 메세지 띄우기 위함.
     private AlertDialog dialog;
     private ManagementUtil Util;
@@ -38,10 +42,12 @@ public class LoginActivity extends AppCompatActivity {
     TextView ForgetButton;
     TextView registerButton;
     TextInputLayout EmailTextLayout,PasswordTextLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        backPressCloseHandler = new BackPressCloseHandler(this);
         EmailFlag = PasswordFlag = true;
         registerButton = (TextView) findViewById(R.id.registerButton);         // 회원가입 버튼
         ForgetButton = (TextView) findViewById(R.id.PasswordChangeButton);
@@ -268,6 +274,11 @@ public class LoginActivity extends AppCompatActivity {
                 queue.add(loginRequest);                                                            // queue에 로그인 리퀘스트를 넣으면 loginrequest가 실행됨.
             }
         });
+    }
+
+    @Override
+    public void onBackPressed(){
+        backPressCloseHandler.onBackPressed();;
     }
 
     protected void onStop()
