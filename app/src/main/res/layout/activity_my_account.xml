@@ -20,6 +20,12 @@
             android:layout_width="match_parent"
             android:layout_height="40dp"
             android:text="Password Change"/>
+        <Button
+            android:id="@+id/IDCancellationInputButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="ID Cancellation Button"/>
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
