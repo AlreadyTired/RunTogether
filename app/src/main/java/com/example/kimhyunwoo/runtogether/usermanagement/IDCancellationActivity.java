@@ -1,5 +1,6 @@
 package com.example.kimhyunwoo.runtogether.usermanagement;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
@@ -21,6 +22,8 @@ import com.example.kimhyunwoo.runtogether.UserInfo;
 
 import org.json.JSONObject;
 
+import java.util.regex.Pattern;
+
 public class IDCancellationActivity extends AppCompatActivity {
 
     private String userPassword;
@@ -38,6 +41,7 @@ public class IDCancellationActivity extends AppCompatActivity {
         setContentView(R.layout.activity_idcancellation);
 
         Util = new ManagementUtil();
+        IDcancellationButton = (Button)findViewById(R.id.IDcancellationButton) ;
         PasswordText = (EditText)findViewById(R.id.IDCancelPasswordText);PasswordText.setHint("Password");
         ConfirmPasswordText = (EditText)findViewById(R.id.IDCancelConfirmPasswordText);ConfirmPasswordText.setHint("Confirm Password");
         PasswordTextLayout = (TextInputLayout)findViewById(R.id.IDCancelPasswordTextLayout);
@@ -60,6 +64,16 @@ public class IDCancellationActivity extends AppCompatActivity {
                         PasswordText.setHint("Password");
                         PasswordTextLayout.setErrorEnabled(false);
                         PasswordTextLayout.setError("Please enter the Password");
+                        PasswordFlag = true;
+                        break;
+                    }
+                    else
+                    {
+                        PasswordFlag = false;
+                    }
+                    if(!Pattern.matches("(?=.*[a-z])(?=.*[0-9])[a-z0-9]{8,50}", temporarystring)) {
+                        PasswordTextLayout.setErrorEnabled(true);
+                        PasswordTextLayout.setError("password should be mixing with small English letter and number");
                         PasswordFlag = true;
                         break;
                     }
@@ -202,10 +216,58 @@ public class IDCancellationActivity extends AppCompatActivity {
                             String message = jsonResponse.getString("message");               // success 이름으로 boolean 타입의 값이 넘어온다
                             if(message.equals("ok"))
                             {
-                                Toast.makeText(IDCancellationActivity.this, "ID Cancellation Success", Toast.LENGTH_SHORT).show();
-                                UserInfo.UserDataReset();
-                                Intent intent = new Intent(IDCancellationActivity.this,LoginActivity.class);      // 로그인 성공으로 메인화면으로 넘어감.
-                                IDCancellationActivity.this.startActivity(intent);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(IDCancellationActivity.this);      // 로그인 실패로 알림을 띄움
+                                dialog = builder.setMessage("Do you 'REALLY' Cancel your ID?")
+                                        .setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                Response.Listener<String> reponseRealListener = new Response.Listener<String>() {
+
+                                                    // Volley 를 통해서 정상적으로 웹서버와 통신이 되면 실행되는 함수
+                                                    @Override
+                                                    public void onResponse(String response)
+                                                    {
+                                                        try
+                                                        {
+                                                            // JSON 형식으로 값을 response 에 받아서 넘어온다.
+                                                            JSONObject jsonRealResponse = new JSONObject(response);
+                                                            String realmessage = jsonRealResponse.getString("message");               // success 이름으로 boolean 타입의 값이 넘어온다
+                                                            if(realmessage.equals("ok"))
+                                                            {
+                                                                Toast.makeText(IDCancellationActivity.this, "ID Cancellation Success", Toast.LENGTH_SHORT).show();
+                                                                UserInfo.UserDataReset();
+                                                                Intent intent = new Intent(IDCancellationActivity.this,LoginActivity.class);      // 로그인 성공으로 메인화면으로 넘어감.
+                                                                IDCancellationActivity.this.startActivity(intent);
+                                                            }
+                                                            else
+                                                            {
+                                                                AlertDialog realdialog;
+                                                                AlertDialog.Builder builder = new AlertDialog.Builder(IDCancellationActivity.this);      // 로그인 실패로 알림을 띄움
+                                                                realdialog = builder.setMessage(realmessage)
+                                                                        .setNegativeButton("Try Again",null)
+                                                                        .create();
+                                                                realdialog.show();
+                                                            }
+                                                        }
+                                                        catch(Exception e)
+                                                        {
+                                                            e.printStackTrace();
+                                                        }
+                                                    }
+                                                };
+                                                IDRealCancellatioinRequest realcancellateRequest = new IDRealCancellatioinRequest(reponseRealListener,IDCancellationActivity.this);           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
+                                                RequestQueue queue = Volley.newRequestQueue(IDCancellationActivity.this);            // Volley의 사용법으로 request queue로 queue를 하나 선언하고
+                                                queue.add(realcancellateRequest);
+                                            }
+                                        })
+                                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                                            @Override
+                                            public void onClick(DialogInterface dialog, int which) {
+                                                return;
+                                            }
+                                        })
+                                        .create();
+                                dialog.show();
                             }
                             else
                             {
