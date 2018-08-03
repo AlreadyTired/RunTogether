@@ -191,11 +191,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         return view;
     }
 
-    public void onRatingSelected(int level, boolean reselected) {
-        Log.i(TAG, "Rated as: " + level + " - " + reselected);
-    }
-
-
     @Override
     public void onClick(View v) {
         if (v == buttonStart) {
@@ -655,6 +650,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         //smile
         srCO = v.findViewById(R.id.rv_co);
         srCO.setSelectedSmile(srCO.OKAY);
+        srCO.setIndicator(true);
         srCO.setOnSmileySelectionListener(new SmileRating.OnSmileySelectionListener() {
             @Override
             public void onSmileySelected(@BaseRating.Smiley int smiley, boolean reselected) {
@@ -683,6 +679,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
         srSO2 = v.findViewById(R.id.rv_so2);
         srSO2.setSelectedSmile(srSO2.OKAY);
+        srSO2.setIndicator(true);
         srSO2.setOnSmileySelectionListener(new SmileRating.OnSmileySelectionListener() {
             @Override
             public void onSmileySelected(@BaseRating.Smiley int smiley, boolean reselected) {
@@ -711,6 +708,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
         srNO2 = v.findViewById(R.id.rv_no2);
         srNO2.setSelectedSmile(srNO2.OKAY);
+        srNO2.setIndicator(true);
         srNO2.setOnSmileySelectionListener(new SmileRating.OnSmileySelectionListener() {
             @Override
             public void onSmileySelected(@BaseRating.Smiley int smiley, boolean reselected) {
@@ -739,6 +737,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
         srO3 = v.findViewById(R.id.rv_o3);
         srO3.setSelectedSmile(srO3.OKAY);
+        srO3.setIndicator(true);
         srO3.setOnSmileySelectionListener(new SmileRating.OnSmileySelectionListener() {
             @Override
             public void onSmileySelected(@BaseRating.Smiley int smiley, boolean reselected) {
@@ -767,6 +766,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
         srPM25 = v.findViewById(R.id.rv_pm25);
         srPM25.setSelectedSmile(srPM25.OKAY);
+        srPM25.setIndicator(true);
         srPM25.setOnSmileySelectionListener(new SmileRating.OnSmileySelectionListener() {
             @Override
             public void onSmileySelected(@BaseRating.Smiley int smiley, boolean reselected) {

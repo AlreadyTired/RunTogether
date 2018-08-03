@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.kimhyunwoo.runtogether.BackPressCloseHandler;
 import com.example.kimhyunwoo.runtogether.MapUtil;
 import com.example.kimhyunwoo.runtogether.R;
 import com.example.kimhyunwoo.runtogether.UserInfo;
@@ -27,6 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
+    //  뒤로가기 버튼을 2번 누르면 종료시키는 클레스
+    private BackPressCloseHandler backPressCloseHandler;
+
 
     LocationManager manager;
     ViewPager pager;
@@ -44,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mapUtil = new MapUtil();
+        backPressCloseHandler = new BackPressCloseHandler(this);
 
         Configuration config = new Configuration();
         config = mapUtil.setLocaleResources();
@@ -137,6 +142,12 @@ public class MainActivity extends AppCompatActivity {
         finish();
 
     }
+
+    @Override
+    public void onBackPressed(){
+        backPressCloseHandler.onBackPressed();;
+    }
+
 
     class PagerAdapter extends FragmentStatePagerAdapter {
 
