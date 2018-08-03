@@ -7,6 +7,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -228,8 +229,8 @@ public class LoginActivity extends AppCompatActivity {
                 }
 
                 // Volley 사용하기 위한 리스너 정의.
-                Response.Listener<String> reponseListener = new Response.Listener<String>() {
-
+                Response.Listener<String> reponseListener = new Response.Listener<String>()
+                {
                     // Volley 를 통해서 정상적으로 웹서버와 통신이 되면 실행되는 함수
                     @Override
                     public void onResponse(String response)
@@ -238,11 +239,18 @@ public class LoginActivity extends AppCompatActivity {
                         {
                             // JSON 형식으로 값을 response 에 받아서 넘어온다.
                             JSONObject jsonResponse = new JSONObject(response);
-                            String message = jsonResponse.getString("message");               // success 이름으로 boolean 타입의 값이 넘어온다
+                            String message = jsonResponse.getString("message");
+                            Log.v("message",message);
                             if(message.equals("ok"))
                             {
+                                String token = jsonResponse.getString("token");
+                                String nickname = jsonResponse.getString("userNickname");
+                                Log.v("token",token);
+                                Log.v("Nickname",nickname);
                                 Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
                                 UserInfo.setUserEmail(userEmail);
+                                UserInfo.setUserToken(token);
+                                UserInfo.setUserNickname(nickname);
                                 Intent intent = new Intent(LoginActivity.this,MainActivity.class);      // 로그인 성공으로 메인화면으로 넘어감.
                                 LoginActivity.this.startActivity(intent);
                             }

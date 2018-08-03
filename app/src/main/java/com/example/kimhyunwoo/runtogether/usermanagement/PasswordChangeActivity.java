@@ -1,7 +1,6 @@
 package com.example.kimhyunwoo.runtogether.usermanagement;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.support.design.widget.TextInputLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,11 +19,10 @@ import com.example.kimhyunwoo.runtogether.ManagementUtil;
 import com.example.kimhyunwoo.runtogether.R;
 
 import java.util.regex.Pattern;
-import com.example.kimhyunwoo.runtogether.ManagementUtil.*;
+
 import com.example.kimhyunwoo.runtogether.mainactivity.MainActivity;
 
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 public class PasswordChangeActivity extends AppCompatActivity {
 
@@ -47,12 +45,12 @@ public class PasswordChangeActivity extends AppCompatActivity {
         PresentPasswordFlag = NewPasswordFlag = ConfirmPasswordFlag = true;
 
         PresentPasswordText = (EditText)findViewById(R.id.presentpasswordText);PresentPasswordText.setHint(" Present Password");
-        NewPasswordText = (EditText)findViewById(R.id.newpasswordText);NewPasswordText.setHint(" New Password");
-        ConfirmNewPasswordText = (EditText)findViewById(R.id.confirmnewpasswordText);ConfirmNewPasswordText.setHint(" Confirm New Password");
+        NewPasswordText = (EditText)findViewById(R.id.ChangePasswordNewPasswordText);NewPasswordText.setHint(" New Password");
+        ConfirmNewPasswordText = (EditText)findViewById(R.id.ChangePasswordConfirmpasswordText);ConfirmNewPasswordText.setHint(" Confirm New Password");
         ChangePasswordButton = (Button)findViewById(R.id.ChangeButton);
         PresentPasswordTextLayout = (TextInputLayout)findViewById(R.id.presentpasswordTextLayout);
-        NewPasswordTextLayout  = (TextInputLayout)findViewById(R.id.NewpasswordTextLayout);
-        ConfirmPasswordTextLayout = (TextInputLayout)findViewById(R.id.confirmpasswordTextInputLayout);
+        NewPasswordTextLayout  = (TextInputLayout)findViewById(R.id.ChangePasswordNewPasswordTextLayout);
+        ConfirmPasswordTextLayout = (TextInputLayout)findViewById(R.id.ChangePasswordConfirmPasswordTextLayout);
 
         PresentPasswordText.addTextChangedListener(new TextWatcher() {
             String temporarystring;
@@ -153,7 +151,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
                     {
                         NewPasswordFlag = false;
                     }
-                    if(!(ConfirmNewPasswordText.getText().toString().equals("")) && !temporarystring.equals(ConfirmNewPasswordText.getText().toString()))
+                    if(!(ConfirmNewPasswordText.getText().toString().equals("")) && !(temporarystring.equals(ConfirmNewPasswordText.getText().toString())))
                     {
                         ConfirmPasswordTextLayout.setErrorEnabled(true);
                         ConfirmPasswordTextLayout.setError("The Passwords do not matched");
@@ -163,10 +161,20 @@ public class PasswordChangeActivity extends AppCompatActivity {
                     {
                         ConfirmPasswordFlag = false;
                     }
-
                     if(!Pattern.matches("(?=.*[a-z])(?=.*[0-9])[a-z0-9]{8,50}", temporarystring)) {
                         NewPasswordTextLayout.setErrorEnabled(true);
                         NewPasswordTextLayout.setError("Password should be mixing with small English letter and number");
+                        NewPasswordFlag = true;
+                        break;
+                    }
+                    else
+                    {
+                        NewPasswordFlag = false;
+                    }
+                    if(temporarystring.equals(PresentPasswordText.getText().toString()))
+                    {
+                        NewPasswordTextLayout.setErrorEnabled(true);
+                        NewPasswordTextLayout.setError("OldPassword and NewPassword is same, Please Check your Password");
                         NewPasswordFlag = true;
                         break;
                     }
@@ -284,8 +292,8 @@ public class PasswordChangeActivity extends AppCompatActivity {
                     return;
                 }
 
-                Response.Listener<String> reponseListener = new Response.Listener<String>() {
-
+                Response.Listener<String> reponseListener = new Response.Listener<String>()
+                {
                     // Volley 를 통해서 정상적으로 웹서버와 통신이 되면 실행되는 함수
                     @Override
                     public void onResponse(String response)

@@ -33,6 +33,7 @@ public class StartActivity extends AppCompatActivity {
             case R.id.Layouts:{
                 Intent i=new Intent(this,LoginActivity.class);
                 startActivity(i);
+
                 break;
             }
             default:

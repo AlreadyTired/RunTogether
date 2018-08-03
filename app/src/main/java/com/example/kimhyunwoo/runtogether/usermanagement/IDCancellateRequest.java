@@ -7,6 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.example.kimhyunwoo.runtogether.UserInfo;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -41,6 +42,7 @@ public class IDCancellateRequest extends StringRequest
         JSONObject informationObject = new JSONObject();
         try{
             informationObject.put("userPassword",userPassword);
+            informationObject.put("token", UserInfo.getUserToken());
         }catch(JSONException e)
         {
             e.printStackTrace();

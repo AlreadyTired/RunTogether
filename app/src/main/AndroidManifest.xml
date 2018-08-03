@@ -60,7 +60,7 @@
             android:name=".usermanagement.FindPasswordActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".usermanagement.PasswordChangeActivity" />
-        <activity android:name=".usermanagement.IDcancellationActivity"/>
+        <activity android:name=".usermanagement.IDCancellationActivity"/>
         <activity
             android:name=".upperactivity.MyAccountActivity"
             android:configChanges="orientation|keyboardHidden"
