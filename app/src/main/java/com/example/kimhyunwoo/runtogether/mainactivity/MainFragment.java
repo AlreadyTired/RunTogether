@@ -60,6 +60,8 @@ import com.hsalf.smilerating.SmileRating;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -84,8 +86,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     //  TODO(db 연동 시에 db에서 마지막 위치를 받아 오도록 하자)
     //  현재는 db에 연동이 안되어 임의로 설정함
     LatLng savedCoordinate = new LatLng(32.881033, -117.235601);
-    LatLng startLat = null;
-    LatLng endLat = null;
+    LatLng currentCoordinate = new LatLng(32.881033, -117.235601);
 
     boolean sendResult = false;
     boolean exercisingFlag = false;
@@ -96,6 +97,21 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     Button buttonCalc;
 
     private static final int markerRequstCode = 1234;
+    //===================================================================
+    //  속도 계산
+    String startTime;
+    String endTime;
+
+    double avgSpeed = 0d;
+    double sumDistance = 0d;
+
+    Handler timeHandle = null;
+    double timer = 0d;
+
+    long nowTime = 0;
+    Date date = null;
+    //TODO 서버랑 시간을 정의해야한다.
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yy/MM/dd/HH:mm:ss");
 
     //===================================================================
     //  메인 차트
@@ -150,6 +166,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         setHasOptionsMenu(true);
         //  Set google map util
         mapUtil = new MapUtil();
+
         btSingletion = BluetoothSingleton.getInstance();
         btUtil = new BluetoothUtil();
 
@@ -236,10 +253,11 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                 return;
             }
         }
+
         // GPS 리스너 등록
         manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, //위치제공자
-                3000, //변경사항 체크 주기 millisecond 단위임
-                1, //변경사항 체크 거리 meter단위
+                1000, //변경사항 체크 주기 millisecond 단위임
+                0, //변경사항 체크 거리 meter단위
                 locationListener //locationListener 함수를 호출 함
         );
 
@@ -273,9 +291,53 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             if(sendResult != false){
                 toastText = "press reset button!";
             }else if(exercisingFlag != true) {
+                //  운동 시작 시간
+                nowTime = System.currentTimeMillis();
+                date = new Date(nowTime);
+                startTime = dateFormat.format(date);
+
                 exercisingFlag = true;
-                startLat = savedCoordinate;
+
+                mapUtil.setStartLat(savedCoordinate);
+
+                timeHandle = new Handler(){
+                    @Override
+                    public void handleMessage(Message msg) {
+                        timeHandle.sendEmptyMessageDelayed(0, 1000);
+                        timer++;
+
+                        if(timer % 3 == 0){
+                            double dist = mapUtil.getDistance();
+                            sumDistance += dist;
+
+                            avgSpeed = dist/timer;
+                            //  소수 2자리 계산
+                            avgSpeed = (int)(avgSpeed*100)/100.0;
+
+                            //  현재 좌표에 마커를 찍기 위해서 옵션에 저장
+                            markerOptions.position(currentCoordinate);
+
+                            mapUtil.polylineOnMap(map, savedCoordinate, currentCoordinate);
+                            savedCoordinate = currentCoordinate;
+
+                            //  마커 삭제
+                            mapUtil.deleteMarker(map, markerOptions);
+
+                            //  카메라 움직임
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentCoordinate,mapUtil.zoomLevel));
+
+//                            Context context = getActivity().getApplicationContext();
+//                            Toast toast = Toast.makeText(context,"now time :"+ timer, Toast.LENGTH_SHORT);
+//                            toast.show();
+                        }
+//                        super.handleMessage(msg);
+                    }
+                };
+
+                timeHandle.sendEmptyMessage(0);
+
                 toastText = "exercise start!!";
+
             }else{
                 toastText = "already start!!";
             }
@@ -288,9 +350,24 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             String toastText = "";
 
             if(exercisingFlag != false) {
+                //  운동 종료 시간
+                nowTime = System.currentTimeMillis();
+                date = new Date(nowTime);
+                endTime = dateFormat.format(date);
+
                 exercisingFlag = false;
                 sendResult = true;
-                endLat = savedCoordinate;
+
+                mapUtil.setEndLat(savedCoordinate);
+
+                timeHandle.removeMessages(0);
+                timer = 0d;
+
+                Context context = getActivity().getApplicationContext();
+                Toast toast = Toast.makeText(context,"speed :"+ avgSpeed, Toast.LENGTH_SHORT);
+                toast.show();
+
+
                 toastText = "exercise end!!";
             }else{
                 toastText = "press start button!!";
@@ -321,15 +398,10 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             //Calculating the distance in meters
             Double distance = 0d;
 
-            //  startLat, endLat이 null일 때 앱 튕김 방지
-            if(startLat != null && endLat != null) {
-                distance = SphericalUtil.computeDistanceBetween(startLat, endLat);
-            }
+//            mapUtil.calculate(distance, avgSpeed);
 
             Context context = getActivity().getApplicationContext();
-            //Displaying the distance
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context,"distance " + distance, duration);
+            Toast toast = Toast.makeText(context,"distance " + distance, Toast.LENGTH_SHORT);
             toast.show();
         }
     }
@@ -356,18 +428,18 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
         //  현재는 사용 안함.
         //  사용하면 다시 활성화 하자.
-//        //  좌표 적용
-//        //  마커생성
-//        markerOptions.position(savedCoordinate); //좌표
-//        markerOptions.title("임시 마커");
-//        //  마커를 화면에 그림
-//        map.addMarker(markerOptions);
-//        //  맵의 중심을 해당 좌표로 이동
-//        //  savedCoordinate : 좌표
-//        //  v: 줌레벨
-//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(savedCoordinate,util.zoomLevel));
-//
-//        map.setOnMarkerClickListener(this);
+        //  좌표 적용
+        //  마커생성
+        markerOptions.position(savedCoordinate); //좌표
+        markerOptions.title("임시 마커");
+        //  마커를 화면에 그림
+        map.addMarker(markerOptions);
+        //  맵의 중심을 해당 좌표로 이동
+        //  savedCoordinate : 좌표
+        //  v: 줌레벨
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(savedCoordinate,mapUtil.zoomLevel));
+
+        map.setOnMarkerClickListener(this);
     }
 
     //GPS 사용을 위해서 좌표 리스너를 생성
@@ -380,20 +452,24 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             double currentLat = location.getLatitude();
 
             //  바뀐 현재 좌표
-            LatLng currentCoordinate = new LatLng(currentLat ,currentLng);
+            currentCoordinate = new LatLng(currentLat ,currentLng);
+
+            if(exercisingFlag == true) {
+                return;
+            }
 
             //  현재 좌표에 마커를 찍기 위해서 옵션에 저장
             markerOptions.position(currentCoordinate);
-
-            if(exercisingFlag == true) {
-                // 라인 그리기
-                mapUtil.polylineOnMap(map, savedCoordinate, currentCoordinate);
-                savedCoordinate = currentCoordinate;
-            }
+//
+//            if(exercisingFlag == true) {
+//                // 라인 그리기
+//                mapUtil.polylineOnMap(map, savedCoordinate, currentCoordinate);
+//                savedCoordinate = currentCoordinate;
+//            }
 
             //  마커 삭제
             mapUtil.deleteMarker(map, markerOptions);
-
+            //  카메라 움직임
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentCoordinate,mapUtil.zoomLevel));
 
             //  디버깅 용
