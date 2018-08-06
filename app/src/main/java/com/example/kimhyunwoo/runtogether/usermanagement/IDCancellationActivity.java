@@ -26,7 +26,6 @@ import java.util.regex.Pattern;
 
 public class IDCancellationActivity extends AppCompatActivity {
 
-    private String userPassword;
     private EditText PasswordText,ConfirmPasswordText;
     private TextInputLayout PasswordTextLayout,ConfirmPasswordTextLayout;
     private Button IDcancellationButton;
@@ -71,7 +70,7 @@ public class IDCancellationActivity extends AppCompatActivity {
                     {
                         PasswordFlag = false;
                     }
-                    if(!Pattern.matches("(?=.*[a-z])(?=.*[0-9])[a-z0-9]{8,50}", temporarystring)) {
+                    if(!Pattern.matches("(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{8,50}", temporarystring)) {
                         PasswordTextLayout.setErrorEnabled(true);
                         PasswordTextLayout.setError("password should be mixing with small English letter and number");
                         PasswordFlag = true;
@@ -184,6 +183,7 @@ public class IDCancellationActivity extends AppCompatActivity {
         IDcancellationButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String userPassword = PasswordText.getText().toString();
                 if(PasswordFlag)
                 {
                     AlertDialog.Builder builder = new AlertDialog.Builder(IDCancellationActivity.this);
