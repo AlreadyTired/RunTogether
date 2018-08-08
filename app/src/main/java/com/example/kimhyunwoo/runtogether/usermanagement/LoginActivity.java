@@ -235,6 +235,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response)
                     {
+                        Log.v("LoginResponse",response);
                         try
                         {
                             // JSON 형식으로 값을 response 에 받아서 넘어온다.

@@ -26,7 +26,13 @@ import com.github.mikephil.charting.interfaces.datasets.IScatterDataSet;
 import com.github.mikephil.charting.utils.ColorTemplate;
 import com.github.mikephil.charting.utils.FileUtils;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 public abstract class SimpleFragment extends Fragment {
     
@@ -42,25 +48,21 @@ public abstract class SimpleFragment extends Fragment {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
     
-    protected LineData getComplexity(String datatype,ArrayList<String> array) {
+    protected LineData getComplexity(String DataType,ArrayList<String> DataInfo){                          // JSON Array 에서 받아온 데이터가지고 순서대로 집어넣는다.
+        ArrayList<ILineDataSet> sets = new ArrayList<ILineDataSet>();
+        List<Entry> list = new ArrayList<>();
+        for(int i=0;i<DataInfo.size();i++)
+        {
+            list.add(new Entry(i,Integer.parseInt(DataInfo.get(i))));
+        }
 
-//        for(int i=0;i<array.size();i++)
-//        {
-//            entries.add(new Entry(i,Float.parseFloat(array.get(i))));
-//        }
+        LineDataSet ds1 = new LineDataSet(list,DataType+"                                                        Y Axis = Value  ,      X Axis = Date");
+        // load DataSets from textfiles in assets folders
+        sets.add(ds1);
 
-        ArrayList<Entry> entries = new ArrayList<>();
-        entries.add(new Entry(08.14f,3f));
-        entries.add(new Entry(08.15f,8f));
-        entries.add(new Entry(08.16f,6f));
-        entries.add(new Entry(08.17f,2f));
-        entries.add(new Entry(08.18f,18f));
-        entries.add(new Entry(08.19f,9f));
-        entries.add(new Entry(08.20f,4f));
-        entries.add(new Entry(08.21f,15f));
-        LineDataSet dataSet = new LineDataSet(entries,datatype);
-        LineData lineData = new LineData(dataSet);
-        return lineData;
+        LineData d = new LineData(sets);
+        d.setValueTypeface(tf);
+        return d;
     }
 
     

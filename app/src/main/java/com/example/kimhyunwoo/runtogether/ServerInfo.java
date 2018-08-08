@@ -10,5 +10,5 @@ public class ServerInfo {
     public static final String idcancellationURL = "api/auth/cancel/cancellation";
     public static final String idrealcancellationURL = "api/auth/cancel/complete";
     public static final String findpasswordURL = "api/auth/password/forgotten";
-    public static final String datagetURL = "";
+    public static final String historicaldataviewURL = "api/sensor/historical/view";
 }

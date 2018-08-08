@@ -20,7 +20,7 @@ import static com.example.kimhyunwoo.runtogether.ServerInfo.*;
 import static com.example.kimhyunwoo.runtogether.UserInfo.*;
 
 public class DataGetRequest extends StringRequest {
-    final static private String URL = serverURL + datagetURL;                          // URL 헤더파일로 묶어서 수정해야함.
+    final static private String URL = serverURL + historicaldataviewURL;                          // URL 헤더파일로 묶어서 수정해야함.
     private Map<String,String> parameters;                                                          // Map 형식으로 데이터를 저장(JSON 이기에 Stirng2개)
 
     // Volley의 StringRequest를 선언받아서 사용해야 하는데 내가 사용할 값들과 부모의 인자값까지 사용해야함. 앞서 선언한 map 에 필요한 값들을 JSON형식의 String 2개값을 넣어서 보냄.
