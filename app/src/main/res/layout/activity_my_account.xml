@@ -1,31 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".upperactivity.MyAccountActivity">
+    android:background="@drawable/gradient_background"
+    tools:context=".upperactivity.MyAccountActivity"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="30dp">
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="10dp"
+            android:text="My Account Page"
+            android:textColor="#ffffff"
+            android:textSize="30dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/SensorListViewButton"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:text="my account activity"
-            />
+            android:text="Sensor List View"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:background="@color/colorPrimaryDark"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp"/>
+
         <Button
             android:id="@+id/PasswordChangeButton"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:text="Password Change"/>
+            android:layout_marginVertical="10dp"
+            android:text="Password Change"
+            android:textColor="#ffffff"
+            android:background="@color/colorPrimaryDark"
+            android:textStyle="bold"/>
+
         <Button
             android:id="@+id/IDCancellationInputButton"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:text="ID Cancellation Button"/>
+            android:layout_marginTop="10dp"
+            android:text="ID Cancellation"
+            android:textColor="#ffffff"
+            android:background="@color/colorPrimaryDark"
+            android:textStyle="bold"/>
 
     </LinearLayout>
 
-</android.support.constraint.ConstraintLayout>
+</LinearLayout>

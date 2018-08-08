@@ -66,7 +66,7 @@ public class UpperFragment extends Fragment {
         buttonBluetooth = view.findViewById(R.id.btn_bluetooth);
         buttonLogout = view.findViewById(R.id.btn_logout);
 
-        UserNicknameView.setText("Welcome, "+UserInfo.getUserNickname());
+        UserNicknameView.setText("Welcome! ,"+UserInfo.getUserNickname());
 
         buttonInfo.setOnClickListener(new View.OnClickListener(){
             @Override
