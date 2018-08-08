@@ -2,6 +2,7 @@ package com.example.kimhyunwoo.runtogether.usermanagement;
 
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -35,7 +36,6 @@ public class IDCancellateRequest extends StringRequest
                         .create();
                 dialog.show();
                 return;
-
             }
         });
         parameters = new HashMap<>();
@@ -48,6 +48,7 @@ public class IDCancellateRequest extends StringRequest
             e.printStackTrace();
         }
         parameters.put("json",informationObject.toString());
+        Log.v("idcancelfirstpart",informationObject.toString());
     }
 
     public Map<String,String>getParams()

@@ -154,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
                         PasswordFlag = false;
                     }
 
-                    if(!Pattern.matches("(?=.*[a-z])(?=.*[0-9])[a-z0-9]{8,50}", temporarystring)) {
+                    if(!Pattern.matches("(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{8,50}", temporarystring)) {
                         ErrorMessage = "password should be mixing with small English letter and number";
                         PasswordFlag = true;
                         break;
@@ -235,6 +235,7 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(String response)
                     {
+                        Log.v("LoginResponse",response);
                         try
                         {
                             // JSON 형식으로 값을 response 에 받아서 넘어온다.
