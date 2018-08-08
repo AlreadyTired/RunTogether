@@ -3,9 +3,9 @@ package com.example.kimhyunwoo.runtogether;
 import android.app.Application;
 
 public class UserInfo extends Application{
-    private static String UserEmail = "";
-    private static String UserToken = "";
-    private static String UserNickname = "";
+    private static String UserEmail="";
+    private static String UserToken="";
+    private static String UserNickname="";
 
     public static void setUserNickname(String email)
     {

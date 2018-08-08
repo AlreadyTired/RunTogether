@@ -199,7 +199,7 @@ public class RegisterActivity extends AppCompatActivity {
                         ConfirmPasswordFlag = false;
                     }
 
-                    if(!Pattern.matches("(?=.*[a-z])(?=.*[0-9])[a-z0-9]{8,50}", temporarystring)) {
+                    if(!Pattern.matches("(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{8,50}", temporarystring)) {
                         passwordTextLayout.setErrorEnabled(true);
                         passwordTextLayout.setError("password should be mixing with small English letter and number");
                         PasswordFlag = true;

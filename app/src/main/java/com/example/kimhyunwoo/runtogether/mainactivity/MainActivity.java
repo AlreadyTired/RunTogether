@@ -95,6 +95,7 @@ public class MainActivity extends AppCompatActivity {
         pager.setCurrentItem(adapter.getCount()-2);
         //  페이저 변경 됬을 때 변경해주는 리스너
         pager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tab));
+        pager.setOffscreenPageLimit(3);
 
         //  탭이 변경 됬을 때 변경해주는 리스너
         tab.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(pager));

@@ -257,7 +257,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         // GPS 리스너 등록
         manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, //위치제공자
                 1000, //변경사항 체크 주기 millisecond 단위임
-                0, //변경사항 체크 거리 meter단위
+                1, //변경사항 체크 거리 meter단위
                 locationListener //locationListener 함수를 호출 함
         );
 
@@ -455,6 +455,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             currentCoordinate = new LatLng(currentLat ,currentLng);
 
             if(exercisingFlag == true) {
+                Log.v("LocationListner: exercisingFlag TRUE","exit!!!!!!!!!!!!!!!");
                 return;
             }
 

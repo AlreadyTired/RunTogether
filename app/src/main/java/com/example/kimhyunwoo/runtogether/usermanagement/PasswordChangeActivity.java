@@ -87,7 +87,7 @@ public class PasswordChangeActivity extends AppCompatActivity {
                         PresentPasswordFlag = false;
                     }
 
-                    if(!Pattern.matches("(?=.*[a-z])(?=.*[0-9])[a-z0-9]{8,20}", temporarystring)) {
+                    if(!Pattern.matches("(?=.*[a-zA-Z])(?=.*[0-9])[a-zA-Z0-9]{8,50}", temporarystring)) {
                         PresentPasswordTextLayout.setErrorEnabled(true);
                         PresentPasswordTextLayout.setError("Password should be mixing with small English letter and number");
                         PresentPasswordFlag = true;
