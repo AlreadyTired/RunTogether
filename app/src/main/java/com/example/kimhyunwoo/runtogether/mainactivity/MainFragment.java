@@ -25,6 +25,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -38,6 +39,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.example.kimhyunwoo.runtogether.BluetoothSingleton;
 import com.example.kimhyunwoo.runtogether.BluetoothUtil;
 import com.example.kimhyunwoo.runtogether.MapUtil;
@@ -45,6 +49,9 @@ import com.example.kimhyunwoo.runtogether.R;
 import com.example.kimhyunwoo.runtogether.bluetoothmanagement.BluetoothChatService;
 import com.example.kimhyunwoo.runtogether.bluetoothmanagement.Constants;
 import com.example.kimhyunwoo.runtogether.bluetoothmanagement.DeviceListActivity;
+import com.example.kimhyunwoo.runtogether.usermanagement.FindPasswordActivity;
+import com.example.kimhyunwoo.runtogether.usermanagement.FindPasswordRequest;
+import com.example.kimhyunwoo.runtogether.usermanagement.LoginActivity;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -95,6 +102,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     Button buttonEnd;
     Button buttonReset;
     Button buttonCalc;
+
+    private AlertDialog dialog;
 
     private static final int markerRequstCode = 1234;
     //===================================================================
@@ -686,8 +695,42 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                     // save the connected device's name
                     mConnectedDeviceName = msg.getData().getString(Constants.DEVICE_NAME);
                     if (null != activity) {
-                        Toast.makeText(activity, "Connected to "
-                                + mConnectedDeviceName, Toast.LENGTH_SHORT).show();
+
+                        // 센서 서버에 등록하는 리퀘스트,리스폰스.
+                        Response.Listener<String> reponseListener = new Response.Listener<String>() {
+
+                            // Volley 를 통해서 정상적으로 웹서버와 통신이 되면 실행되는 함수
+                            @Override
+                            public void onResponse(String response)
+                            {
+                                try
+                                {
+                                    // JSON 형식으로 값을 response 에 받아서 넘어온다.
+                                    JSONObject jsonResponse = new JSONObject(response);
+                                    String message = jsonResponse.getString("message");
+                                    if(message.equals("ok"))
+                                    {
+                                        Toast.makeText(getContext(), "Device registration complete!", Toast.LENGTH_LONG).show();
+                                    }
+                                    else
+                                    {
+                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                                        dialog = builder.setMessage(message)
+                                                .setNegativeButton("Try Again Bluetooth Connect!",null)
+                                                .create();
+                                        dialog.show();
+                                    }
+                                }
+                                catch(Exception e)
+                                {
+                                    e.printStackTrace();
+                                }
+                            }
+                        };
+                        //  맥, 이름 날라옴(btSingletion.getDeviceAdress(),btSingletion.getDeviceName())
+                        SensorRegistrationRequest SensorRegistRequest = new SensorRegistrationRequest( btSingletion.getDeviceAdress(),btSingletion.getDeviceName(),reponseListener,getContext());           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
+                        RequestQueue queue = Volley.newRequestQueue(getContext());            // Volley의 사용법으로 request queue로 queue를 하나 선언하고
+                        queue.add(SensorRegistRequest);
                     }
                     break;
                 case Constants.MESSAGE_TOAST:

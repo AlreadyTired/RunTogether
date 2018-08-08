@@ -84,14 +84,17 @@ public class HistoryFragment extends SimpleFragment {
         // 데이터 목록을 저장하는 어레이 변수
         ArrayList<String> DataTypeList = new ArrayList<>();
         DataTypeList.add("SO2");
+        DataTypeList.add("SO2 AQI");
         DataTypeList.add("CO");
-        DataTypeList.add("CO2");
-        DataTypeList.add("NO");
+        DataTypeList.add("CO AQI");
         DataTypeList.add("NO2");
+        DataTypeList.add("NO2 AQI");
         DataTypeList.add("O3");
+        DataTypeList.add("O3 AQI");
         DataTypeList.add("PM2.5");
-        DataTypeList.add("PM10");
+        DataTypeList.add("PM2.5 AQI");
         DataTypeList.add("Temp");
+        DataTypeList.add("HeartRate");
 
         // 기간을 저장하는 어레이 변수
         ArrayList<String> periodlist = new ArrayList<>();
@@ -121,14 +124,17 @@ public class HistoryFragment extends SimpleFragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if(position == 0) { DataTypeStirng = "so2";}
-                if(position == 1) { DataTypeStirng = "co";}
-                if(position == 2) { DataTypeStirng = "co2";}
-                if(position == 3) { DataTypeStirng = "no";}
+                if(position == 1) { DataTypeStirng = "so2aqi";}
+                if(position == 2) { DataTypeStirng = "co";}
+                if(position == 3) { DataTypeStirng = "coaqi";}
                 if(position == 4) { DataTypeStirng = "no2";}
-                if(position == 5) { DataTypeStirng = "o3";}
-                if(position == 6) { DataTypeStirng = "pm25";}
-                if(position == 7) { DataTypeStirng = "pm10";}
-                if(position == 8) { DataTypeStirng = "temp";}
+                if(position == 5) { DataTypeStirng = "no2aqi";}
+                if(position == 6) { DataTypeStirng = "o3";}
+                if(position == 7) { DataTypeStirng = "o3aqi";}
+                if(position == 8) { DataTypeStirng = "pm25";}
+                if(position == 9) { DataTypeStirng = "pm25aqi";}
+                if(position == 10) { DataTypeStirng = "temp";}
+                if(position == 11) { DataTypeStirng = "heartrate";}
             }
 
             @Override
