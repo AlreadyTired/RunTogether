@@ -43,15 +43,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="reset"
-                android:id="@+id/btn_reset"/>
+                android:text="calc"
+                android:id="@+id/btn_calc"
+                />
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="calc"
-                android:id="@+id/btn_calc"
-            />
+                android:text="reset"
+                android:id="@+id/btn_reset"/>
         </LinearLayout>
 
         <LinearLayout

@@ -60,6 +60,8 @@ import com.hsalf.smilerating.SmileRating;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
@@ -84,8 +86,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     //  TODO(db 연동 시에 db에서 마지막 위치를 받아 오도록 하자)
     //  현재는 db에 연동이 안되어 임의로 설정함
     LatLng savedCoordinate = new LatLng(32.881033, -117.235601);
-    LatLng startLat = null;
-    LatLng endLat = null;
+    LatLng currentCoordinate = new LatLng(32.881033, -117.235601);
 
     boolean sendResult = false;
     boolean exercisingFlag = false;
@@ -95,20 +96,38 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     Button buttonReset;
     Button buttonCalc;
 
-    //  TODO(그루트와 코드 번호를 정의 해보자)
     private static final int markerRequstCode = 1234;
-    //  구글 맵 변수 끝
     //===================================================================
+    //  속도 계산
+    String startTime;
+    String endTime;
+
+    double avgSpeed = 0d;
+    double sumDistance = 0d;
+
+    Handler timeHandle = null;
+    double timer = 0d;
+
+    long nowTime = 0;
+    Date date = null;
+    //TODO 서버랑 시간을 정의해야한다.
+    SimpleDateFormat dateFormat = new SimpleDateFormat("yy/MM/dd/HH:mm:ss");
 
     //===================================================================
+    //  메인 차트
     TextView textCO;
     TextView textSO2;
     TextView textNO2;
     TextView textO3;
     TextView textPM25;
 
-    private static final int SELECT_DEVICE_REQUEST_CODE = 42;
+    private SmileRating srCO;
+    private SmileRating srSO2;
+    private SmileRating srNO2;
+    private SmileRating srO3;
+    private SmileRating srPM25;
 
+    //===================================================================
     //  블루투스 변수
     BluetoothUtil btUtil;
     private static final String TAG = "BluetoothChatFragment";
@@ -137,17 +156,31 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
     BluetoothSingleton btSingletion;
 
-    //  불루투스 변수 끝
-    //===================================================================
-
     public MainFragment() {
         // Required empty public constructor
     }
-    private SmileRating srCO;
-    private SmileRating srSO2;
-    private SmileRating srNO2;
-    private SmileRating srO3;
-    private SmileRating srPM25;
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        //  Set google map util
+        mapUtil = new MapUtil();
+
+        btSingletion = BluetoothSingleton.getInstance();
+        btUtil = new BluetoothUtil();
+
+        // Get local Bluetooth adapter
+        btSingletion.mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+
+        // If the adapter is null, then Bluetooth is not supported
+        if (btSingletion.mBluetoothAdapter == null) {
+            FragmentActivity activity = getActivity();
+            Toast.makeText(activity, "Bluetooth is not available", Toast.LENGTH_LONG).show();
+            activity.finish();
+
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -192,6 +225,64 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     }
 
     @Override
+    public void onStart() {
+        super.onStart();
+        // If BT is not on, request that it be enabled.
+        // setupChat() will then be called during onActivityResult
+        if (!btSingletion.mBluetoothAdapter.isEnabled()) {
+            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
+            // Otherwise, setup the chat session
+        } else if (btSingletion.mChatService == null) {
+            setupChat();
+        }
+    }
+
+
+    // 현재 프래그먼트가 러닝직전
+    // 생명주기를 생각하면 onResume
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        //마시멜로 이상버전에서는 런타임 권한 체크여부를 확인
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            // GPS 사용을 위한 권한 휙득이 되어 있지 않으면 리스너 해제
+            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
+                    != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+        }
+
+        // GPS 리스너 등록
+        manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, //위치제공자
+                1000, //변경사항 체크 주기 millisecond 단위임
+                1, //변경사항 체크 거리 meter단위
+                locationListener //locationListener 함수를 호출 함
+        );
+
+        //==========================================================================
+        // Performing this check in onResume() covers the case in which BT was
+        // not enabled during onStart(), so we were paused to enable it...
+        // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
+        if (btSingletion.mChatService != null) {
+            // Only if the state is STATE_NONE, do we know that we haven't started already
+            if (btSingletion.mChatService.getState() == BluetoothChatService.STATE_NONE) {
+                // Start the Bluetooth chat services
+                btSingletion.mChatService.start();
+            }
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (btSingletion.mChatService != null) {
+            btSingletion.mChatService.stop();
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         if (v == buttonStart) {
             String toastText = "";
@@ -200,9 +291,53 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             if(sendResult != false){
                 toastText = "press reset button!";
             }else if(exercisingFlag != true) {
+                //  운동 시작 시간
+                nowTime = System.currentTimeMillis();
+                date = new Date(nowTime);
+                startTime = dateFormat.format(date);
+
                 exercisingFlag = true;
-                startLat = savedCoordinate;
+
+                mapUtil.setStartLat(savedCoordinate);
+
+                timeHandle = new Handler(){
+                    @Override
+                    public void handleMessage(Message msg) {
+                        timeHandle.sendEmptyMessageDelayed(0, 1000);
+                        timer++;
+
+                        if(timer % 3 == 0){
+                            double dist = mapUtil.getDistance();
+                            sumDistance += dist;
+
+                            avgSpeed = dist/timer;
+                            //  소수 2자리 계산
+                            avgSpeed = (int)(avgSpeed*100)/100.0;
+
+                            //  현재 좌표에 마커를 찍기 위해서 옵션에 저장
+                            markerOptions.position(currentCoordinate);
+
+                            mapUtil.polylineOnMap(map, savedCoordinate, currentCoordinate);
+                            savedCoordinate = currentCoordinate;
+
+                            //  마커 삭제
+                            mapUtil.deleteMarker(map, markerOptions);
+
+                            //  카메라 움직임
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentCoordinate,mapUtil.zoomLevel));
+
+//                            Context context = getActivity().getApplicationContext();
+//                            Toast toast = Toast.makeText(context,"now time :"+ timer, Toast.LENGTH_SHORT);
+//                            toast.show();
+                        }
+//                        super.handleMessage(msg);
+                    }
+                };
+
+                timeHandle.sendEmptyMessage(0);
+
                 toastText = "exercise start!!";
+
             }else{
                 toastText = "already start!!";
             }
@@ -215,9 +350,24 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             String toastText = "";
 
             if(exercisingFlag != false) {
+                //  운동 종료 시간
+                nowTime = System.currentTimeMillis();
+                date = new Date(nowTime);
+                endTime = dateFormat.format(date);
+
                 exercisingFlag = false;
                 sendResult = true;
-                endLat = savedCoordinate;
+
+                mapUtil.setEndLat(savedCoordinate);
+
+                timeHandle.removeMessages(0);
+                timer = 0d;
+
+                Context context = getActivity().getApplicationContext();
+                Toast toast = Toast.makeText(context,"speed :"+ avgSpeed, Toast.LENGTH_SHORT);
+                toast.show();
+
+
                 toastText = "exercise end!!";
             }else{
                 toastText = "press start button!!";
@@ -248,29 +398,12 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             //Calculating the distance in meters
             Double distance = 0d;
 
-            //  startLat, endLat이 null일 때 앱 튕김 방지
-            if(startLat != null && endLat != null) {
-                distance = SphericalUtil.computeDistanceBetween(startLat, endLat);
-            }
+//            mapUtil.calculate(distance, avgSpeed);
 
             Context context = getActivity().getApplicationContext();
-            //Displaying the distance
-            int duration = Toast.LENGTH_SHORT;
-            Toast toast = Toast.makeText(context,"distance " + distance, duration);
+            Toast toast = Toast.makeText(context,"distance " + distance, Toast.LENGTH_SHORT);
             toast.show();
         }
-    }
-
-    @Override
-    public boolean onMarkerClick(Marker marker) {
-        //dialog fragment class 생성
-        MarkerClickFragment newFragment = new MarkerClickFragment();
-        // onActivityResult에서 1234 라는 요청 코드를 받아서 처리할 수 있도록 설정
-        newFragment.setTargetFragment(this, markerRequstCode );
-        //"dialog"라는 태그를 갖는 프래그먼트 생성
-        newFragment.show(getFragmentManager(), "dialog");
-
-        return true;
     }
 
     // 다이얼이 끝나고 여기로 결과가 전송됨
@@ -287,17 +420,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                     Toast.makeText(getActivity(), "Sending Friend request!\n to "+id ,Toast.LENGTH_LONG).show();
                 }
         }
-
-        if (requestCode == SELECT_DEVICE_REQUEST_CODE &&
-                resultCode == Activity.RESULT_OK) {
-            // User has chosen to pair with the Bluetooth device.
-            BluetoothDevice deviceToPair =
-                    data.getParcelableExtra(CompanionDeviceManager.EXTRA_DEVICE);
-            deviceToPair.createBond();
-
-            // ... Continue interacting with the paired device.
-        }
-
     }
 
     @Override
@@ -306,52 +428,18 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
         //  현재는 사용 안함.
         //  사용하면 다시 활성화 하자.
-//        //  좌표 적용
-//        //  마커생성
-//        markerOptions.position(savedCoordinate); //좌표
-//        markerOptions.title("임시 마커");
-//        //  마커를 화면에 그림
-//        map.addMarker(markerOptions);
-//        //  맵의 중심을 해당 좌표로 이동
-//        //  savedCoordinate : 좌표
-//        //  v: 줌레벨
-//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(savedCoordinate,util.zoomLevel));
-//
-//        map.setOnMarkerClickListener(this);
-    }
+        //  좌표 적용
+        //  마커생성
+        markerOptions.position(savedCoordinate); //좌표
+        markerOptions.title("임시 마커");
+        //  마커를 화면에 그림
+        map.addMarker(markerOptions);
+        //  맵의 중심을 해당 좌표로 이동
+        //  savedCoordinate : 좌표
+        //  v: 줌레벨
+        map.moveCamera(CameraUpdateFactory.newLatLngZoom(savedCoordinate,mapUtil.zoomLevel));
 
-    // 현재 프래그먼트가 러닝직전
-    // 생명주기를 생각하면 onResume
-    @Override
-    public void onResume() {
-        super.onResume();
-
-        //마시멜로 이상버전에서는 런타임 권한 체크여부를 확인
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            // GPS 사용을 위한 권한 휙득이 되어 있지 않으면 리스너 해제
-            if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION)
-                    != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-        }
-        // GPS 리스너 등록
-        manager.requestLocationUpdates(LocationManager.GPS_PROVIDER, //위치제공자
-                3000, //변경사항 체크 주기 millisecond 단위임
-                1, //변경사항 체크 거리 meter단위
-                locationListener //locationListener 함수를 호출 함
-        );
-
-        //==========================================================================
-        // Performing this check in onResume() covers the case in which BT was
-        // not enabled during onStart(), so we were paused to enable it...
-        // onResume() will be called when ACTION_REQUEST_ENABLE activity returns.
-        if (btSingletion.mChatService != null) {
-            // Only if the state is STATE_NONE, do we know that we haven't started already
-            if (btSingletion.mChatService.getState() == BluetoothChatService.STATE_NONE) {
-                // Start the Bluetooth chat services
-                btSingletion.mChatService.start();
-            }
-        }
+        map.setOnMarkerClickListener(this);
     }
 
     //GPS 사용을 위해서 좌표 리스너를 생성
@@ -362,29 +450,27 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             double currentLng = location.getLongitude();
             //위도
             double currentLat = location.getLatitude();
-            // 현재는 사용하지 않음 아마도 사용 안할듯?
-//            //고도
-//            double alt = location.getAltitude();
-//            //정확도
-//            float acc = location.getAccuracy();
-//            //위치제공자(ISP)
-//            String provider = location.getProvider();
 
             //  바뀐 현재 좌표
-            LatLng currentCoordinate = new LatLng(currentLat ,currentLng);
+            currentCoordinate = new LatLng(currentLat ,currentLng);
+
+            if(exercisingFlag == true) {
+                Log.v("LocationListner: exercisingFlag TRUE","exit!!!!!!!!!!!!!!!");
+                return;
+            }
 
             //  현재 좌표에 마커를 찍기 위해서 옵션에 저장
             markerOptions.position(currentCoordinate);
-
-            if(exercisingFlag == true) {
-                // 라인 그리기
-                mapUtil.polylineOnMap(map, savedCoordinate, currentCoordinate);
-                savedCoordinate = currentCoordinate;
-            }
+//
+//            if(exercisingFlag == true) {
+//                // 라인 그리기
+//                mapUtil.polylineOnMap(map, savedCoordinate, currentCoordinate);
+//                savedCoordinate = currentCoordinate;
+//            }
 
             //  마커 삭제
             mapUtil.deleteMarker(map, markerOptions);
-
+            //  카메라 움직임
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentCoordinate,mapUtil.zoomLevel));
 
             //  디버깅 용
@@ -410,50 +496,16 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         }
     };
 
-    //=========================================================================
-
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        //  Set google map util
-        mapUtil = new MapUtil();
-        btSingletion = BluetoothSingleton.getInstance();
-        btUtil = new BluetoothUtil();
+    public boolean onMarkerClick(Marker marker) {
+        //dialog fragment class 생성
+        MarkerClickFragment newFragment = new MarkerClickFragment();
+        // onActivityResult에서 1234 라는 요청 코드를 받아서 처리할 수 있도록 설정
+        newFragment.setTargetFragment(this, markerRequstCode );
+        //"dialog"라는 태그를 갖는 프래그먼트 생성
+        newFragment.show(getFragmentManager(), "dialog");
 
-
-
-        // Get local Bluetooth adapter
-        btSingletion.mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-
-        // If the adapter is null, then Bluetooth is not supported
-        if (btSingletion.mBluetoothAdapter == null) {
-            FragmentActivity activity = getActivity();
-            Toast.makeText(activity, "Bluetooth is not available", Toast.LENGTH_LONG).show();
-            activity.finish();
-
-        }
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // If BT is not on, request that it be enabled.
-        // setupChat() will then be called during onActivityResult
-        if (!btSingletion.mBluetoothAdapter.isEnabled()) {
-            Intent enableIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-            startActivityForResult(enableIntent, REQUEST_ENABLE_BT);
-            // Otherwise, setup the chat session
-        } else if (btSingletion.mChatService == null) {
-            setupChat();
-        }
-    }
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        if (btSingletion.mChatService != null) {
-            btSingletion.mChatService.stop();
-        }
+        return true;
     }
 
     @Override
