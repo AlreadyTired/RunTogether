@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -16,6 +17,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.maps.android.SphericalUtil;
 
 import java.util.Locale;
 
@@ -23,9 +25,31 @@ public class MapUtil {
     private final String TAG = "MapUtil TAG : ";
     private final String DEFAULT_LOCALE_STRING = "en_US";
 
-    public  int zoomLevel = 18;
+    private Marker delete = null;
 
-    Marker delete = null;
+    private LatLng startLat = null;
+    private LatLng endLat = null;
+
+
+    public  int zoomLevel = 18;
+    private double distance = 0d;
+
+    public void setStartLat(LatLng lat){
+        this.startLat = lat;
+    }
+
+    public void setEndLat(LatLng lat){
+        this.endLat = lat;
+    }
+
+    public LatLng getStartLat() {
+        return startLat;
+    }
+
+    public LatLng getEndLat() {
+        return endLat;
+    }
+
 
     public void polylineOnMap(GoogleMap map, LatLng previousCoordinate, LatLng currentCoordinate){
         if(map == null || previousCoordinate == null || currentCoordinate == null)
@@ -63,4 +87,15 @@ public class MapUtil {
         return config;
     }
 
+    public double getDistance(){
+
+        //  startLat, endLat이 null일 때 앱 튕김 방지
+        if(this.startLat == null || this.endLat == null) {
+            return distance;
+        }
+
+        distance = SphericalUtil.computeDistanceBetween(this.startLat, this.endLat);
+
+        return distance;
+    }
 }
