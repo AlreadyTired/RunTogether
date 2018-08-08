@@ -20,6 +20,7 @@ public class BluetoothSingleton {
      */
     public BluetoothChatService mChatService = null;
 
+    private BluetoothDevice device = null;
 
     private BluetoothSingleton(){
     }
@@ -40,7 +41,7 @@ public class BluetoothSingleton {
     public void connectDevice(Intent data) {
         // Get the device MAC address
         String address = "";
-        BluetoothDevice device = null;
+
         try {
             address = data.getExtras()
                     .getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
@@ -56,5 +57,17 @@ public class BluetoothSingleton {
         }catch (Exception e){
             Log.e("[ERR]connectDevice", e.getMessage().toString());
         }
+        String test1 = device.getAddress();
+        String test2 = device.getName();
+
     }
+
+    public String getDeviceAdress(){
+        return device.getAddress();
+    }
+
+    public String getDeviceName(){
+        return device.getName();
+    }
+
 }
