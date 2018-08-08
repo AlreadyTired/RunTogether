@@ -120,6 +120,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     TextView textNO2;
     TextView textO3;
     TextView textPM25;
+    TextView textTEMP;
 
     private SmileRating srCO;
     private SmileRating srSO2;
@@ -218,6 +219,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         textNO2 = view.findViewById(R.id.txt_no2);
         textO3 = view.findViewById(R.id.txt_o3);
         textPM25 = view.findViewById(R.id.txt_pm25);
+        textTEMP = view.findViewById(R.id.txt_temp);
 
         MainAllDataChart(view);
 
@@ -669,15 +671,17 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                             String[] parsing = parsingResult.split(",");
                             //  이런식으로 받으면 될 듯하다.
                             textCO.setText(parsing[0]);
-                            setSmileChart(srCO, Integer.parseInt(parsing[0]));
+//                            setSmileChart(srCO, Integer.parseInt(parsing[0]));
                             textSO2.setText(parsing[1]);
-                            setSmileChart(srSO2, Integer.parseInt(parsing[1]));
+//                            setSmileChart(srSO2, Integer.parseInt(parsing[1]));
                             textNO2.setText(parsing[2]);
-                            setSmileChart(srNO2, Integer.parseInt(parsing[2]));
+//                            setSmileChart(srNO2, Integer.parseInt(parsing[2]));
                             textO3.setText(parsing[3]);
-                            setSmileChart(srO3, Integer.parseInt(parsing[3]));
+//                            setSmileChart(srO3, Integer.parseInt(parsing[3]));
                             textPM25.setText(parsing[4]);
-                            setSmileChart(srPM25, Integer.parseInt(parsing[4]));
+//                            setSmileChart(srPM25, Integer.parseInt(parsing[4]));
+
+                            textTEMP.setText(parsing[5]);
                         }
                     }
                     mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
