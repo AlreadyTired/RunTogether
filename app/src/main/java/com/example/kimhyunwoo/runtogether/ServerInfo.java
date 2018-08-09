@@ -11,8 +11,9 @@ public class ServerInfo {
     public static final String idrealcancellationURL = "api/auth/cancel/complete";
     public static final String findpasswordURL = "api/auth/password/forgotten";
     public static final String historicaldataviewURL = "api/sensor/historical/view";
-    public static final String SensorDeregistrationURL = "";
+    public static final String SensorDeregistrationURL = "api/sensor/deregistration";
     public static final String SensorListViewURL = "";
     public static final String SensorRegistrationURL = "api/sensor/registration";
     public static final String DataTransferURL = "";
+    public static final String AqiDataTransferURL = "";
 }
