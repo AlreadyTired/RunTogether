@@ -13,6 +13,6 @@ public class ServerInfo {
     public static final String historicaldataviewURL = "api/sensor/historical/view";
     public static final String SensorDeregistrationURL = "";
     public static final String SensorListViewURL = "";
-    public static final String SensorRegistrationURL = "";
+    public static final String SensorRegistrationURL = "api/sensor/registration";
     public static final String DataTransferURL = "";
 }

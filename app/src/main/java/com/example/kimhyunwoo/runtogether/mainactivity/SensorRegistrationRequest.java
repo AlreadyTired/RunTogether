@@ -51,7 +51,7 @@ public class SensorRegistrationRequest extends StringRequest {
         JSONObject informationObject = new JSONObject();
         try{
             informationObject.put("mac",MacAddress);
-            informationObject.put("devicename",DeviceName);
+            informationObject.put("name",DeviceName);
             informationObject.put("token",getUserToken());
         }catch(JSONException e)
         {
