@@ -7,10 +7,46 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class BluetoothUtil {
-    public JSONObject airData;
 
+    private boolean isAQI = false;
 
-    public String airDataJsonParsing(String data) throws JSONException {
+    public boolean getType(){
+        return isAQI;
+    }
+
+    public void setType(){
+        if(isAQI){
+            isAQI = false;
+        }else{
+            isAQI = true;
+        }
+    }
+
+    public String SortType(String data) throws JSONException {
+        JSONObject dataType;
+
+        try {
+            dataType = new JSONObject(data);
+        } catch (Exception e) {
+            Log.e("[ERR] JSON", e.getMessage().toString());
+            return null;
+        }
+
+        String type = dataType.getString("type");
+        String result = null;
+
+        if(type.equals("real")){
+            result = airDataJsonParsing(data);
+        }else{
+            result = aqiDataJsonParsing(data);
+        }
+
+        return result;
+    }
+
+    private String airDataJsonParsing(String data) throws JSONException {
+        JSONObject airData;
+
         try {
             airData = new JSONObject(data);
         } catch (Exception e) {
@@ -19,7 +55,6 @@ public class BluetoothUtil {
         }
 
         //  현재는 임시 데이터로 정의 됨
-        String type = airData.getString("type");
         String temp = airData.getString("temp");
         float temp_f = Float.parseFloat(temp);
         temp = String.format("%.2f",temp_f);
@@ -47,5 +82,42 @@ public class BluetoothUtil {
         return jsonString;
     }
 
+    private String aqiDataJsonParsing(String data) throws JSONException {
+        JSONObject airData;
+
+        try {
+            airData = new JSONObject(data);
+        } catch (Exception e) {
+            Log.e("[ERR] JSON", e.getMessage().toString());
+            return null;
+        }
+
+        //  현재는 임시 데이터로 정의 됨
+        String totalaqi = airData.getString("totalaqi");
+        float total_f = Float.parseFloat(totalaqi);
+        totalaqi = String.format("%.2f",total_f);
+        String coaqi = airData.getString("coaqi");
+        float coaqi_f = Float.parseFloat(coaqi);
+        coaqi = String.format("%.2f",coaqi_f);
+        String so2aqi = airData.getString("so2aqi");
+        float so2aqi_f = Float.parseFloat(so2aqi);
+        so2aqi = String.format("%.2f",so2aqi_f);
+        String no2aqi = airData.getString("no2aqi");
+        float no2aqi_f = Float.parseFloat(no2aqi);
+        no2aqi = String.format("%.2f",no2aqi_f);
+        String o3aqi = airData.getString("o3aqi");
+        float o3aqi_f = Float.parseFloat(o3aqi);
+        o3aqi = String.format("%.2f",o3aqi_f);
+        String pm25aqi = airData.getString("pm25aqi");
+        float pm25aqi_f = Float.parseFloat(pm25aqi);
+        pm25aqi = String.format("%.2f",pm25aqi_f);
+        String timestamp = airData.getString("timestamp");
+
+        AqiDataTansfer.setAqiData(coaqi, so2aqi, no2aqi, o3aqi, pm25aqi, totalaqi, timestamp);
+
+        String jsonString = coaqi + "," +  so2aqi + "," + no2aqi + "," + o3aqi + "," + pm25aqi + "," + totalaqi;
+
+        return jsonString;
+    }
 
 }

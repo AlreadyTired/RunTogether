@@ -136,11 +136,19 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     TextView textTEMP;
     TextView textHR;
 
+    private SmileRating srAQI;
     private SmileRating srCO;
     private SmileRating srSO2;
     private SmileRating srNO2;
     private SmileRating srO3;
     private SmileRating srPM25;
+
+    TextView textCOAQI;
+    TextView textSO2AQI;
+    TextView textNO2AQI;
+    TextView textO3AQI;
+    TextView textPM25AQI;
+    TextView textTotal;
 
     //===================================================================
     //  블루투스 변수
@@ -149,10 +157,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
     // Intent request codes
     private static final int REQUEST_ENABLE_BT = 3;
-
-    // Layout View
-    private EditText mOutEditText;
-    private Button mSendButton;
 
     /**
      * Name of the connected device
@@ -236,6 +240,12 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         textTEMP = view.findViewById(R.id.txt_temp);
         textHR = view.findViewById(R.id.txt_hr);
 
+        textCOAQI = view.findViewById(R.id.txt_coAQI);
+        textSO2AQI = view.findViewById(R.id.txt_so2AQI);
+        textNO2AQI = view.findViewById(R.id.txt_no2AQI);
+        textO3AQI = view.findViewById(R.id.txt_o3AQI);
+        textPM25AQI = view.findViewById(R.id.txt_pm252AQI);
+        textTotal = view.findViewById(R.id.txt_total);
         RealTimeDataTransfer.setTextView(textHR);
 
         MainAllDataChart(view);
@@ -527,13 +537,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         return true;
     }
 
-    @Override
-    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        mOutEditText = (EditText) view.findViewById(R.id.edit_text_out);
-        mSendButton = (Button) view.findViewById(R.id.button_send);
-
-    }
-
     /**
      * Set up the UI and background operations for chat.
      */
@@ -543,67 +546,12 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         // Initialize the array adapter for the conversation thread
         mConversationArrayAdapter = new ArrayAdapter<String>(getActivity(), R.layout.message);
 
-        // Initialize the compose field with a listener for the return key
-        mOutEditText.setOnEditorActionListener(mWriteListener);
-
-        // Initialize the send button with a listener that for click events
-        mSendButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                // Send a message using content of the edit text widget
-                View view = getView();
-                if (null != view) {
-                    TextView textView = (TextView) view.findViewById(R.id.edit_text_out);
-                    String message = textView.getText().toString();
-                    sendMessage(message);
-                }
-            }
-        });
-
         // Initialize the BluetoothChatService to perform bluetooth connections
         btSingletion.mChatService = new BluetoothChatService(getActivity(), mHandler);
 
         // Initialize the buffer for outgoing messages
         mOutStringBuffer = new StringBuffer("");
     }
-
-    /**
-     * Sends a message.
-     *
-     * @param message A string of text to send.
-     */
-    private void sendMessage(String message) {
-        // Check that we're actually connected before trying anything
-        if (btSingletion.mChatService.getState() != BluetoothChatService.STATE_CONNECTED) {
-            Toast.makeText(getActivity(), R.string.not_connected, Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Check that there's actually something to send
-        if (message.length() > 0) {
-            // Get the message bytes and tell the BluetoothChatService to write
-            byte[] send = message.getBytes();
-            btSingletion.mChatService.write(send);
-
-            // Reset out string buffer to zero and clear the edit text field
-            mOutStringBuffer.setLength(0);
-            mOutEditText.setText(mOutStringBuffer);
-        }
-    }
-
-    /**
-     * The action listener for the EditText widget, to listen for the return key
-     */
-    private TextView.OnEditorActionListener mWriteListener
-            = new TextView.OnEditorActionListener() {
-        public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-            // If the action is a key-up event on the return key, send the message
-            if (actionId == EditorInfo.IME_NULL && event.getAction() == KeyEvent.ACTION_UP) {
-                String message = view.getText().toString();
-                sendMessage(message);
-            }
-            return true;
-        }
-    };
 
     /**
      * Updates the status on the action bar.
@@ -658,19 +606,21 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                             mConversationArrayAdapter.clear();
                             break;
                         case BluetoothChatService.STATE_CONNECTING:
-                            setStatus(R.string.title_connecting);
-                            break;
+                            if(btSingletion.isPolarSensor){
+                                Log.w("[INFO]","Polar Sensor :"+ btSingletion.getDeviceName()+ ", " + btSingletion.getDeviceAdress());
+                                setStatus("Polar Sensor device info");
+                                DeviceRegistryRequest();
+                                btSingletion.isPolarSensor = false;
+                            }else{
+                                setStatus(R.string.title_connecting);
+                            }
+
+                            break;//여기
                         case BluetoothChatService.STATE_LISTEN:
                         case BluetoothChatService.STATE_NONE:
                             setStatus(R.string.title_not_connected);
                             break;
                     }
-                    break;
-                case Constants.MESSAGE_WRITE:
-                    byte[] writeBuf = (byte[]) msg.obj;
-                    // construct a string from the buffer
-                    String writeMessage = new String(writeBuf);
-                    mConversationArrayAdapter.add("Me:  " + writeMessage);
                     break;
                 case Constants.MESSAGE_READ: //메세지 여기로 받음
                     byte[] readBuf = (byte[]) msg.obj;
@@ -680,28 +630,38 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                     {
                         String parsingResult = null;
                         try {
-                            parsingResult = btUtil.airDataJsonParsing(readMessage);
+                            parsingResult = btUtil.SortType(readMessage);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        if(parsingResult != null) {
-                            String[] parsing = parsingResult.split(",");
-                            //  이런식으로 받으면 될 듯하다.
-                            textCO.setText(parsing[0]);
-                            //setSmileChart(srCO, Integer.parseInt(parsing[0]));
-                            textSO2.setText(parsing[1]);
-                            //setSmileChart(srSO2, Integer.parseInt(parsing[1]));
-                            textNO2.setText(parsing[2]);
-                            //setSmileChart(srNO2, Integer.parseInt(parsing[2]));
-                            textO3.setText(parsing[3]);
-                            //setSmileChart(srO3, Integer.parseInt(parsing[3]));
-                            textPM25.setText(parsing[4]);
-                            //setSmileChart(srPM25, Integer.parseInt(parsing[4]));
-//                            setSmileChart(srPM25, Integer.parseInt(parsing[4]));
 
-                            textTEMP.setText(parsing[5]);
-                            textHR.setText(RealTimeDataTransfer.getHeartRate());
-                            RealTimeDataTransfer.ShowData();
+                        String[] parsing = parsingResult.split(",");
+
+                        if(parsingResult != null) {
+                            if(btUtil.getType()){
+                                //AQI
+                                setSmileChart(srCO, Integer.parseInt(parsing[0]));
+                                textCOAQI.setText(parsing[0]);
+                                setSmileChart(srSO2, Integer.parseInt(parsing[1]));
+                                textSO2AQI.setText(parsing[1]);
+                                setSmileChart(srNO2, Integer.parseInt(parsing[2]));
+                                textNO2AQI.setText(parsing[2]);
+                                setSmileChart(srO3, Integer.parseInt(parsing[3]));
+                                textO3AQI.setText(parsing[3]);
+                                setSmileChart(srPM25, Integer.parseInt(parsing[4]));
+                                textPM25AQI.setText(parsing[4]);
+                                setSmileChart(srAQI, Integer.parseInt(parsing[5]));
+                                textTotal.setText(parsing[5]);
+                            }else{
+                                //Real-Time
+                                textCO.setText(parsing[0]);
+                                textSO2.setText(parsing[1]);
+                                textNO2.setText(parsing[2]);
+                                textO3.setText(parsing[3]);
+                                textPM25.setText(parsing[4]);
+                                textTEMP.setText(parsing[5]);
+                                RealTimeDataTransfer.ShowData();
+                            }
                         }
                     }
                     mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
@@ -710,42 +670,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                     // save the connected device's name
                     mConnectedDeviceName = msg.getData().getString(Constants.DEVICE_NAME);
                     if (null != activity) {
-
-                        // 센서 서버에 등록하는 리퀘스트,리스폰스.
-                        Response.Listener<String> reponseListener = new Response.Listener<String>() {
-
-                            // Volley 를 통해서 정상적으로 웹서버와 통신이 되면 실행되는 함수
-                            @Override
-                            public void onResponse(String response)
-                            {
-                                try
-                                {
-                                    // JSON 형식으로 값을 response 에 받아서 넘어온다.
-                                    JSONObject jsonResponse = new JSONObject(response);
-                                    String message = jsonResponse.getString("message");
-                                    if(message.equals("ok"))
-                                    {
-                                        Toast.makeText(getContext(), "Device registration complete!", Toast.LENGTH_LONG).show();
-                                    }
-                                    else
-                                    {
-                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                        dialog = builder.setMessage(message)
-                                                .setNegativeButton("Try Again Bluetooth Connect!",null)
-                                                .create();
-                                        dialog.show();
-                                    }
-                                }
-                                catch(Exception e)
-                                {
-                                    e.printStackTrace();
-                                }
-                            }
-                        };
-                        //  맥, 이름 날라옴(btSingletion.getDeviceAdress(),btSingletion.getDeviceName())
-                        SensorRegistrationRequest SensorRegistRequest = new SensorRegistrationRequest( btSingletion.getDeviceAdress(),btSingletion.getDeviceName(),reponseListener,getContext());           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
-                        RequestQueue queue = Volley.newRequestQueue(getContext());            // Volley의 사용법으로 request queue로 queue를 하나 선언하고
-                        queue.add(SensorRegistRequest);
+                        DeviceRegistryRequest();
                     }
                     break;
                 case Constants.MESSAGE_TOAST:
@@ -759,9 +684,77 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     };
 
 
+    private void DeviceRegistryRequest(){
+
+        // 센서 서버에 등록하는 리퀘스트,리스폰스.
+        Response.Listener<String> reponseListener = new Response.Listener<String>() {
+
+            // Volley 를 통해서 정상적으로 웹서버와 통신이 되면 실행되는 함수
+            @Override
+            public void onResponse(String response)
+            {
+                try
+                {
+                    // JSON 형식으로 값을 response 에 받아서 넘어온다.
+                    JSONObject jsonResponse = new JSONObject(response);
+                    String message = jsonResponse.getString("message");
+                    if(message.equals("ok"))
+                    {
+                        Toast.makeText(getContext(), "Device registration complete!", Toast.LENGTH_LONG).show();
+                    }
+                    else
+                    {
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                        dialog = builder.setMessage(message)
+                                .setNegativeButton("Try Again Bluetooth Connect!",null)
+                                .create();
+                        dialog.show();
+                    }
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        };
+        //  맥, 이름 날라옴(btSingletion.getDeviceAdress(),btSingletion.getDeviceName())
+        SensorRegistrationRequest SensorRegistRequest = new SensorRegistrationRequest( btSingletion.getDeviceAdress(),btSingletion.getDeviceName(),reponseListener,getContext());           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
+        RequestQueue queue = Volley.newRequestQueue(getContext());            // Volley의 사용법으로 request queue로 queue를 하나 선언하고
+        queue.add(SensorRegistRequest);
+    }
 
     public void MainAllDataChart(View v){
+
         //smile
+        srAQI= v.findViewById(R.id.rv_total);
+        srAQI.setSelectedSmile(srAQI.OKAY);
+        srAQI.setIndicator(true);
+        srAQI.setOnSmileySelectionListener(new SmileRating.OnSmileySelectionListener() {
+            @Override
+            public void onSmileySelected(@BaseRating.Smiley int smiley, boolean reselected) {
+                // reselected is false when user selects different smiley that previously selected one
+                // true when the same smiley is selected.
+                // Except if it first time, then the value will be false.
+                switch (smiley) {
+                    case SmileRating.BAD:
+                        Log.i(TAG, "Bad");
+                        break;
+                    case SmileRating.GOOD:
+                        Log.i(TAG, "Good");
+                        break;
+                    case SmileRating.GREAT:
+                        Log.i(TAG, "Great");
+                        break;
+                    case SmileRating.OKAY:
+                        Log.i(TAG, "Okay");
+                        break;
+                    case SmileRating.TERRIBLE:
+                        Log.i(TAG, "Terrible");
+                        break;
+                }
+            }
+        });
+
         srCO = v.findViewById(R.id.rv_co);
         srCO.setSelectedSmile(srCO.OKAY);
         srCO.setIndicator(true);
