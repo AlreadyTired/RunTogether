@@ -92,7 +92,7 @@ public class MyAccountActivity extends AppCompatActivity{
                                     JSONObject object = array.getJSONObject(i);
                                     String Macdata = object.getString("mac");
                                     String Namedata = object.getString("name");
-                                    String data = "MAC Address = "+Macdata+"\nDevice Name = "+Namedata;
+                                    String data = Namedata+"\n"+Macdata;
                                     SensorAdapterList.add(data);
                                 }
                             }
@@ -125,7 +125,7 @@ public class MyAccountActivity extends AppCompatActivity{
                 alertBuilder.setAdapter(SensorAdapterList, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        final String MacAddress = SensorAdapterList.getItem(which);
+                        final String MacAddress = SensorAdapterList.getItem(which).substring(0,17);
                         AlertDialog.Builder innBuilder = new AlertDialog.Builder(MyAccountActivity.this);
                         innBuilder.setTitle("Do you want Delete MACaddress?");
                         innBuilder.setPositiveButton("YES", new DialogInterface.OnClickListener() {

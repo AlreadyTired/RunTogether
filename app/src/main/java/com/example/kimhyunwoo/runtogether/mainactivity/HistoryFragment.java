@@ -211,7 +211,7 @@ public class HistoryFragment extends SimpleFragment {
                                 {
                                     JSONObject object = array.getJSONObject(i);
                                     String data = object.getString(DataTypeStirng);
-                                    String datedata = object.getString("date");
+                                        String datedata = object.getString("date");
                                     datedata = datedata.substring(5,10);
                                     DataTypeInfoFromServer.add(data);
                                     DateInfoFromServer.add(datedata);
