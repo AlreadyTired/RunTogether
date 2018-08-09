@@ -158,7 +158,23 @@ public class HistoryFragment extends SimpleFragment {
                         String Monthstring = month<10?"0"+String.valueOf(month):String.valueOf(month);
                         String Daystring = dayOfMonth<10?"0"+String.valueOf(dayOfMonth):String.valueOf(dayOfMonth);
                         String date = Monthstring+"-"+Daystring+"-"+String.valueOf(year);
-                        DateString = String.valueOf(year-2000)+Monthstring+Daystring;
+                        DateString = String.valueOf(year)+Monthstring+Daystring;
+                        long now = System.currentTimeMillis();
+                        Date Todaydate = new Date(now);
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                        String TodayString = sdf.format(Todaydate);
+
+                        if(Integer.parseInt(DateString)>Integer.parseInt(TodayString))
+                        {
+                            sdf = new SimpleDateFormat("MM-dd-yyyy");
+                            date = sdf.format(Todaydate);
+                            sdf = new SimpleDateFormat("yyyy-MM-dd");
+                            DateString = sdf.format(Todaydate);
+                        }
+                        else
+                        {
+                            DateString = String.valueOf(year)+"-"+Monthstring+"-"+Daystring;
+                        }
                         Log.v("DateString",DateString);
                         DateText.setText(date);
                     }

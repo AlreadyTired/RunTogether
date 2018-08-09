@@ -33,6 +33,17 @@
         android:orientation="vertical">
 
         <Button
+            android:id="@+id/AllUserRealTimeDataButton"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:text="All User Real Time Data"
+            android:textColor="#ffffff"
+            android:gravity="center"
+            android:background="@color/colorPrimaryDark"
+            android:textStyle="bold"
+            android:layout_marginVertical="10dp"/>
+
+        <Button
             android:id="@+id/SensorListViewButton"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -41,7 +52,7 @@
             android:gravity="center"
             android:background="@color/colorPrimaryDark"
             android:textStyle="bold"
-            android:layout_marginBottom="10dp"/>
+            android:layout_marginVertical="10dp"/>
 
         <Button
             android:id="@+id/PasswordChangeButton"
@@ -61,7 +72,8 @@
             android:text="ID Cancellation"
             android:textColor="#ffffff"
             android:background="@color/colorPrimaryDark"
-            android:textStyle="bold"/>
+            android:textStyle="bold"
+            android:layout_marginVertical="10dp"/>
 
     </LinearLayout>
 
