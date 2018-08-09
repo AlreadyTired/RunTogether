@@ -136,11 +136,19 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     TextView textTEMP;
     TextView textHR;
 
+    private SmileRating srAQI;
     private SmileRating srCO;
     private SmileRating srSO2;
     private SmileRating srNO2;
     private SmileRating srO3;
     private SmileRating srPM25;
+
+    TextView textCOAQI;
+    TextView textSO2AQI;
+    TextView textNO2AQI;
+    TextView textO3AQI;
+    TextView textPM25AQI;
+    TextView textTotal;
 
     //===================================================================
     //  블루투스 변수
@@ -236,6 +244,12 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         textTEMP = view.findViewById(R.id.txt_temp);
         textHR = view.findViewById(R.id.txt_hr);
 
+        textCOAQI = view.findViewById(R.id.txt_coAQI);
+        textSO2AQI = view.findViewById(R.id.txt_so2AQI);
+        textNO2AQI = view.findViewById(R.id.txt_no2AQI);
+        textO3AQI = view.findViewById(R.id.txt_o3AQI);
+        textPM25AQI = view.findViewById(R.id.txt_pm252AQI);
+        textTotal = view.findViewById(R.id.txt_total);
         RealTimeDataTransfer.setTextView(textHR);
 
         MainAllDataChart(view);
@@ -688,28 +702,38 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                     {
                         String parsingResult = null;
                         try {
-                            parsingResult = btUtil.airDataJsonParsing(readMessage);
+                            parsingResult = btUtil.SortType(readMessage);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
-                        if(parsingResult != null) {
-                            String[] parsing = parsingResult.split(",");
-                            //  이런식으로 받으면 될 듯하다.
-                            textCO.setText(parsing[0]);
-                            //setSmileChart(srCO, Integer.parseInt(parsing[0]));
-                            textSO2.setText(parsing[1]);
-                            //setSmileChart(srSO2, Integer.parseInt(parsing[1]));
-                            textNO2.setText(parsing[2]);
-                            //setSmileChart(srNO2, Integer.parseInt(parsing[2]));
-                            textO3.setText(parsing[3]);
-                            //setSmileChart(srO3, Integer.parseInt(parsing[3]));
-                            textPM25.setText(parsing[4]);
-                            //setSmileChart(srPM25, Integer.parseInt(parsing[4]));
-//                            setSmileChart(srPM25, Integer.parseInt(parsing[4]));
 
-                            textTEMP.setText(parsing[5]);
-                            textHR.setText(RealTimeDataTransfer.getHeartRate());
-                            RealTimeDataTransfer.ShowData();
+                        String[] parsing = parsingResult.split(",");
+
+                        if(parsingResult != null) {
+                            if(btUtil.getType()){
+                                //AQI
+                                setSmileChart(srCO, Integer.parseInt(parsing[0]));
+                                textCOAQI.setText(parsing[0]);
+                                setSmileChart(srSO2, Integer.parseInt(parsing[1]));
+                                textSO2AQI.setText(parsing[1]);
+                                setSmileChart(srNO2, Integer.parseInt(parsing[2]));
+                                textNO2AQI.setText(parsing[2]);
+                                setSmileChart(srO3, Integer.parseInt(parsing[3]));
+                                textO3AQI.setText(parsing[3]);
+                                setSmileChart(srPM25, Integer.parseInt(parsing[4]));
+                                textPM25AQI.setText(parsing[4]);
+                                setSmileChart(srAQI, Integer.parseInt(parsing[5]));
+                                textTotal.setText(parsing[5]);
+                            }else{
+                                //Real-Time
+                                textCO.setText(parsing[0]);
+                                textSO2.setText(parsing[1]);
+                                textNO2.setText(parsing[2]);
+                                textO3.setText(parsing[3]);
+                                textPM25.setText(parsing[4]);
+                                textTEMP.setText(parsing[5]);
+                                RealTimeDataTransfer.ShowData();
+                            }
                         }
                     }
                     mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
@@ -772,7 +796,37 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     }
 
     public void MainAllDataChart(View v){
+
         //smile
+        srAQI= v.findViewById(R.id.rv_total);
+        srAQI.setSelectedSmile(srAQI.OKAY);
+        srAQI.setIndicator(true);
+        srAQI.setOnSmileySelectionListener(new SmileRating.OnSmileySelectionListener() {
+            @Override
+            public void onSmileySelected(@BaseRating.Smiley int smiley, boolean reselected) {
+                // reselected is false when user selects different smiley that previously selected one
+                // true when the same smiley is selected.
+                // Except if it first time, then the value will be false.
+                switch (smiley) {
+                    case SmileRating.BAD:
+                        Log.i(TAG, "Bad");
+                        break;
+                    case SmileRating.GOOD:
+                        Log.i(TAG, "Good");
+                        break;
+                    case SmileRating.GREAT:
+                        Log.i(TAG, "Great");
+                        break;
+                    case SmileRating.OKAY:
+                        Log.i(TAG, "Okay");
+                        break;
+                    case SmileRating.TERRIBLE:
+                        Log.i(TAG, "Terrible");
+                        break;
+                }
+            }
+        });
+
         srCO = v.findViewById(R.id.rv_co);
         srCO.setSelectedSmile(srCO.OKAY);
         srCO.setIndicator(true);
