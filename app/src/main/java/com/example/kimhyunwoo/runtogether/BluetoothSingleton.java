@@ -22,6 +22,8 @@ public class BluetoothSingleton {
 
     private BluetoothDevice device = null;
 
+    public boolean isPolarSensor = false;
+
     private BluetoothSingleton(){
     }
 
@@ -51,14 +53,18 @@ public class BluetoothSingleton {
         }
         // Get the BluetoothDevice object
 
+        String catchStrings = device.getName();
+        if(catchStrings.contains("Polar")){
+            isPolarSensor = true;
+            Log.w("[INFO]","this sensor is Polar sensor");
+        }
+
         // Attempt to connect to the device
         try{
             mChatService.connect(device);
         }catch (Exception e){
             Log.e("[ERR]connectDevice", e.getMessage().toString());
         }
-        String test1 = device.getAddress();
-        String test2 = device.getName();
 
     }
 

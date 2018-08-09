@@ -51,7 +51,7 @@ public class AqiDataTransferRequest extends StringRequest {
             informationObject.put("o3aqi",DataList.get(3));
             informationObject.put("pm25aqi",DataList.get(4));
             informationObject.put("totalaqi",DataList.get(5));
-            informationObject.put("time",DataList.get(6));
+            informationObject.put("timestamp",DataList.get(6));
             informationObject.put("token",UserInfo.getUserToken());
         }catch(JSONException e)
         {

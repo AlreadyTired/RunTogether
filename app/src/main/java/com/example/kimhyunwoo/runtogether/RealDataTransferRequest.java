@@ -54,7 +54,7 @@ public class RealDataTransferRequest extends StringRequest {
             informationObject.put("lang",DataList.get(6));
             informationObject.put("long",DataList.get(7));
             informationObject.put("heart",DataList.get(8));
-            informationObject.put("time",DataList.get(9));
+            informationObject.put("timestamp",DataList.get(9));
             informationObject.put("token",UserInfo.getUserToken());
         }catch(JSONException e)
         {
