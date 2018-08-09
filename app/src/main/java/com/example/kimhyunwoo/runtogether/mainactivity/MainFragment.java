@@ -46,6 +46,7 @@ import com.example.kimhyunwoo.runtogether.BluetoothSingleton;
 import com.example.kimhyunwoo.runtogether.BluetoothUtil;
 import com.example.kimhyunwoo.runtogether.MapUtil;
 import com.example.kimhyunwoo.runtogether.R;
+import com.example.kimhyunwoo.runtogether.RealTimeDataTransfer;
 import com.example.kimhyunwoo.runtogether.bluetoothmanagement.BluetoothChatService;
 import com.example.kimhyunwoo.runtogether.bluetoothmanagement.Constants;
 import com.example.kimhyunwoo.runtogether.bluetoothmanagement.DeviceListActivity;
@@ -106,6 +107,9 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     private AlertDialog dialog;
 
     private static final int markerRequstCode = 1234;
+
+    double currentLng = 32.881033;
+    double currentLat = -117.235601;
     //===================================================================
     //  속도 계산
     String startTime;
@@ -129,6 +133,8 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
     TextView textNO2;
     TextView textO3;
     TextView textPM25;
+    TextView textTEMP;
+    TextView textHR;
 
     private SmileRating srCO;
     private SmileRating srSO2;
@@ -227,6 +233,10 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         textNO2 = view.findViewById(R.id.txt_no2);
         textO3 = view.findViewById(R.id.txt_o3);
         textPM25 = view.findViewById(R.id.txt_pm25);
+        textTEMP = view.findViewById(R.id.txt_temp);
+        textHR = view.findViewById(R.id.txt_hr);
+
+        RealTimeDataTransfer.setTextView(textHR);
 
         MainAllDataChart(view);
 
@@ -456,15 +466,15 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         @Override
         public void onLocationChanged(Location location) {
             //경도
-            double currentLng = location.getLongitude();
+            currentLng = location.getLongitude();
             //위도
-            double currentLat = location.getLatitude();
+            currentLat = location.getLatitude();
+            RealTimeDataTransfer.setGPS(Double.toString(currentLat),Double.toString(currentLng));
 
             //  바뀐 현재 좌표
             currentCoordinate = new LatLng(currentLat ,currentLng);
 
             if(exercisingFlag == true) {
-                Log.v("LocationListner: exercisingFlag TRUE","exit!!!!!!!!!!!!!!!");
                 return;
             }
 
@@ -687,6 +697,11 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                             //setSmileChart(srO3, Integer.parseInt(parsing[3]));
                             textPM25.setText(parsing[4]);
                             //setSmileChart(srPM25, Integer.parseInt(parsing[4]));
+//                            setSmileChart(srPM25, Integer.parseInt(parsing[4]));
+
+                            textTEMP.setText(parsing[5]);
+                            textHR.setText(RealTimeDataTransfer.getHeartRate());
+                            RealTimeDataTransfer.ShowData();
                         }
                     }
                     mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);

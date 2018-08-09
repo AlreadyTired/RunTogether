@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -25,30 +27,51 @@ import java.util.Queue;
 
 public class RealTimeDataTransfer {
     private AlertDialog dialog;
-    private static String CO = "",SO2= "",NO2= "",O3= "",PM25= "",Temp= "",HeartRate= "",Lang= "",Long= "",TimeStamp="";
+    private static String CO = "",HeartRate="",SO2= "",NO2= "",O3= "",PM25= "",Temp= "",LANG= "",LONG= "",TimeStamp="";
     private static Queue<ArrayList> DataQueue = new LinkedList<>();
     public static boolean ErrorFlag = false;
     int ErrorCount = 0;
 
-    public void setAirData(String CO,String SO2, String NO2,String O3,String PM25,String Temp,String TimeStamp)
+    private static TextView TextHeartRate = null;
+
+    public static void setAirData(String Co,String So2, String No2,String o3,String Pm25,String TEMP,String TIMESTAMP)
     {
-        this.CO = CO;
-        this.SO2 = SO2;
-        this.NO2 = NO2;
-        this.O3 = O3;
-        this.PM25 = PM25;
-        this.Temp = Temp;
-        this.TimeStamp = TimeStamp;
+        CO = Co;
+        SO2 = So2;
+        NO2 = No2;
+        O3 = o3;
+        PM25 = Pm25;
+        Temp = TEMP;
+        TimeStamp = TIMESTAMP;
     }
-    public void setHeartRate(String HeartRate)
+    public static void setHeartRate(String heart)
     {
-        this.HeartRate = HeartRate;
+        HeartRate = heart;
     }
-    public void setGPS(String Lang,String Long)
+
+    public static String getHeartRate(){
+        return HeartRate;
+    }
+
+    public static void setTextView(TextView hr){
+        TextHeartRate = hr;
+    }
+
+    public static void setTextHeartrate() {
+        if (TextHeartRate != null) {
+            TextHeartRate.setText(HeartRate);
+        }
+    }
+    public static void ShowData(){
+        Log.v("[INFO] RealTimeDataTransfer ", CO + "," + SO2+ "," +NO2+ "," +O3 + "," +PM25+ "," +Temp+ "," +LANG+ "," +LONG+ "," +HeartRate+ "," +TimeStamp);
+    }
+
+    public static void setGPS(String Lang, String Long)
     {
-        this.Lang = Lang;
-        this.Long = Long;
+        LANG = Lang;
+        LONG = Long;
     }
+
     public void Request(final Context context)
     {
         ArrayList<String> DataList = new ArrayList<>();
@@ -58,8 +81,8 @@ public class RealTimeDataTransfer {
         DataList.add(O3);
         DataList.add(PM25);
         DataList.add(Temp);
-        DataList.add(Lang);
-        DataList.add(Long);
+        DataList.add(LANG);
+        DataList.add(LONG);
         DataList.add(HeartRate);
         DataList.add(TimeStamp);
 

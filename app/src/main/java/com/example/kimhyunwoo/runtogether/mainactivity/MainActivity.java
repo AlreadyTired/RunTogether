@@ -3,6 +3,7 @@ package com.example.kimhyunwoo.runtogether.mainactivity;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.LocationManager;
@@ -21,7 +22,9 @@ import android.widget.Toast;
 import com.example.kimhyunwoo.runtogether.BackPressCloseHandler;
 import com.example.kimhyunwoo.runtogether.MapUtil;
 import com.example.kimhyunwoo.runtogether.R;
+import com.example.kimhyunwoo.runtogether.RealTimeDataTransfer;
 import com.example.kimhyunwoo.runtogether.UserInfo;
+import com.example.kimhyunwoo.runtogether.bluetoothmanagement.PolarBleReceiver;
 import com.example.kimhyunwoo.runtogether.upperactivity.UpperFragment;
 
 import java.util.ArrayList;
@@ -30,7 +33,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     //  뒤로가기 버튼을 2번 누르면 종료시키는 클레스
     private BackPressCloseHandler backPressCloseHandler;
-
 
     LocationManager manager;
     ViewPager pager;
@@ -104,6 +106,8 @@ public class MainActivity extends AppCompatActivity {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
             checkPermission();
         }
+
+        activatePolar();
     }
 
     //  권한 체크
@@ -168,4 +172,24 @@ public class MainActivity extends AppCompatActivity {
             return datas.size();
         }
     }
+
+    private final PolarBleReceiver mPolarBleUpdateReceiver = new PolarBleReceiver() {};
+
+    protected void activatePolar() {
+        Log.w(this.getClass().getName(), "activatePolar()");
+        registerReceiver(mPolarBleUpdateReceiver, makePolarGattUpdateIntentFilter());
+    }
+
+    protected void deactivatePolar() {
+        unregisterReceiver(mPolarBleUpdateReceiver);
+    }
+
+    private static IntentFilter makePolarGattUpdateIntentFilter() {
+        final IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(PolarBleReceiver.ACTION_GATT_CONNECTED);
+        intentFilter.addAction(PolarBleReceiver.ACTION_GATT_DISCONNECTED);
+        intentFilter.addAction(PolarBleReceiver.ACTION_HR_DATA_AVAILABLE);
+        return intentFilter;
+    }
+
 }
