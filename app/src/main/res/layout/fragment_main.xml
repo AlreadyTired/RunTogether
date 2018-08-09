@@ -69,28 +69,28 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:textSize="40dp"
+                    android:textSize="35dp"
                     android:id="@+id/txt_temp"
                     />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:textSize="40dp"
+                    android:textSize="35dp"
                     android:text="C˚"
                     />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:textSize="40dp"
+                    android:textSize="35dp"
                     android:text="HR :"
                     />
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
-                    android:textSize="40dp"
+                    android:textSize="35dp"
                     android:id="@+id/txt_hr"
                     />
 

@@ -4,6 +4,11 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
+
+import com.example.kimhyunwoo.runtogether.R;
+import com.example.kimhyunwoo.runtogether.RealTimeDataTransfer;
 
 import java.util.StringTokenizer;
 
@@ -35,6 +40,9 @@ public class PolarBleReceiver extends BroadcastReceiver {
             int lastRRvalue = Integer.parseInt(tokens.nextToken());
             String sessionId = tokens.nextToken();
             Log.w(this.getClass().getName(), "####Received heartRate: " +heartRate+" pnnPercentage: "+pnnPercentage+" pnnCount: "+pnnCount+" rrThreshold: "+rrThreshold+" totalNN: "+totalNN+" lastRRvalue: "+lastRRvalue+" sessionId: "+sessionId);
+
+           RealTimeDataTransfer.setHeartRate(Integer.toString(heartRate));
+           RealTimeDataTransfer.setTextHeartrate();
         }
     }
 }

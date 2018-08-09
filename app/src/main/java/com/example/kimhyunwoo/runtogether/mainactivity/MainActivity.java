@@ -22,6 +22,7 @@ import android.widget.Toast;
 import com.example.kimhyunwoo.runtogether.BackPressCloseHandler;
 import com.example.kimhyunwoo.runtogether.MapUtil;
 import com.example.kimhyunwoo.runtogether.R;
+import com.example.kimhyunwoo.runtogether.RealTimeDataTransfer;
 import com.example.kimhyunwoo.runtogether.UserInfo;
 import com.example.kimhyunwoo.runtogether.bluetoothmanagement.PolarBleReceiver;
 import com.example.kimhyunwoo.runtogether.upperactivity.UpperFragment;
@@ -32,7 +33,6 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     //  뒤로가기 버튼을 2번 누르면 종료시키는 클레스
     private BackPressCloseHandler backPressCloseHandler;
-
 
     LocationManager manager;
     ViewPager pager;
