@@ -18,12 +18,12 @@ import java.util.Map;
 
 import static com.example.kimhyunwoo.runtogether.ServerInfo.*;
 
-public class RealDataTransferRequest extends StringRequest {
-    final static private String URL = serverURL + DataTransferURL;                          // URL 헤더파일로 묶어서 수정해야함.
+public class AqiDataTransferRequest extends StringRequest {
+    final static private String URL = serverURL + AqiDataTransferURL;                          // URL 헤더파일로 묶어서 수정해야함.
     private Map<String,String> parameters;                                                          // Map 형식으로 데이터를 저장(JSON 이기에 Stirng2개)
 
     // Volley의 StringRequest를 선언받아서 사용해야 하는데 내가 사용할 값들과 부모의 인자값까지 사용해야함. 앞서 선언한 map 에 필요한 값들을 JSON형식의 String 2개값을 넣어서 보냄.
-    public RealDataTransferRequest(ArrayList<String> DataList, Response.Listener<String> listener, final Context context)
+    public AqiDataTransferRequest(ArrayList<String> DataList, Response.Listener<String> listener, final Context context)
     {
         super(Request.Method.POST,URL,listener,new Response.ErrorListener() {
             @Override
@@ -34,7 +34,7 @@ public class RealDataTransferRequest extends StringRequest {
                         .setNegativeButton("OK", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                RealTimeDataTransfer.RealTimeErrorFlag = true;
+                                AqiDataTansfer.AqiErrorFlag = true;
                             }
                         })
                         .create();
@@ -45,16 +45,13 @@ public class RealDataTransferRequest extends StringRequest {
         parameters = new HashMap<>();
         JSONObject informationObject = new JSONObject();
         try{
-            informationObject.put("co",DataList.get(0));
-            informationObject.put("so2",DataList.get(1));
-            informationObject.put("no2",DataList.get(2));
-            informationObject.put("o3",DataList.get(3));
-            informationObject.put("pm25",DataList.get(4));
-            informationObject.put("temp",DataList.get(5));
-            informationObject.put("lang",DataList.get(6));
-            informationObject.put("long",DataList.get(7));
-            informationObject.put("heart",DataList.get(8));
-            informationObject.put("time",DataList.get(9));
+            informationObject.put("coaqi",DataList.get(0));
+            informationObject.put("so2aqi",DataList.get(1));
+            informationObject.put("no2aqi",DataList.get(2));
+            informationObject.put("o3aqi",DataList.get(3));
+            informationObject.put("pm25aqi",DataList.get(4));
+            informationObject.put("totalaqi",DataList.get(5));
+            informationObject.put("time",DataList.get(6));
             informationObject.put("token",UserInfo.getUserToken());
         }catch(JSONException e)
         {

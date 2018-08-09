@@ -77,7 +77,6 @@ public class MyAccountActivity extends AppCompatActivity{
                     @Override
                     public void onResponse(String response)
                     {
-                        Log.v("LoginResponse",response);
                         try
                         {
                             // JSON 형식으로 값을 response 에 받아서 넘어온다.
@@ -86,10 +85,14 @@ public class MyAccountActivity extends AppCompatActivity{
                             Log.v("message",message);
                             if(message.equals("ok"))
                             {
-                                JSONArray array = jsonResponse.getJSONArray("mac");
-                                for(int i=array.length()-1;i>=0;i--)
+                                JSONArray array = jsonResponse.getJSONArray("data");
+
+                                for(int i=0;i<array.length();i++)
                                 {
-                                    String data = array.getString(i);
+                                    JSONObject object = array.getJSONObject(i);
+                                    String Macdata = object.getString("mac");
+                                    String Namedata = object.getString("name");
+                                    String data = Namedata+"\n"+Macdata;
                                     SensorAdapterList.add(data);
                                 }
                             }
@@ -122,7 +125,7 @@ public class MyAccountActivity extends AppCompatActivity{
                 alertBuilder.setAdapter(SensorAdapterList, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        final String MacAddress = SensorAdapterList.getItem(which);
+                        final String MacAddress = SensorAdapterList.getItem(which).substring(0,17);
                         AlertDialog.Builder innBuilder = new AlertDialog.Builder(MyAccountActivity.this);
                         innBuilder.setTitle("Do you want Delete MACaddress?");
                         innBuilder.setPositiveButton("YES", new DialogInterface.OnClickListener() {

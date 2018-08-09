@@ -2,13 +2,12 @@ package com.example.kimhyunwoo.runtogether;
 
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
-import android.util.Log;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.example.kimhyunwoo.runtogether.RealDataTransferRequest;
 
 import org.json.JSONObject;
 
@@ -16,65 +15,33 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Queue;
 
-public class RealTimeDataTransfer {
+public class AqiDataTansfer {
     private AlertDialog dialog;
-    private static String CO = "",HeartRate="",SO2= "",NO2= "",O3= "",PM25= "",Temp= "",LANG= "",LONG= "",TimeStamp="";
+    private static String COAqi="",SO2Aqi="",NO2Aqi="",O3Aqi="",PM25Aqi="",TotalAqi="",TimeStamp="";
     private static Queue<ArrayList> DataQueue = new LinkedList<>();
-    public static boolean RealTimeErrorFlag = false;
-    static int RealTimeErrorCount = 0;
+    public static boolean AqiErrorFlag = false;
+    static int AqiErrorCount = 0;
 
-    private static TextView TextHeartRate = null;
-
-    public static void setAirData(String Co,String So2, String No2,String o3,String Pm25,String TEMP,String TIMESTAMP)
+    public static void setAqiData(String CoAqi,String So2Aqi,String No2Aqi,String o3Aqi,String Pm25Aqi,String TOTALAqi,String Timestamp)
     {
-        CO = Co;
-        SO2 = So2;
-        NO2 = No2;
-        O3 = o3;
-        PM25 = Pm25;
-        Temp = TEMP;
-        TimeStamp = TIMESTAMP;
-    }
-    public static void setHeartRate(String heart)
-    {
-        HeartRate = heart;
-    }
-
-    public static String getHeartRate(){
-        return HeartRate;
-    }
-
-    public static void setTextView(TextView hr){
-        TextHeartRate = hr;
-    }
-
-    public static void setTextHeartrate() {
-        if (TextHeartRate != null) {
-            TextHeartRate.setText(HeartRate);
-        }
-    }
-    public static void ShowData(){
-        Log.v("[INFO] RealTimeDataTransfer ", CO + "," + SO2+ "," +NO2+ "," +O3 + "," +PM25+ "," +Temp+ "," +LANG+ "," +LONG+ "," +HeartRate+ "," +TimeStamp);
-    }
-
-    public static void setGPS(String Lang, String Long)
-    {
-        LANG = Lang;
-        LONG = Long;
+        COAqi = CoAqi;
+        SO2Aqi = So2Aqi;
+        NO2Aqi = No2Aqi;
+        O3Aqi = o3Aqi;
+        PM25Aqi = Pm25Aqi;
+        TotalAqi = TOTALAqi;
+        TimeStamp = Timestamp;
     }
 
     public void Request(final Context context)
     {
         ArrayList<String> DataList = new ArrayList<>();
-        DataList.add(CO);
-        DataList.add(SO2);
-        DataList.add(NO2);
-        DataList.add(O3);
-        DataList.add(PM25);
-        DataList.add(Temp);
-        DataList.add(LANG);
-        DataList.add(LONG);
-        DataList.add(HeartRate);
+        DataList.add(COAqi);
+        DataList.add(SO2Aqi);
+        DataList.add(NO2Aqi);
+        DataList.add(O3Aqi);
+        DataList.add(PM25Aqi);
+        DataList.add(TotalAqi);
         DataList.add(TimeStamp);
 
         if(DataQueue.size()>5)
@@ -100,7 +67,7 @@ public class RealTimeDataTransfer {
                         Toast.makeText(context, "Success!", Toast.LENGTH_SHORT).show();
                         while(!DataQueue.isEmpty())
                         {
-                            if(RealTimeErrorCount >3 || RealTimeErrorFlag ==true)
+                            if(AqiErrorCount >3 || AqiErrorFlag ==true)
                             {
                                 break;
                             }
@@ -117,7 +84,7 @@ public class RealTimeDataTransfer {
                                         }
                                         else
                                         {
-                                            RealTimeErrorCount++;
+                                            AqiErrorCount++;
                                         }
                                     }catch (Exception e)
                                     {
@@ -130,8 +97,8 @@ public class RealTimeDataTransfer {
                             RequestQueue queue = Volley.newRequestQueue(context);            // Volley의 사용법으로 request queue로 queue를 하나 선언하고
                             queue.add(RealtimedataqueueRequest);
                         }
-                        RealTimeErrorCount = 0;
-                        RealTimeErrorFlag = false;
+                        AqiErrorCount = 0;
+                        AqiErrorFlag = false;
                     }
                 }
                 catch(Exception e)
@@ -143,6 +110,6 @@ public class RealTimeDataTransfer {
         RealDataTransferRequest RealtimedataRequest = new RealDataTransferRequest(DataList,reponseListener,context);           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
         RequestQueue queue = Volley.newRequestQueue(context);            // Volley의 사용법으로 request queue로 queue를 하나 선언하고
         queue.add(RealtimedataRequest);
-        RealTimeErrorFlag = false;
+        AqiErrorFlag = false;
     }
 }
