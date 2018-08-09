@@ -688,14 +688,15 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                             String[] parsing = parsingResult.split(",");
                             //  이런식으로 받으면 될 듯하다.
                             textCO.setText(parsing[0]);
-//                            setSmileChart(srCO, Integer.parseInt(parsing[0]));
+                            //setSmileChart(srCO, Integer.parseInt(parsing[0]));
                             textSO2.setText(parsing[1]);
-//                            setSmileChart(srSO2, Integer.parseInt(parsing[1]));
+                            //setSmileChart(srSO2, Integer.parseInt(parsing[1]));
                             textNO2.setText(parsing[2]);
-//                            setSmileChart(srNO2, Integer.parseInt(parsing[2]));
+                            //setSmileChart(srNO2, Integer.parseInt(parsing[2]));
                             textO3.setText(parsing[3]);
-//                            setSmileChart(srO3, Integer.parseInt(parsing[3]));
+                            //setSmileChart(srO3, Integer.parseInt(parsing[3]));
                             textPM25.setText(parsing[4]);
+                            //setSmileChart(srPM25, Integer.parseInt(parsing[4]));
 //                            setSmileChart(srPM25, Integer.parseInt(parsing[4]));
 
                             textTEMP.setText(parsing[5]);

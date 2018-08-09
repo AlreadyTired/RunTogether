@@ -28,7 +28,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class MyAccountActivity extends AppCompatActivity{
-    private Button ChangePasswordButton,IDCancellationInputButton,SensorListViewButton;
+    private Button ChangePasswordButton,IDCancellationInputButton,SensorListViewButton,AllUserRealTimeDataButton;
     private AlertDialog dialog,dialog2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +37,14 @@ public class MyAccountActivity extends AppCompatActivity{
         ChangePasswordButton = (Button) findViewById(R.id.PasswordChangeButton);
         SensorListViewButton = (Button) findViewById(R.id.SensorListViewButton);
         IDCancellationInputButton = (Button) findViewById(R.id.IDCancellationInputButton);
+        AllUserRealTimeDataButton = (Button)findViewById(R.id.AllUserRealTimeDataButton);
+        AllUserRealTimeDataButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(MyAccountActivity.this, AllUserRealTimeDataViewActivity.class);      // 로그인 성공으로 메인화면으로 넘어감.
+                MyAccountActivity.this.startActivity(intent);
+            }
+        });
         ChangePasswordButton.setOnClickListener(new View.OnClickListener()                                   // 로그인 버튼
         {
             @Override
