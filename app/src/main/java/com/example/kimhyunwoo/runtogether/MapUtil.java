@@ -27,9 +27,10 @@ public class MapUtil {
 
     private Marker delete = null;
 
-    private LatLng startLat = null;
-    private LatLng endLat = null;
-
+//    private LatLng startLat = null;
+//    private LatLng endLat = null;
+    private LatLng startLat = new LatLng(32.881033, -117.235601);;
+    private LatLng endLat = new LatLng(32.8843552,-117.2338066);
 
     public  int zoomLevel = 18;
     private double distance = 0d;

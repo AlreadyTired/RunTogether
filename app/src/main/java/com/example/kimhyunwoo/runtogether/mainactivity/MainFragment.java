@@ -175,6 +175,9 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
     BluetoothSingleton btSingletion;
 
+    //===================================================================
+    //  데이터 전송
+    RealTimeDataTransfer realTimeDataTransfer;
     public MainFragment() {
         // Required empty public constructor
     }
@@ -189,6 +192,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         btSingletion = BluetoothSingleton.getInstance();
         btUtil = new BluetoothUtil();
 
+        realTimeDataTransfer = new RealTimeDataTransfer();
         // Get local Bluetooth adapter
         btSingletion.mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -459,14 +463,14 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         //  사용하면 다시 활성화 하자.
         //  좌표 적용
         //  마커생성
-        markerOptions.position(savedCoordinate); //좌표
-        markerOptions.title("임시 마커");
-        //  마커를 화면에 그림
-        map.addMarker(markerOptions);
-        //  맵의 중심을 해당 좌표로 이동
-        //  savedCoordinate : 좌표
-        //  v: 줌레벨
-        map.moveCamera(CameraUpdateFactory.newLatLngZoom(savedCoordinate,mapUtil.zoomLevel));
+//        markerOptions.position(savedCoordinate); //좌표
+//        markerOptions.title("임시 마커");
+//        //  마커를 화면에 그림
+//        map.addMarker(markerOptions);
+//        //  맵의 중심을 해당 좌표로 이동
+//        //  savedCoordinate : 좌표
+//        //  v: 줌레벨
+//        map.moveCamera(CameraUpdateFactory.newLatLngZoom(savedCoordinate,mapUtil.zoomLevel));
 
         map.setOnMarkerClickListener(this);
     }
@@ -663,6 +667,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                                 RealTimeDataTransfer.ShowData();
                             }
                         }
+                        realTimeDataTransfer.Request(getContext());
                     }
                     mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
                     break;

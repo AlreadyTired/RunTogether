@@ -18,7 +18,7 @@ import java.util.Queue;
 
 public class RealTimeDataTransfer {
     private AlertDialog dialog;
-    private static String CO = "",HeartRate="",SO2= "",NO2= "",O3= "",PM25= "",Temp= "",LANG= "",LONG= "",TimeStamp="";
+    private static String CO = "",HeartRate="70",SO2= "",NO2= "",O3= "",PM25= "",Temp= "",LANG= "32.881033",LONG= "-117.235601",TimeStamp="";
     private static Queue<ArrayList> DataQueue = new LinkedList<>();
     public static boolean RealTimeErrorFlag = false;
     static int RealTimeErrorCount = 0;
