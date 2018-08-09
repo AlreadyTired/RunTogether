@@ -113,7 +113,7 @@ public class BluetoothUtil {
         pm25aqi = String.format("%.2f",pm25aqi_f);
         String timestamp = airData.getString("timestamp");
 
-        //RealTimeDataTransfer.setAirData(coaqi, so2aqi, no2aqi, o3aqi, pm25aqi, total, timestamp);
+        AqiDataTansfer.setAqiData(coaqi, so2aqi, no2aqi, o3aqi, pm25aqi, totalaqi, timestamp);
 
         String jsonString = coaqi + "," +  so2aqi + "," + no2aqi + "," + o3aqi + "," + pm25aqi + "," + totalaqi;
 
