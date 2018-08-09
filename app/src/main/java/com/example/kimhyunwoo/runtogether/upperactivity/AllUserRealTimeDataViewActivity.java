@@ -11,5 +11,6 @@ public class AllUserRealTimeDataViewActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_all_user_real_time_data_view);
+
     }
 }

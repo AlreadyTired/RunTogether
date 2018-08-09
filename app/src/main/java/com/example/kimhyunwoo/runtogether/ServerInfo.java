@@ -12,7 +12,7 @@ public class ServerInfo {
     public static final String findpasswordURL = "api/auth/password/forgotten";
     public static final String historicaldataviewURL = "api/sensor/historical/view";
     public static final String SensorDeregistrationURL = "api/sensor/deregistration";
-    public static final String SensorListViewURL = "";
+    public static final String SensorListViewURL = "api/sensor/listview";
     public static final String SensorRegistrationURL = "api/sensor/registration";
     public static final String DataTransferURL = "";
     public static final String AqiDataTransferURL = "";
