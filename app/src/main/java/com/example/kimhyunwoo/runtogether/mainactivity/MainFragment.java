@@ -42,6 +42,7 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
+import com.example.kimhyunwoo.runtogether.AqiDataTansfer;
 import com.example.kimhyunwoo.runtogether.BluetoothSingleton;
 import com.example.kimhyunwoo.runtogether.BluetoothUtil;
 import com.example.kimhyunwoo.runtogether.MapUtil;
@@ -93,7 +94,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
     //  TODO(db 연동 시에 db에서 마지막 위치를 받아 오도록 하자)
     //  현재는 db에 연동이 안되어 임의로 설정함
-    LatLng savedCoordinate = new LatLng(32.881033, -117.235601);
+    LatLng savedCoordinate = null;
     LatLng currentCoordinate = new LatLng(32.881033, -117.235601);
 
     boolean sendResult = false;
@@ -177,6 +178,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
     //===================================================================
     //  데이터 전송
+    AqiDataTansfer aqiDataTansfer;
     RealTimeDataTransfer realTimeDataTransfer;
     public MainFragment() {
         // Required empty public constructor
@@ -192,6 +194,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         btSingletion = BluetoothSingleton.getInstance();
         btUtil = new BluetoothUtil();
 
+        aqiDataTansfer = new AqiDataTansfer();
         realTimeDataTransfer = new RealTimeDataTransfer();
         // Get local Bluetooth adapter
         btSingletion.mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -329,9 +332,10 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                 date = new Date(nowTime);
                 startTime = dateFormat.format(date);
 
+                mapUtil.setStartLat(currentCoordinate);
+
                 exercisingFlag = true;
 
-                mapUtil.setStartLat(savedCoordinate);
 
                 timeHandle = new Handler(){
                     @Override
@@ -350,7 +354,10 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                             //  현재 좌표에 마커를 찍기 위해서 옵션에 저장
                             markerOptions.position(currentCoordinate);
 
-                            mapUtil.polylineOnMap(map, savedCoordinate, currentCoordinate);
+                            if(savedCoordinate != null){
+                                mapUtil.polylineOnMap(map, savedCoordinate, currentCoordinate);
+                            }
+
                             savedCoordinate = currentCoordinate;
 
                             //  마커 삭제
@@ -391,7 +398,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                 exercisingFlag = false;
                 sendResult = true;
 
-                mapUtil.setEndLat(savedCoordinate);
+                mapUtil.setEndLat(currentCoordinate);
 
                 timeHandle.removeMessages(0);
                 timer = 0d;
@@ -487,7 +494,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
             //  바뀐 현재 좌표
             currentCoordinate = new LatLng(currentLat ,currentLng);
-
+            savedCoordinate = currentCoordinate;
             if(exercisingFlag == true) {
                 return;
             }
@@ -507,10 +514,10 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentCoordinate,mapUtil.zoomLevel));
 
             //  디버깅 용
-            Context context = getActivity().getApplicationContext();
-            Toast toast = Toast.makeText(context,"lat : "+currentLat + "\nlng : "
-                    + currentLng, Toast.LENGTH_SHORT);
-            toast.show();
+//            Context context = getActivity().getApplicationContext();
+//            Toast toast = Toast.makeText(context,"lat : "+currentLat + "\nlng : "
+//                    + currentLng, Toast.LENGTH_SHORT);
+//            toast.show();
         }
 
         @Override
@@ -644,18 +651,19 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                         if(parsingResult != null) {
                             if(btUtil.getType()){
                                 //AQI
-                                setSmileChart(srCO, Integer.parseInt(parsing[0]));
+                                setSmileChart(srCO, Float.parseFloat(parsing[0]));
                                 textCOAQI.setText(parsing[0]);
-                                setSmileChart(srSO2, Integer.parseInt(parsing[1]));
+                                setSmileChart(srSO2, Float.parseFloat(parsing[1]));
                                 textSO2AQI.setText(parsing[1]);
-                                setSmileChart(srNO2, Integer.parseInt(parsing[2]));
+                                setSmileChart(srNO2, Float.parseFloat(parsing[2]));
                                 textNO2AQI.setText(parsing[2]);
-                                setSmileChart(srO3, Integer.parseInt(parsing[3]));
+                                setSmileChart(srO3, Float.parseFloat(parsing[3]));
                                 textO3AQI.setText(parsing[3]);
-                                setSmileChart(srPM25, Integer.parseInt(parsing[4]));
+                                setSmileChart(srPM25, Float.parseFloat(parsing[4]));
                                 textPM25AQI.setText(parsing[4]);
-                                setSmileChart(srAQI, Integer.parseInt(parsing[5]));
+                                setSmileChart(srAQI, Float.parseFloat(parsing[5]));
                                 textTotal.setText(parsing[5]);
+                                aqiDataTansfer.Request(getContext());
                             }else{
                                 //Real-Time
                                 textCO.setText(parsing[0]);
@@ -665,9 +673,10 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                                 textPM25.setText(parsing[4]);
                                 textTEMP.setText(parsing[5]);
                                 RealTimeDataTransfer.ShowData();
+                                realTimeDataTransfer.Request(getContext());
                             }
                         }
-                        realTimeDataTransfer.Request(getContext());
+
                     }
                     mConversationArrayAdapter.add(mConnectedDeviceName + ":  " + readMessage);
                     break;
@@ -907,14 +916,14 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         //smile end
     }
 
-    public void setSmileChart(SmileRating srData, int airData){
-        if(airData > 80){
+    public void setSmileChart(SmileRating srData, Float airData){
+        if(airData > 200){
             srData.setSelectedSmile(srData.TERRIBLE, true);
-        }else if(airData > 60){
+        }else if(airData > 150){
             srData.setSelectedSmile(srData.BAD, true);
-        }else if(airData > 40){
+        }else if(airData > 101){
             srData.setSelectedSmile(srData.OKAY, true);
-        }else if(airData > 20){
+        }else if(airData > 50){
             srData.setSelectedSmile(srData.GOOD, true);
         }else{
             srData.setSelectedSmile(srData.GREAT, true);

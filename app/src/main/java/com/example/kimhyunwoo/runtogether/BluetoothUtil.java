@@ -14,12 +14,8 @@ public class BluetoothUtil {
         return isAQI;
     }
 
-    public void setType(){
-        if(isAQI){
-            isAQI = false;
-        }else{
-            isAQI = true;
-        }
+    public void setType(boolean flag){
+        isAQI = flag;
     }
 
     public String SortType(String data) throws JSONException {
@@ -46,7 +42,7 @@ public class BluetoothUtil {
 
     private String airDataJsonParsing(String data) throws JSONException {
         JSONObject airData;
-
+        setType(false);
         try {
             airData = new JSONObject(data);
         } catch (Exception e) {
@@ -84,6 +80,7 @@ public class BluetoothUtil {
 
     private String aqiDataJsonParsing(String data) throws JSONException {
         JSONObject airData;
+        setType(true);
 
         try {
             airData = new JSONObject(data);
