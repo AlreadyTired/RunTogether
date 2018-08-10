@@ -93,7 +93,8 @@ public class RealTimeDataTransfer {
                 {
                     // JSON 형식으로 값을 response 에 받아서 넘어온다.
                     JSONObject jsonResponse = new JSONObject(response);
-                    String message = jsonResponse.getString("message");               // success 이름으로 boolean 타입의 값이 넘어온다
+                    String message = jsonResponse.getString("message");
+                    Log.v("Message",message);// success 이름으로 boolean 타입의 값이 넘어온다
                     if(message.equals("ok"))
                     {
                         DataQueue.poll();

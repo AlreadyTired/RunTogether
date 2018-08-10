@@ -2,6 +2,7 @@ package com.example.kimhyunwoo.runtogether;
 
 import android.content.Context;
 import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.volley.RequestQueue;
@@ -107,9 +108,9 @@ public class AqiDataTansfer {
                 }
             }
         };
-        RealDataTransferRequest RealtimedataRequest = new RealDataTransferRequest(DataList,reponseListener,context);           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
+        AqiDataTransferRequest aqiDataTansfer = new AqiDataTransferRequest(DataList,reponseListener, context);           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
         RequestQueue queue = Volley.newRequestQueue(context);            // Volley의 사용법으로 request queue로 queue를 하나 선언하고
-        queue.add(RealtimedataRequest);
+        queue.add(aqiDataTansfer);
         AqiErrorFlag = false;
     }
 }
