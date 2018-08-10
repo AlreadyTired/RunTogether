@@ -134,7 +134,7 @@ public class HistoryFragment extends SimpleFragment {
                 if(position == 8) { DataTypeStirng = "pm25";}
                 if(position == 9) { DataTypeStirng = "pm25aqi";}
                 if(position == 10) { DataTypeStirng = "temp";}
-                if(position == 11) { DataTypeStirng = "heartrate";}
+                if(position == 11) { DataTypeStirng = "heart";}
             }
 
             @Override
@@ -211,12 +211,13 @@ public class HistoryFragment extends SimpleFragment {
                                 {
                                     JSONObject object = array.getJSONObject(i);
                                     String data = object.getString(DataTypeStirng);
-                                        String datedata = object.getString("date");
+                                    String datedata = object.getString("date");
                                     datedata = datedata.substring(5,10);
                                     DataTypeInfoFromServer.add(data);
                                     DateInfoFromServer.add(datedata);
                                 }
                                 Log.v("DateInfoFromServer",DateInfoFromServer.toString());
+                                mChart.clear();
                                 mChart.setData(getComplexity(DataTypeStirng,DataTypeInfoFromServer));
                                 mChart.invalidate();
                                 xAxis.setValueFormatter(new IndexAxisValueFormatter(DateInfoFromServer));

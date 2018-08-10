@@ -119,9 +119,9 @@ public class UpperFragment extends Fragment {
                         }
                     }
                 };
-                LogoutRequest loginRequest = new LogoutRequest(reponseListener,getActivity());           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
+                LogoutRequest logoutRequest = new LogoutRequest(reponseListener,getActivity());           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
                 RequestQueue queue = Volley.newRequestQueue(getActivity());            // Volley의 사용법으로 request queue로 queue를 하나 선언하고
-                queue.add(loginRequest);
+                queue.add(logoutRequest);
             }
         });
 

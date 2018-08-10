@@ -92,7 +92,7 @@ public class MyAccountActivity extends AppCompatActivity{
                                     JSONObject object = array.getJSONObject(i);
                                     String Macdata = object.getString("mac");
                                     String Namedata = object.getString("name");
-                                    String data = Namedata+"\n"+Macdata;
+                                    String data = Macdata+"\n"+Namedata;
                                     SensorAdapterList.add(data);
                                 }
                             }

@@ -24,19 +24,28 @@
     </LinearLayout>
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="300dp">
-        <Button
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorPrimaryDark"/>
-    </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="UserList"
+                android:textSize="20dp"
+                android:textColor="#ffffff"/>
+            <Spinner
+                android:id="@+id/UserListSpinner"
+                android:background="#ffffff"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:padding="0dip">
 
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/colorPrimary"/>
+            </Spinner>
+        </LinearLayout>
+
     </LinearLayout>
 </LinearLayout>

@@ -3,6 +3,7 @@ package com.example.kimhyunwoo.runtogether.mainactivity;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -14,18 +15,26 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.example.kimhyunwoo.runtogether.BackPressCloseHandler;
 import com.example.kimhyunwoo.runtogether.MapUtil;
 import com.example.kimhyunwoo.runtogether.R;
 import com.example.kimhyunwoo.runtogether.RealTimeDataTransfer;
 import com.example.kimhyunwoo.runtogether.UserInfo;
 import com.example.kimhyunwoo.runtogether.bluetoothmanagement.PolarBleReceiver;
+import com.example.kimhyunwoo.runtogether.upperactivity.LogoutRequest;
 import com.example.kimhyunwoo.runtogether.upperactivity.UpperFragment;
+import com.example.kimhyunwoo.runtogether.usermanagement.LoginActivity;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -108,6 +117,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         activatePolar();
+        Toast.makeText(MainActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
     }
 
     //  권한 체크
@@ -191,5 +201,4 @@ public class MainActivity extends AppCompatActivity {
         intentFilter.addAction(PolarBleReceiver.ACTION_HR_DATA_AVAILABLE);
         return intentFilter;
     }
-
 }

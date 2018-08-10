@@ -35,7 +35,6 @@ public class LogoutRequest extends StringRequest {
                         .create();
                 dialog.show();
                 return;
-
             }
         });
         parameters = new HashMap<>();
