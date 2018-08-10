@@ -228,6 +228,8 @@ public class LoginActivity extends AppCompatActivity {
                     return;
                 }
 
+                Toast.makeText(LoginActivity.this, "Wait a second", Toast.LENGTH_SHORT).show();
+
                 // Volley 사용하기 위한 리스너 정의.
                 Response.Listener<String> reponseListener = new Response.Listener<String>()
                 {
@@ -246,14 +248,23 @@ public class LoginActivity extends AppCompatActivity {
                             {
                                 String token = jsonResponse.getString("token");
                                 String nickname = jsonResponse.getString("userNickname");
+                                String temp = jsonResponse.getString("temp");
                                 Log.v("token",token);
                                 Log.v("Nickname",nickname);
-                                Toast.makeText(LoginActivity.this, "Login Success", Toast.LENGTH_SHORT).show();
+                                Log.v("temp",temp);
                                 UserInfo.setUserEmail(userEmail);
                                 UserInfo.setUserToken(token);
                                 UserInfo.setUserNickname(nickname);
-                                Intent intent = new Intent(LoginActivity.this,MainActivity.class);      // 로그인 성공으로 메인화면으로 넘어감.
-                                LoginActivity.this.startActivity(intent);
+                                if(temp.equals("1"))
+                                {
+                                    Intent intent = new Intent(LoginActivity.this,PasswordChangeActivity.class);      // 로그인시 임시비번이면 패스워드 변경창으로 바로 감
+                                    LoginActivity.this.startActivity(intent);
+                                }
+                                else
+                                {
+                                    Intent intent = new Intent(LoginActivity.this,MainActivity.class);      // 로그인 성공으로 메인화면으로 넘어감.
+                                    LoginActivity.this.startActivity(intent);
+                                }
                             }
                             else
                             {

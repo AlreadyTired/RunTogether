@@ -53,7 +53,7 @@ public abstract class SimpleFragment extends Fragment {
         List<Entry> list = new ArrayList<>();
         for(int i=0;i<DataInfo.size();i++)
         {
-            list.add(new Entry(i,Integer.parseInt(DataInfo.get(i))));
+            list.add(new Entry(i,Float.parseFloat(DataInfo.get(i))));
         }
 
         LineDataSet ds1 = new LineDataSet(list,DataType+"                                                        Y Axis = Value  ,      X Axis = Date");

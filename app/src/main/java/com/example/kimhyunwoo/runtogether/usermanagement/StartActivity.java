@@ -1,14 +1,22 @@
 package com.example.kimhyunwoo.runtogether.usermanagement;
 
 import android.content.Intent;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.TextView;
 
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
 import com.example.kimhyunwoo.runtogether.R;
+import com.example.kimhyunwoo.runtogether.UserInfo;
+import com.example.kimhyunwoo.runtogether.mainactivity.MainActivity;
+import com.example.kimhyunwoo.runtogether.upperactivity.LogoutRequest;
 
 public class StartActivity extends AppCompatActivity {
 
@@ -39,5 +47,37 @@ public class StartActivity extends AppCompatActivity {
             default:
                 break;
         }
+    }
+    @Override
+    protected void onDestroy() {
+        Log.v("onDestroy","들어왔어요2@#@#@#");
+        if(!UserInfo.getUserToken().isEmpty())
+        {
+            Log.v("onDestroy","들어왔어요2");
+            Response.Listener<String> reponseListener = new Response.Listener<String>() {
+                // Volley 를 통해서 정상적으로 웹서버와 통신이 되면 실행되는 함수
+                @Override
+                public void onResponse(String response)
+                {
+                }
+            };
+            LogoutRequest logoutRequest = new LogoutRequest(reponseListener,StartActivity.this);           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
+            RequestQueue queue = Volley.newRequestQueue(StartActivity.this);            // Volley의 사용법으로 request queue로 queue를 하나 선언하고
+            queue.add(logoutRequest);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                }
+            }, 2000);
+        }
+        Log.v("끝난다","너무빨리끝나부럿다!");
+        super.onDestroy();
     }
 }
