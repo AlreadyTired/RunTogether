@@ -1,7 +1,6 @@
 package com.example.kimhyunwoo.runtogether.upperactivity;
 
 import android.content.Context;
-import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.widget.Toast;
 
