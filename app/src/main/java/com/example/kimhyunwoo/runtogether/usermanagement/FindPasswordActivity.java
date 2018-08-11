@@ -128,7 +128,7 @@ public class FindPasswordActivity extends AppCompatActivity {
                             String message = jsonResponse.getString("message");               // success 이름으로 boolean 타입의 값이 넘어온다
                             if(message.equals("ok"))
                             {
-                                Toast.makeText(FindPasswordActivity.this, "Success!", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(FindPasswordActivity.this, "Please Check your Email!", Toast.LENGTH_SHORT).show();
                                 Intent intent = new Intent(FindPasswordActivity.this,LoginActivity.class);      // 성공으로 화면으로 넘어감.
                                 FindPasswordActivity.this.startActivity(intent);
                             }

@@ -29,7 +29,7 @@ public class SpecificUserDataRequest extends StringRequest {
         super(Request.Method.POST,URL,listener,new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Toast.makeText(context, "Connect Error!", Toast.LENGTH_SHORT).show();
+                Log.v("User's Log","Server Connect Error");
             }
         });
         parameters = new HashMap<>();

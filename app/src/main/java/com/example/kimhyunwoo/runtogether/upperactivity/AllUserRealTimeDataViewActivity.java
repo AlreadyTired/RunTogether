@@ -142,8 +142,6 @@ public class AllUserRealTimeDataViewActivity extends AppCompatActivity {
                                     NO2AQITextView.setText(dataObject.getString("no2aqi"));
                                     O3AQITextView.setText(dataObject.getString("o3aqi"));
                                     PM25AQITextView.setText(dataObject.getString("pm25aqi"));
-
-                                    Toast.makeText(AllUserRealTimeDataViewActivity.this, "Success", Toast.LENGTH_SHORT).show();
                                 }
                                 else
                                 {
@@ -213,7 +211,7 @@ public class AllUserRealTimeDataViewActivity extends AppCompatActivity {
                             UserEmailList.add(Emaildata);
                         }
 
-                        Toast.makeText(AllUserRealTimeDataViewActivity.this, "Get UserListSuccess", Toast.LENGTH_SHORT).show();
+                        Log.v("User's Log","Get UserListSuccess");
                     }
                     else
                     {
