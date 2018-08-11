@@ -18,4 +18,5 @@ public class ServerInfo {
     public static final String AqiDataTransferURL = "api/sensor/aqi/transfer";
     public static final String UserListRequestURL = "/api/auth/user/list";
     public static final String SpecificUserRealTimeDataURL = "/api/sensor/all/view";
+    public static final String ExerciseTransferURL = "api/maps/exercise/reg";
 }
