@@ -98,7 +98,6 @@ public class RealTimeDataTransfer {
                     if(message.equals("ok"))
                     {
                         DataQueue.poll();
-                        Toast.makeText(context, "Success!", Toast.LENGTH_SHORT).show();
                         while(!DataQueue.isEmpty())
                         {
                             if(RealTimeErrorCount >3 || RealTimeErrorFlag ==true)
