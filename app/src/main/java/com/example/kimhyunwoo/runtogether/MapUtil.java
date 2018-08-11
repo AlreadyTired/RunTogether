@@ -30,6 +30,7 @@ import com.google.maps.android.SphericalUtil;
 
 import org.json.JSONObject;
 
+import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Locale;
 
@@ -43,8 +44,8 @@ public class MapUtil {
     private LatLng startLat = null;
     private LatLng endLat = null;
 
-    private String startTime = null;
-    private String endTime = null;
+    private Timestamp startTime = null;
+    private Timestamp endTime = null;
 
     public  int zoomLevel = 18;
     private double distance = 0d;
@@ -67,14 +68,21 @@ public class MapUtil {
             return;
         }
         this.startLat = lat;
-        this.startTime = new Timestamp(System.currentTimeMillis()).toString();
+        this.startTime = new Timestamp(System.currentTimeMillis());
+    }
+
+    public Timestamp getStartTime(){
+        return this.startTime;
     }
 
     public void setEnd(LatLng lat){
         this.endLat = lat;
-        this.endTime = new Timestamp(System.currentTimeMillis()).toString();
+        this.endTime = new Timestamp(System.currentTimeMillis());
     }
 
+    public Timestamp getEndTime(){
+        return this.endTime;
+    }
     public void polylineOnMap(GoogleMap map, LatLng previousCoordinate, LatLng currentCoordinate){
         if(map == null || previousCoordinate == null || currentCoordinate == null)
         {
@@ -164,7 +172,7 @@ public class MapUtil {
                 }
             }
         };
-        ExerciseInfoRequest exerciseInfoRequest = new ExerciseInfoRequest(startTime, endTime,reponseListener,context);           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
+        ExerciseInfoRequest exerciseInfoRequest = new ExerciseInfoRequest(startTime.toString(), endTime.toString(),reponseListener,context);           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
         RequestQueue queue = Volley.newRequestQueue(context);            // Volley의 사용법으로 request queue로 queue를 하나 선언하고
         queue.add(exerciseInfoRequest);
     }
