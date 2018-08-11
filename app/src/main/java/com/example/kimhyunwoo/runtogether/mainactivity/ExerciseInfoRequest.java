@@ -60,7 +60,7 @@ public class ExerciseInfoRequest extends StringRequest {
             e.printStackTrace();
         }
         parameters.put("json",informationObject.toString());
-        Log.v("parameters",parameters.toString());
+        Log.v("User's Log",parameters.toString());
     }
 
 

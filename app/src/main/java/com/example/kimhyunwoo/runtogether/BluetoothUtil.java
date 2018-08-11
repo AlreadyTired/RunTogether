@@ -85,7 +85,7 @@ public class BluetoothUtil {
         try {
             airData = new JSONObject(data);
         } catch (Exception e) {
-            Log.e("[ERR] JSON", e.getMessage().toString());
+            Log.e("User's Log", " Error " + e.getMessage().toString());
             return null;
         }
 

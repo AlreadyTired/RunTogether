@@ -65,7 +65,7 @@ public class AqiDataTansfer {
                     if(message.equals("ok"))
                     {
                         DataQueue.poll();
-                        Toast.makeText(context, "Success!", Toast.LENGTH_SHORT).show();
+                        Log.v("User's Log","Success!");
                         while(!DataQueue.isEmpty())
                         {
                             if(AqiErrorCount >3 || AqiErrorFlag ==true)

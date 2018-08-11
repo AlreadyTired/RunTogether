@@ -86,7 +86,7 @@ public class MapUtil {
     public void polylineOnMap(GoogleMap map, LatLng previousCoordinate, LatLng currentCoordinate){
         if(map == null || previousCoordinate == null || currentCoordinate == null)
         {
-            Log.e("[ERR] polyLineOnMap : ", "null check!!!");
+            Log.e("User's Log", "Error polyLineOnMap : null check!!!");
             return;
         }
 
@@ -172,7 +172,7 @@ public class MapUtil {
             }
         };
 
-        Log.v("[INFO]", "startTime : " + Long.toString(startTime.getTime()/1000)
+        Log.v("User's Log", "startTime : " + Long.toString(startTime.getTime()/1000)
                 + "endTime : " + Long.toString(endTime.getTime()/1000)
                 + "speed : " + speed.toString()
                 + "distance : "+ distance.toString());
