@@ -171,6 +171,12 @@ public class MyAccountActivity extends AppCompatActivity{
                                 RequestQueue queue = Volley.newRequestQueue(MyAccountActivity.this);            // Volley의 사용법으로 request queue로 queue를 하나 선언하고
                                 queue.add(SensorDeregistRequest);
                             }
+                        })
+                        .setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                return;
+                            }
                         });
                         innBuilder.show();
                     }
