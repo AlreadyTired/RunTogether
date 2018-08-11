@@ -36,7 +36,7 @@ public class UserInfo extends Application{
 
     public static void UserDataReset()
     {
-        UserToken=null;
-        UserEmail=null;
+        UserToken="";
+        UserEmail="";
     }
 }

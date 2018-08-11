@@ -16,6 +16,6 @@ public class ServerInfo {
     public static final String SensorRegistrationURL = "api/sensor/registration";
     public static final String DataTransferURL = "api/sensor/real/transfer";
     public static final String AqiDataTransferURL = "api/sensor/aqi/transfer";
-    public static final String UserListRequestURL = "";
-    public static final String SpecificUserRealTimeDataURL = "";
+    public static final String UserListRequestURL = "/api/auth/user/list";
+    public static final String SpecificUserRealTimeDataURL = "/api/sensor/all/view";
 }

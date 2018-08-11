@@ -50,10 +50,10 @@ public class StartActivity extends AppCompatActivity {
     }
     @Override
     protected void onDestroy() {
-        Log.v("onDestroy","들어왔어요2@#@#@#");
+        Log.v("User's Log","OnDestroy before response");
         if(!UserInfo.getUserToken().isEmpty())
         {
-            Log.v("onDestroy","들어왔어요2");
+            Log.v("User's Log","OnDestroy before response after 'if'command");
             Response.Listener<String> reponseListener = new Response.Listener<String>() {
                 // Volley 를 통해서 정상적으로 웹서버와 통신이 되면 실행되는 함수
                 @Override
@@ -77,7 +77,7 @@ public class StartActivity extends AppCompatActivity {
                 }
             }, 2000);
         }
-        Log.v("끝난다","너무빨리끝나부럿다!");
+        Log.v("User's Log","OnDestroy after response");
         super.onDestroy();
     }
 }

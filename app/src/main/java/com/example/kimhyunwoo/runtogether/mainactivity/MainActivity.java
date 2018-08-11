@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
@@ -33,6 +34,7 @@ import com.example.kimhyunwoo.runtogether.bluetoothmanagement.PolarBleReceiver;
 import com.example.kimhyunwoo.runtogether.upperactivity.LogoutRequest;
 import com.example.kimhyunwoo.runtogether.upperactivity.UpperFragment;
 import com.example.kimhyunwoo.runtogether.usermanagement.LoginActivity;
+import com.example.kimhyunwoo.runtogether.usermanagement.StartActivity;
 
 import org.json.JSONObject;
 
@@ -200,5 +202,39 @@ public class MainActivity extends AppCompatActivity {
         intentFilter.addAction(PolarBleReceiver.ACTION_GATT_DISCONNECTED);
         intentFilter.addAction(PolarBleReceiver.ACTION_HR_DATA_AVAILABLE);
         return intentFilter;
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        Log.v("User's Log","OnDestroy before response");
+        if(!UserInfo.getUserToken().isEmpty())
+        {
+            Log.v("User's Log","OnDestroy before response after 'if'command");
+            Response.Listener<String> reponseListener = new Response.Listener<String>() {
+                // Volley 를 통해서 정상적으로 웹서버와 통신이 되면 실행되는 함수
+                @Override
+                public void onResponse(String response)
+                {
+                }
+            };
+            LogoutRequest logoutRequest = new LogoutRequest(reponseListener,MainActivity.this);           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
+            RequestQueue queue = Volley.newRequestQueue(MainActivity.this);            // Volley의 사용법으로 request queue로 queue를 하나 선언하고
+            queue.add(logoutRequest);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+
+                }
+            }, 2000);
+        }
+        Log.v("User's Log","OnDestroy after response");
+        super.onDestroy();
     }
 }
