@@ -332,32 +332,32 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                             timeHandle.sendEmptyMessageDelayed(0, 1000);
                             timer++;
 
-                            if (timer % 3 == 0) {
-                                if (savedCoordinate != null && currentCoordinate != null) {
-                                    Log.w("[INFO] ", "distance : " + sumDistance);
-                                    Log.w("[INFO] ", "before lang: " + savedCoordinate.latitude + " before long : " + savedCoordinate.longitude);
-                                    Log.w("[INFO] ", "after lang: " + currentCoordinate.latitude + " after long : " + currentCoordinate.longitude);
-                                }
+                            if (savedCoordinate != null && currentCoordinate != null) {
+                                Log.v("[INFO] ", "distance : " + sumDistance);
+                                Log.v("[INFO] ", "timer : " + sumDistance);
+                                Log.v("[INFO] ", "lang: " + savedCoordinate.latitude + " before long : " + savedCoordinate.longitude);
 
-                                //  현재 좌표에 마커를 찍기 위해서 옵션에 저장
-                                markerOptions.position(currentCoordinate);
+                            }
 
-                                if (savedCoordinate != null) {
-                                    mapUtil.polylineOnMap(map, savedCoordinate, currentCoordinate);
-                                }
+                            //  현재 좌표에 마커를 찍기 위해서 옵션에 저장
+                            markerOptions.position(currentCoordinate);
 
-                                savedCoordinate = currentCoordinate;
+                            if (savedCoordinate != null) {
+                                mapUtil.polylineOnMap(map, savedCoordinate, currentCoordinate);
+                            }
 
-                                //  마커 삭제
-                                mapUtil.deleteMarker(map, markerOptions);
+                            savedCoordinate = currentCoordinate;
 
-                                //  카메라 움직임
-                                map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentCoordinate, mapUtil.zoomLevel));
+                            //  마커 삭제
+                            mapUtil.deleteMarker(map, markerOptions);
+
+                            //  카메라 움직임
+                            map.moveCamera(CameraUpdateFactory.newLatLngZoom(currentCoordinate, mapUtil.zoomLevel));
 
 //                            Context context = getActivity().getApplicationContext();
 //                            Toast toast = Toast.makeText(context,"now time :"+ timer, Toast.LENGTH_SHORT);
 //                            toast.show();
-                            }
+
 //                        super.handleMessage(msg);
                         }
                     };
@@ -395,7 +395,6 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                         speed = sumDistance / timer;
                     }
                     timeHandle.removeMessages(0);
-                    timer = 0d;
 
                     Context context = getActivity().getApplicationContext();
                     Toast toast = Toast.makeText(context, "speed :" + speed + " m/s", Toast.LENGTH_SHORT);
@@ -422,6 +421,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 //                mapUtil.setSendResult(mapUtil.SEND_READY);
                 mapUtil.setReset();
                 sumDistance = 0d;
+                timer = 0d;
                 toastText = "Reset Google Map";
             }
             //  운동이 끝났고, 전송에 실패 했으면 재전송
