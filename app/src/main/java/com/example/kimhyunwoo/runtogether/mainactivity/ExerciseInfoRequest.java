@@ -24,7 +24,7 @@ public class ExerciseInfoRequest extends StringRequest {
     private Map<String,String> parameters;                                                          // Map 형식으로 데이터를 저장(JSON 이기에 Stirng2개)
 
     // Volley의 StringRequest를 선언받아서 사용해야 하는데 내가 사용할 값들과 부모의 인자값까지 사용해야함. 앞서 선언한 map 에 필요한 값들을 JSON형식의 String 2개값을 넣어서 보냄.
-    public ExerciseInfoRequest(String startTimestamp, String endTimestamp, Response.Listener<String> listener, final Context context)
+    public ExerciseInfoRequest(String startTimestamp, String endTimestamp,String speed, String distacne, Response.Listener<String> listener, final Context context)
     {
         super(Request.Method.POST,URL,listener,new Response.ErrorListener() {
             @Override
@@ -50,8 +50,10 @@ public class ExerciseInfoRequest extends StringRequest {
         parameters = new HashMap<>();
         JSONObject informationObject = new JSONObject();
         try{
-            informationObject.put("startstamp",startTimestamp);
-            informationObject.put("endstamp",endTimestamp);
+            informationObject.put("startTime",startTimestamp);
+            informationObject.put("endTime",endTimestamp);
+            informationObject.put("speed",speed);
+            informationObject.put("distance",distacne);
             informationObject.put("token",getUserToken());
         }catch(JSONException e)
         {

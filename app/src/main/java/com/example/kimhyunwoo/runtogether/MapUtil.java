@@ -56,7 +56,7 @@ public class MapUtil {
     public final int SEND_READY = 0;
     public final int SEND_FAILED = -1;
 
-    int sendResult = SEND_SUCCESS;
+    int sendResult = SEND_READY;
 
     public void setReset(){
         this.startLat = null;
@@ -135,7 +135,7 @@ public class MapUtil {
         this.sendResult = result;
     }
 
-    public void Request(final Context context){
+    public void Request(final Context context, String speed, String distance){
         Response.Listener<String> reponseListener = new Response.Listener<String>()
         {
             // Volley 를 통해서 정상적으로 웹서버와 통신이 되면 실행되는 함수
@@ -153,7 +153,6 @@ public class MapUtil {
                     {
                         //  TODO 서버에 등록이 성공하면 어떤 데이터를 받을지 이야기하자
 //                        String temp = jsonResponse.getString("temp");
-
                         sendResult = SEND_SUCCESS;
                     }
                     else
@@ -172,7 +171,13 @@ public class MapUtil {
                 }
             }
         };
-        ExerciseInfoRequest exerciseInfoRequest = new ExerciseInfoRequest(startTime.toString(), endTime.toString(),reponseListener,context);           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
+
+        Log.v("[INFO]", "startTime : " + Long.toString(startTime.getTime()/1000)
+                + "endTime : " + Long.toString(endTime.getTime()/1000)
+                + "speed : " + speed.toString()
+                + "distance : "+ distance.toString());
+
+        ExerciseInfoRequest exerciseInfoRequest = new ExerciseInfoRequest(Long.toString(startTime.getTime()/1000), Long.toString(endTime.getTime()/1000),speed.toString(),distance.toString(),reponseListener,context);           // 위에서 작성한 리스너를 기반으로 요청하는 클래스를 선언.(LoginRequest참고)
         RequestQueue queue = Volley.newRequestQueue(context);            // Volley의 사용법으로 request queue로 queue를 하나 선언하고
         queue.add(exerciseInfoRequest);
     }

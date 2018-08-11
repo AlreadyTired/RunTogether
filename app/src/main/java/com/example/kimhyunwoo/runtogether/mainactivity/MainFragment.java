@@ -365,7 +365,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
             toast.show();
 
         }else if (v == buttonEnd){
-            String toastText = "";
+            String toastText;
 
             do {
                 if(currentCoordinate == null){
@@ -384,9 +384,10 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                     }
                     timeHandle.removeMessages(0);
 
-                    Context context = getActivity().getApplicationContext();
-                    Toast toast = Toast.makeText(context, "speed :" + speed + " m/s", Toast.LENGTH_SHORT);
-                    toast.show();
+                    //  운동이 끝났고, 전송에 성공 했으면 전송 준비 상태
+                    if (mapUtil.getSendResult() == mapUtil.SEND_READY && speed > 0) {
+                        mapUtil.Request(getContext(), Double.toString(speed), Double.toString(sumDistance));
+                    }
 
                     toastText = "exercise end!!";
                     break;
@@ -401,56 +402,55 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
 
         }else if (v == buttonReset) {
             Context context = getActivity().getApplicationContext();
-            String toastText;
+            String toastText = "Press start button";;
 
             do {
-                //  운동이 끝났고, 전송에 성공 했으면 전송 준비 상태
-                if (exercisingFlag != true && mapUtil.getSendResult() == mapUtil.SEND_SUCCESS) {
+                Log.v("[TEST3]", "sendresult : " + mapUtil.getSendResult());
 
-                    if(mapUtil.getStartTime() != null && mapUtil.getEndTime() != null) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());      // 로그인 실패로 알림을 띄움
-                        dialog = builder.setMessage("Successfully save your data!! :)" +
-                                "\n\nStart Time\n" +
-                                "* " + mapUtil.getStartTime() +
-                                "\nEnd Time\n" +
-                                "* " + mapUtil.getEndTime() +
-                                "\n\nSpeed\n" +
-                                "* " + speed + " m/s" +
-                                "\nDistance\n" +
-                                "* " + dist + " M")
-                                .setNegativeButton("Ok", null)
-                                .create();
-                        dialog.show();
-                    }
-                    
+                if(mapUtil.getSendResult() == mapUtil.SEND_SUCCESS){
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());      // 로그인 실패로 알림을 띄움
+                    dialog = builder.setMessage("Successfully save your data!! :)" +
+                            "\n\nStart Time\n" +
+                            "* " + mapUtil.getStartTime() +
+                            "\nEnd Time\n" +
+                            "* " + mapUtil.getEndTime() +
+                            "\n\nSpeed\n" +
+                            "* " + speed + " m/s" +
+                            "\nDistance\n" +
+                            "* " + dist + " M")
+                            .setNegativeButton("Ok", null)
+                            .create();
+                    dialog.show();
+
                     map.clear();
-//                mapUtil.setSendResult(mapUtil.SEND_READY);
+                    mapUtil.setSendResult(mapUtil.SEND_READY);
                     mapUtil.setReset();
                     sumDistance = 0d;
                     timer = 0d;
-                    toastText = "Reset Google Map";
+                    speed = 0d;
 
+                    toastText = "Saved data";
                     break;
                 }
 
                 //  운동이 끝났고, 전송에 실패 했으면 재전송
-                if (exercisingFlag != true && mapUtil.getSendResult() == mapUtil.SEND_FAILED) {
-//                mapUtil.Request(getContext());
-                    toastText = "Retransmisstion!!";
+                if (mapUtil.getSendResult() == mapUtil.SEND_FAILED) {
+                    mapUtil.Request(getContext(), Double.toString(speed), Double.toString(sumDistance));
 
-                    break;
-                }
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getContext());      // 저장 실패로 알림을 띄움
+                    dialog = builder.setMessage("Check the internet and click again the reset button")
+                            .setNegativeButton("Ok", null)
+                            .create();
+                    dialog.show();
 
-                //  운동이 끝났고, 전송 대기 중이면 전송
-                if (exercisingFlag != true && mapUtil.getSendResult() == mapUtil.SEND_READY) {
-//                mapUtil.Request(getContext());
-                    toastText = "Send exercise data";
-
+                    toastText = "Check the internet and re-click the reset button";
                     break;
                 }
 
                 //  운동 중이면 전송하면 안됨
-                toastText = "Press stop button!!";
+                if(exercisingFlag == true) {
+                    toastText = "Press stop button!!";
+                }
 
             }while(false);
             Toast toast = Toast.makeText(context,toastText, Toast.LENGTH_SHORT);
