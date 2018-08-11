@@ -25,7 +25,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
-            android:weightSum="4"
+            android:weightSum="3"
             >
             <Button
                 android:layout_width="match_parent"
@@ -39,13 +39,6 @@
                 android:layout_weight="1"
                 android:text="end"
                 android:id="@+id/btn_end"/>
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="calc"
-                android:id="@+id/btn_calc"
-                />
             <Button
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
