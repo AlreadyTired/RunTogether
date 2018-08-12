@@ -184,7 +184,7 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
         // If the adapter is null, then Bluetooth is not supported
         if (btSingletion.mBluetoothAdapter == null) {
             FragmentActivity activity = getActivity();
-            Toast.makeText(activity, "Bluetooth is not available", Toast.LENGTH_LONG).show();
+            Log.e("User's Log", "Bluetooth is not available");
             activity.finish();
 
         }
@@ -321,9 +321,9 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                             timer++;
 
                             if (savedCoordinate != null && currentCoordinate != null) {
-                                Log.v("[INFO] ", "distance : " + sumDistance);
-                                Log.v("[INFO] ", "timer : " + sumDistance);
-                                Log.v("[INFO] ", "lang: " + savedCoordinate.latitude + " before long : " + savedCoordinate.longitude);
+                                Log.v("User's Log", "distance : " + sumDistance);
+                                Log.v("User's Log", "timer : " + sumDistance);
+                                Log.v("User's Log", "lang: " + savedCoordinate.latitude + " before long : " + savedCoordinate.longitude);
 
                             }
 
@@ -620,13 +620,13 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                             try {
                                 setStatus(getString(R.string.title_connecting) + mConnectedDeviceName);
                             }catch (IllegalStateException e){
-                                Log.e("[ERR]Handler", e.getMessage().toString());
+                                Log.e("User's Log", "Error !!" + e.getMessage().toString());
                             }
                             mConversationArrayAdapter.clear();
                             break;
                         case BluetoothChatService.STATE_CONNECTING:
                             if(btSingletion.isPolarSensor){
-                                Log.w("[INFO]","Polar Sensor :"+ btSingletion.getDeviceName()+ ", " + btSingletion.getDeviceAdress());
+                                Log.w("User's Log","Polar Sensor :"+ btSingletion.getDeviceName()+ ", " + btSingletion.getDeviceAdress());
                                 setStatus("Polar Sensor device info");
                                 DeviceRegistryRequest();
                                 btSingletion.isPolarSensor = false;

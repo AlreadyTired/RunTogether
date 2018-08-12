@@ -146,7 +146,7 @@ public class FriendsFragment extends Fragment {
                             adapter.addItem(ContextCompat.getDrawable(getContext(),R.drawable.ic_account_box_black_24dp),Nicknamedata,Emaildata);
                         }
                         listView.setAdapter(adapter);
-                        Toast.makeText(getContext(), "Get UserListSuccess", Toast.LENGTH_SHORT).show();
+                        Log.v("User's log", "Get UserListSuccess");
                     }
                     else
                     {

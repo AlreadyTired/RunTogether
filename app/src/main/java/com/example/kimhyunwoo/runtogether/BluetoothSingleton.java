@@ -49,21 +49,21 @@ public class BluetoothSingleton {
                     .getString(DeviceListActivity.EXTRA_DEVICE_ADDRESS);
             device = mBluetoothAdapter.getRemoteDevice(address);
         }catch (IllegalArgumentException e){
-            Log.e("[ERR]getExtras ",e.getMessage().toString());
+            Log.e("User's Log","Error " + e.getMessage().toString());
         }
         // Get the BluetoothDevice object
 
         String catchStrings = device.getName();
         if(catchStrings.contains("Polar")){
             isPolarSensor = true;
-            Log.w("[INFO]","this sensor is Polar sensor");
+            Log.w("User's Log", " this sensor is Polar sensor");
         }
 
         // Attempt to connect to the device
         try{
             mChatService.connect(device);
         }catch (Exception e){
-            Log.e("[ERR]connectDevice", e.getMessage().toString());
+            Log.e("User's Log", "Error connectDevice " + e.getMessage().toString());
         }
 
     }

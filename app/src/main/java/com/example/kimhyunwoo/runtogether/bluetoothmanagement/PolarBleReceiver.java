@@ -39,7 +39,7 @@ public class PolarBleReceiver extends BroadcastReceiver {
             int totalNN = Integer.parseInt(tokens.nextToken());
             int lastRRvalue = Integer.parseInt(tokens.nextToken());
             String sessionId = tokens.nextToken();
-            Log.w(this.getClass().getName(), "####Received heartRate: " +heartRate+" pnnPercentage: "+pnnPercentage+" pnnCount: "+pnnCount+" rrThreshold: "+rrThreshold+" totalNN: "+totalNN+" lastRRvalue: "+lastRRvalue+" sessionId: "+sessionId);
+            Log.w("User's Log", "####Received heartRate: " +heartRate+" pnnPercentage: "+pnnPercentage+" pnnCount: "+pnnCount+" rrThreshold: "+rrThreshold+" totalNN: "+totalNN+" lastRRvalue: "+lastRRvalue+" sessionId: "+sessionId);
 
            RealTimeDataTransfer.setHeartRate(Integer.toString(heartRate));
            RealTimeDataTransfer.setTextHeartrate();

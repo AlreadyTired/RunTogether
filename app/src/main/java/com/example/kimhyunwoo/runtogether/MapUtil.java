@@ -86,7 +86,7 @@ public class MapUtil {
     public void polylineOnMap(GoogleMap map, LatLng previousCoordinate, LatLng currentCoordinate){
         if(map == null || previousCoordinate == null || currentCoordinate == null)
         {
-            Log.e("[ERR] polyLineOnMap : ", "null check!!!");
+            Log.e("User's Log", "Error polyLineOnMap : null check!!!");
             return;
         }
 
@@ -142,7 +142,7 @@ public class MapUtil {
             @Override
             public void onResponse(String response)
             {
-                Log.v("[INFO] ExerciseInfoRequest : ",response);
+                Log.v("User's Log", "ExerciseInfoRequest : "+ response);
                 try
                 {
                     // JSON 형식으로 값을 response 에 받아서 넘어온다.
@@ -172,7 +172,7 @@ public class MapUtil {
             }
         };
 
-        Log.v("[INFO]", "startTime : " + Long.toString(startTime.getTime()/1000)
+        Log.v("User's Log", "startTime : " + Long.toString(startTime.getTime()/1000)
                 + "endTime : " + Long.toString(endTime.getTime()/1000)
                 + "speed : " + speed.toString()
                 + "distance : "+ distance.toString());

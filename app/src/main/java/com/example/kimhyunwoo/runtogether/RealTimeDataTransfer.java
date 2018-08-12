@@ -54,7 +54,7 @@ public class RealTimeDataTransfer {
         }
     }
     public static void ShowData(){
-        Log.v("[INFO] RealTimeDataTransfer ", CO + "," + SO2+ "," +NO2+ "," +O3 + "," +PM25+ "," +Temp+ "," +LANG+ "," +LONG+ "," +HeartRate+ "," +TimeStamp);
+        Log.v("User's Log", "RealTimeDataTransfer " + CO + "," + SO2+ "," +NO2+ "," +O3 + "," +PM25+ "," +Temp+ "," +LANG+ "," +LONG+ "," +HeartRate+ "," +TimeStamp);
     }
 
     public static void setGPS(String Lang, String Long)

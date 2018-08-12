@@ -156,8 +156,8 @@ public class MainActivity extends AppCompatActivity {
     }
     
     public void cancel() {
-        Toast.makeText(this, "사용자가 GPS 권한을 거절했습니다.", Toast.LENGTH_SHORT).show();
-        Toast.makeText(this, "앱이 정상적으로 실행되지 않을 수 있습니다.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "The user rejects GPS rights.", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, "The App don't work normally.", Toast.LENGTH_SHORT).show();
         finish();
 
     }
@@ -191,7 +191,7 @@ public class MainActivity extends AppCompatActivity {
     private final PolarBleReceiver mPolarBleUpdateReceiver = new PolarBleReceiver() {};
 
     protected void activatePolar() {
-        Log.w(this.getClass().getName(), "activatePolar()");
+        Log.w("User's Log", "activatePolar()");
         registerReceiver(mPolarBleUpdateReceiver, makePolarGattUpdateIntentFilter());
     }
 

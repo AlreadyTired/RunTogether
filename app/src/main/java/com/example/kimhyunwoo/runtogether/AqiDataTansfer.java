@@ -65,6 +65,7 @@ public class AqiDataTansfer {
                     if(message.equals("ok"))
                     {
                         DataQueue.poll();
+                        Log.v("User's Log","Success!");
                         while(!DataQueue.isEmpty())
                         {
                             if(AqiErrorCount >3 || AqiErrorFlag ==true)

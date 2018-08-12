@@ -18,6 +18,9 @@ public class BackPressCloseHandler {
         }
 
         if (System.currentTimeMillis() <= backKeyPressedTime + 2000) {
+
+
+
             activity.finishAffinity();
             toast.cancel();
         }
