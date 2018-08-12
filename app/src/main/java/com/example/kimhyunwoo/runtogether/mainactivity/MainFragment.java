@@ -321,9 +321,9 @@ public class MainFragment extends Fragment implements OnMapReadyCallback,
                             timer++;
 
                             if (savedCoordinate != null && currentCoordinate != null) {
-                                Log.v("[INFO] ", "distance : " + sumDistance);
-                                Log.v("[INFO] ", "timer : " + sumDistance);
-                                Log.v("[INFO] ", "lang: " + savedCoordinate.latitude + " before long : " + savedCoordinate.longitude);
+                                Log.v("User's Log", "distance : " + sumDistance);
+                                Log.v("User's Log", "timer : " + sumDistance);
+                                Log.v("User's Log", "lang: " + savedCoordinate.latitude + " before long : " + savedCoordinate.longitude);
 
                             }
 

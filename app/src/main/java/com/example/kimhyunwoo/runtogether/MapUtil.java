@@ -142,7 +142,7 @@ public class MapUtil {
             @Override
             public void onResponse(String response)
             {
-                Log.v("[INFO] ExerciseInfoRequest : ",response);
+                Log.v("User's Log", "ExerciseInfoRequest : "+ response);
                 try
                 {
                     // JSON 형식으로 값을 response 에 받아서 넘어온다.
